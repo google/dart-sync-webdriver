@@ -82,6 +82,7 @@ class WebDriver implements SearchContext {
 
   WebDriver._(this._uri, this.capabilities) {
     _jsonDecoder = new JsonCodec.withReviver(_reviver);
+    _timeouts = new Timeouts._(this);
   }
 
   @override
