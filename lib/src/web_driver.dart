@@ -24,6 +24,7 @@ class WebDriver implements SearchContext {
   final Map<String, Object> capabilities;
 
   JsonCodec _jsonDecoder;
+  Timeouts _timeouts;
 
   factory WebDriver({
       Uri uri: null,
@@ -135,7 +136,7 @@ class WebDriver implements SearchContext {
 
   Cookies get cookies => new Cookies._(this);
 
-  Timeouts get timeouts => new Timeouts._(this);
+  Timeouts get timeouts => _timeouts;
 
   /**
    * Inject a snippet of JavaScript into the page for execution in the context

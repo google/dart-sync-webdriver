@@ -59,12 +59,14 @@ class WithAttribute extends ElementFilter {
   bool keep(WebElement element) => element.attributes[name] == value;
 }
 
-class ByJs implements Finder {
+typedef ScriptExecutor(String script, List args);
+
+abstract class ByScript implements Finder {
 
   final String _js;
   final _arg;
 
-  const ByJs(this._js, [this._arg]);
+  const ByScript(this._js, this._arg);
 
   WebElement findElement(SearchContext context) {
     List<WebElement> results = findElements(context);
@@ -79,7 +81,7 @@ class ByJs implements Finder {
   List<WebElement> findElements(SearchContext context) {
     var listArg;
     if (_arg is List) {
-      listArg = _arg;
+      listArg = new List.from(_arg);
     } else if (_arg != null){
       listArg = [_arg];
     } else {
@@ -87,11 +89,12 @@ class ByJs implements Finder {
     }
 
     if (context is WebElement) {
-      listArg = new List.from(listArg)
-        ..add(context);
+      listArg.add(context);
+    } else {
+      listArg.add(null);
     }
 
-    var result = context.driver.execute(_js, listArg);
+    var result = executor(context)(_js, listArg);
 
     if (result is WebElement) {
       return new UnmodifiableListView<WebElement>([result]);
@@ -108,4 +111,22 @@ class ByJs implements Finder {
 
     throw new StateError('Script returned non-WebElement');
   }
+
+  ScriptExecutor executor(SearchContext context);
+}
+
+class ByJs extends ByScript {
+
+  const ByJs(String js, [arg]) : super(js, arg);
+
+  @override
+  ScriptExecutor executor(SearchContext context) => context.driver.execute;
+}
+
+class ByAsyncJs extends ByScript {
+
+  const ByAsyncJs(String js, [arg]) : super(js, arg);
+
+  @override
+  ScriptExecutor executor(SearchContext context) => context.driver.executeAsync;
 }

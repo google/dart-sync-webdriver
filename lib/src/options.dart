@@ -89,25 +89,42 @@ class Cookie {
 
 class Timeouts extends _WebDriverBase {
 
+  Duration _scriptTimeout;
+  Duration _implicitWaitTimeout;
+  Duration _pageLoadTimeout;
+
   Timeouts._(driver): super(driver, 'timeouts');
 
-  void _set(String type, Duration duration) =>
+  _set(String type, Duration duration) =>
       _post('', { 'type' : type, 'ms': duration.inMilliseconds});
 
+  /// Get the script timeout.
+  Duration get scriptTimeout => _scriptTimeout;
   /// Set the script timeout.
-  void setScriptTimeout(Duration duration) => _set('script', duration);
+  set scriptTimeout(Duration duration) {
+    _set('script', duration);
+    return _scriptTimeout = duration;
+  }
+  /// Set the script timeout.
+  setScriptTimeout(Duration duration) => scriptTimeout = duration;
 
+  /// Get the implicit timeout.
+  Duration get implicitWaitTimeout => _implicitWaitTimeout;
   /// Set the implicit timeout.
-  void setImplicitTimeout(Duration duration) => _set('implicit', duration);
+  set implicitWaitTimeout(Duration duration) {
+    _set('implicit', duration);
+    return _implicitWaitTimeout = duration;
+  }
+  /// Set the implicit timeout.
+  setImplicitWaitTimeout(Duration duration) => implicitWaitTimeout = duration;
 
+  /// Get the page load timeout.
+  Duration get pageLoadTimeout => _pageLoadTimeout;
   /// Set the page load timeout.
-  void setPageLoadTimeout(Duration duration) => _set('page load', duration);
-
-  /// Set the async script timeout.
-  void setAsyncScriptTimeout(Duration duration) =>
-      _post('async_script', { 'ms': duration.inMilliseconds});
-
-  /// Set the implicit wait timeout.
-  void setImplicitWaitTimeout(Duration duration) =>
-      _post('implicit_wait', { 'ms': duration.inMilliseconds});
+  set pageLoadTimeout(Duration duration) {
+    _set('page load', duration);
+    return _pageLoadTimeout = duration;
+  }
+  /// Set the page load timeout.
+  setPageLoadTimeout(Duration duration) => pageLoadTimeout = duration;
 }
