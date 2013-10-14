@@ -17,12 +17,10 @@ void main() {
   PageLoader loader;
 
   setUp(() {
-    driver = new WebDriver(desired: Capabilities.chrome);
+    driver = freshDriver;
     driver.url = testPagePath;
     loader = new PageLoader(driver);
   });
-
-  tearDown(() => driver.quit());
 
   test('simple', () {
     PageForSimpleTest page = loader.getInstance(PageForSimpleTest);
@@ -99,6 +97,10 @@ void main() {
 
   test('ambiguous element test', () {
     expect(() => loader.getInstance(PageForAmbiguousTest), throws);
+  });
+
+  test('one-time teardown', () {
+    closeDriver();
   });
 }
 

@@ -28,17 +28,17 @@ class Touch extends _WebDriverBase{
   /**
    * Finger down on the screen.
    */
-  void down(Point point) => _post('down', point);
+  void down(Point point) => _post('down', _pointToJson(point));
 
   /**
    * Finger up on the screen.
    */
-  void up(Point point) => _post('up', point);
+  void up(Point point) => _post('up', _pointToJson(point));
 
   /**
    * Finger move on the screen.
    */
-  void move(Point point) => _post('move', point);
+  void move(Point point) => _post('move', _pointToJson(point));
 
   /**
    * Scroll on the touch screen using finger based motion events.

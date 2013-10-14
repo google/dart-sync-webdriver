@@ -21,16 +21,16 @@ import 'package:sync_webdriver/sync_webdriver.dart';
 import '../test_util.dart';
 
 void main() {
-  WebDriver driver;
 
-  setUp(() {
-    driver = new WebDriver(desired: Capabilities.chrome);
-    driver.url = testPagePath;
-  });
-
-  tearDown(() => driver.quit());
 
   group('waitFor()', () {
+
+    WebDriver driver;
+
+    setUp(() {
+      driver = freshDriver;
+      driver.url = testPagePath;
+    });
 
     test('that returns a string', () {
       driver.url = 'http://www.google.com';
@@ -58,6 +58,13 @@ void main() {
   });
 
   group('waitForValue()', () {
+
+    WebDriver driver;
+
+    setUp(() {
+      driver = freshDriver;
+      driver.url = testPagePath;
+    });
 
     test('that returns a string', () {
       driver.url = 'http://www.google.com';
