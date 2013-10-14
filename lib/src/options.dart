@@ -105,8 +105,6 @@ class Timeouts extends _WebDriverBase {
     _set('script', duration);
     return _scriptTimeout = duration;
   }
-  /// Set the script timeout.
-  setScriptTimeout(Duration duration) => scriptTimeout = duration;
 
   /// Get the implicit timeout.
   Duration get implicitWaitTimeout => _implicitWaitTimeout;
@@ -115,8 +113,6 @@ class Timeouts extends _WebDriverBase {
     _set('implicit', duration);
     return _implicitWaitTimeout = duration;
   }
-  /// Set the implicit timeout.
-  setImplicitWaitTimeout(Duration duration) => implicitWaitTimeout = duration;
 
   /// Get the page load timeout.
   Duration get pageLoadTimeout => _pageLoadTimeout;
@@ -125,6 +121,4 @@ class Timeouts extends _WebDriverBase {
     _set('page load', duration);
     return _pageLoadTimeout = duration;
   }
-  /// Set the page load timeout.
-  setPageLoadTimeout(Duration duration) => pageLoadTimeout = duration;
 }

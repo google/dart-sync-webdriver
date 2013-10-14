@@ -91,11 +91,21 @@ void main() {
 
     tearDown(() => driver.quit());
 
-    // TODO(DrMarcII): Figure out how to tell if timeouts are correctly set
     test('set all timeouts', () {
-      driver.timeouts.setScriptTimeout(new Duration(seconds: 5));
-      driver.timeouts.setPageLoadTimeout(new Duration(seconds: 10));
-      driver.timeouts.setImplicitWaitTimeout(new Duration(seconds: 2));
+      expect(driver.timeouts.scriptTimeout, isNull);
+      var timeout = new Duration(seconds: 5);
+      driver.timeouts.scriptTimeout = timeout;
+      expect(driver.timeouts.scriptTimeout, equals(timeout));
+
+      expect(driver.timeouts.pageLoadTimeout, isNull);
+      timeout = new Duration(seconds: 10);
+      driver.timeouts.pageLoadTimeout = timeout;
+      expect(driver.timeouts.pageLoadTimeout, equals(timeout));
+
+      expect(driver.timeouts.implicitWaitTimeout, isNull);
+      timeout = new Duration(seconds: 2);
+      driver.timeouts.implicitWaitTimeout = timeout;
+      expect(driver.timeouts.implicitWaitTimeout, equals(timeout));
     });
   });
 }

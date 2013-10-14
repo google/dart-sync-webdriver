@@ -61,12 +61,12 @@ class WithAttribute extends ElementFilter {
 
 typedef ScriptExecutor(String script, List args);
 
-abstract class ByScript implements Finder {
+abstract class _ByScript implements Finder {
 
   final String _js;
   final _arg;
 
-  const ByScript(this._js, this._arg);
+  const _ByScript(this._js, this._arg);
 
   WebElement findElement(SearchContext context) {
     List<WebElement> results = findElements(context);
@@ -115,7 +115,7 @@ abstract class ByScript implements Finder {
   ScriptExecutor executor(SearchContext context);
 }
 
-class ByJs extends ByScript {
+class ByJs extends _ByScript {
 
   const ByJs(String js, [arg]) : super(js, arg);
 
@@ -123,7 +123,7 @@ class ByJs extends ByScript {
   ScriptExecutor executor(SearchContext context) => context.driver.execute;
 }
 
-class ByAsyncJs extends ByScript {
+class ByAsyncJs extends _ByScript {
 
   const ByAsyncJs(String js, [arg]) : super(js, arg);
 
