@@ -27,7 +27,7 @@ class Window extends _WebDriverBase {
   Size get size =>  new Size.fromJson(_get('size'));
 
   /// The location of this window.
-  Point get location =>  new Point.fromJson(_get('position'));
+  Point<int> get location =>  _jsonToPoint(_get('position'));
 
   /// Maximize this window.
   void maximize() => _post('maximize');
@@ -36,7 +36,7 @@ class Window extends _WebDriverBase {
   set size(Size size) => _post('size', size);
 
   /// Set this window location.
-  set location(Point point) => _post('position', point);
+  set location(Point point) => _post('position', _pointToJson(point));
 
   String toJson() => _handle;
 

@@ -29,13 +29,11 @@ void main() {
     WebElement output;
 
     setUp(() {
-      driver = new WebDriver(desired: Capabilities.chrome);
+      driver = freshDriver;
       driver.url = testPagePath;
       button = driver.findElement(new By.tagName('button'));
       output = driver.findElement(new By.id('settable'));
     });
-
-    tearDown(() => driver.quit());
 
     test('no alert', () {
       expect(() => driver.switchTo.alert,

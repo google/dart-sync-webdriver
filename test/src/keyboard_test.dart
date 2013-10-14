@@ -28,13 +28,11 @@ void main() {
     WebElement textInput;
 
     setUp(() {
-      driver = new WebDriver(desired: Capabilities.chrome);
+      driver = freshDriver;
       driver.url = testPagePath;
       textInput = driver.findElement(new By.cssSelector('input[type=text]'));
       textInput.click();
     });
-
-    tearDown(() => driver.quit());
 
     test('sendKeys -- once', () {
       driver.keyboard.sendKeys('abcdef');

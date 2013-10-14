@@ -55,30 +55,14 @@ class Size {
   String toString() => toJson().toString();
 }
 
-class Point {
-  final num x;
-  final num y;
+Point<int> _jsonToPoint(Map<String, dynamic> json) =>
+      new Point<int>(json['x'].floor(), json['y'].floor());
 
-  const Point(this.x, this.y);
-
-  Point.fromJson(Map json) : this(json['x'], json['y']);
-
-  Map<String, num> toJson() => {
-    'x': x,
-    'y': y
-  };
-
-  @override
-  bool operator ==(Object other) => other is Point &&
-      x == (other as Point).x &&
-      y == (other as Point).y;
-
-  @override
-  int get hashCode => x.hashCode << 3 + y.hashCode;
-
-  @override
-  String toString() => toJson().toString();
-}
+Map<String, int> _pointToJson(Point point) =>
+    <String, int>{
+      'x': point.x.floor(),
+      'y': point.y.floor()
+    };
 
 abstract class SearchContext {
   WebDriver get driver;
