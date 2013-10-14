@@ -99,6 +99,7 @@ void main() {
     expect(() => loader.getInstance(PageForAmbiguousTest), throws);
   });
 
+  // This test needs to be last to properly close the browser.
   test('one-time teardown', () {
     closeDriver();
   });
