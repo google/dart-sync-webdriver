@@ -31,11 +31,9 @@ void main() {
     WebDriver driver;
 
     setUp(() {
-      driver = new WebDriver(desired: Capabilities.chrome);
+      driver = freshDriver;
       driver.url = testPagePath;
     });
-
-    tearDown(() => driver.quit());
 
     test('frame index', () {
       driver.switchTo.frame(0);

@@ -34,7 +34,7 @@ void main() {
     WebElement invisible;
 
     setUp(() {
-      driver = new WebDriver(desired: Capabilities.chrome);
+      driver = freshDriver;
       driver.url = testPagePath;
       table = driver.findElement(new By.tagName('table'));
       button = driver.findElement(new By.tagName('button'));
@@ -45,99 +45,97 @@ void main() {
       invisible = driver.findElement(new By.tagName('div'));
     });
 
-    tearDown(() => driver.quit());
+    test('click', () {
+      button.click();
+      driver.switchTo.alert.accept();
+    });
 
-//    test('click', () {
-//      button.click();
-//      driver.switchTo.alert.accept();
-//    });
-//
-//    test('submit', () {
-//      form.submit();
-//      var alert = driver.switchTo.alert;
-//      expect(alert.text, 'form submitted');
-//      alert.accept();
-//    });
-//
-//    test('sendKeys', () {
-//      textInput.sendKeys('some keys');
-//      expect(textInput.attributes['value'], 'some keys');
-//    });
-//
-//    test('clear', () {
-//      textInput.sendKeys('some keys');
-//      textInput.clear();
-//      expect(textInput.attributes['value'], '');
-//    });
-//
-//    test('enabled', () {
-//      expect(table.enabled, isTrue);
-//      expect(button.enabled, isTrue);
-//      expect(form.enabled, isTrue);
-//      expect(textInput.enabled, isTrue);
-//      expect(checkbox.enabled, isTrue);
-//      expect(disabled.enabled, isFalse);
-//    });
-//
-//    test('displayed', () {
-//      expect(table.displayed, isTrue);
-//      expect(button.displayed, isTrue);
-//      expect(form.displayed, isTrue);
-//      expect(textInput.displayed, isTrue);
-//      expect(checkbox.displayed, isTrue);
-//      expect(disabled.displayed, isTrue);
-//      expect(invisible.displayed, isFalse);
-//    });
-//
-//    test('location -- table', () {
-//      var location = table.location;
-//      expect(location, isPoint);
-//      // TODO(DrMarcII): Switch to hasProperty matchers
-//      expect(location.x, isNonNegative);
-//      expect(location.y, isNonNegative);
-//    });
-//
-//    test('location -- invisible', () {
-//      var location = invisible.location;
-//      expect(location, isPoint);
-//      // TODO(DrMarcII): Switch to hasProperty matchers
-//      expect(location.x, 0);
-//      expect(location.y, 0);
-//    });
-//
-//    test('size -- table', () {
-//      var size = table.size;
-//      expect(size, isSize);
-//      // TODO(DrMarcII): Switch to hasProperty matchers
-//      expect(size.width, isNonNegative);
-//      expect(size.height, isNonNegative);
-//    });
-//
-//    test('size -- invisible', () {
-//      var size = invisible.size;
-//      expect(size, isSize);
-//      // TODO(DrMarcII): I thought these should be 0
-//      // TODO(DrMarcII): Switch to hasProperty matchers
-//      expect(size.width, isNonNegative);
-//      expect(size.height, isNonNegative);
-//    });
-//
-//    test('name', () {
-//      expect(table.name, 'table');
-//      expect(button.name, 'button');
-//      expect(form.name, 'form');
-//      expect(textInput.name, 'input');
-//    });
-//
-//    test('text', () {
-//      expect(table.text, 'r1c1 r1c2\nr2c1 r2c2');
-//      expect(button.text, 'button');
-//      expect(invisible.text, '');
-//    });
-//
-//    test('findElement -- success', () {
-//      expect(table.findElement(new By.tagName('tr')), isWebElement);
-//    });
+    test('submit', () {
+      form.submit();
+      var alert = driver.switchTo.alert;
+      expect(alert.text, 'form submitted');
+      alert.accept();
+    });
+
+    test('sendKeys', () {
+      textInput.sendKeys('some keys');
+      expect(textInput.attributes['value'], 'some keys');
+    });
+
+    test('clear', () {
+      textInput.sendKeys('some keys');
+      textInput.clear();
+      expect(textInput.attributes['value'], '');
+    });
+
+    test('enabled', () {
+      expect(table.enabled, isTrue);
+      expect(button.enabled, isTrue);
+      expect(form.enabled, isTrue);
+      expect(textInput.enabled, isTrue);
+      expect(checkbox.enabled, isTrue);
+      expect(disabled.enabled, isFalse);
+    });
+
+    test('displayed', () {
+      expect(table.displayed, isTrue);
+      expect(button.displayed, isTrue);
+      expect(form.displayed, isTrue);
+      expect(textInput.displayed, isTrue);
+      expect(checkbox.displayed, isTrue);
+      expect(disabled.displayed, isTrue);
+      expect(invisible.displayed, isFalse);
+    });
+
+    test('location -- table', () {
+      var location = table.location;
+      expect(location, isPoint);
+      // TODO(DrMarcII): Switch to hasProperty matchers
+      expect(location.x, isNonNegative);
+      expect(location.y, isNonNegative);
+    });
+
+    test('location -- invisible', () {
+      var location = invisible.location;
+      expect(location, isPoint);
+      // TODO(DrMarcII): Switch to hasProperty matchers
+      expect(location.x, 0);
+      expect(location.y, 0);
+    });
+
+    test('size -- table', () {
+      var size = table.size;
+      expect(size, isSize);
+      // TODO(DrMarcII): Switch to hasProperty matchers
+      expect(size.width, isNonNegative);
+      expect(size.height, isNonNegative);
+    });
+
+    test('size -- invisible', () {
+      var size = invisible.size;
+      expect(size, isSize);
+      // TODO(DrMarcII): I thought these should be 0
+      // TODO(DrMarcII): Switch to hasProperty matchers
+      expect(size.width, isNonNegative);
+      expect(size.height, isNonNegative);
+    });
+
+    test('name', () {
+      expect(table.name, 'table');
+      expect(button.name, 'button');
+      expect(form.name, 'form');
+      expect(textInput.name, 'input');
+    });
+
+    test('text', () {
+      expect(table.text, 'r1c1 r1c2\nr2c1 r2c2');
+      expect(button.text, 'button');
+      expect(invisible.text, '');
+    });
+
+    test('findElement -- success', () {
+      expect(table.findElement(new By.tagName('tr')), isWebElement);
+    });
 
     test('findElement -- failure', () {
       expect(() => button.findElement(new By.tagName('tr')),

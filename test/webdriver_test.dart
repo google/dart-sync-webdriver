@@ -17,6 +17,9 @@ limitations under the License.
 library webdriver_test;
 
 import 'package:unittest/compact_vm_config.dart';
+import 'package:unittest/unittest.dart' show test;
+
+import 'test_util.dart' show closeDriver;
 
 import 'src/alert_test.dart' as alert;
 import 'src/keyboard_test.dart' as keyboard;
@@ -46,4 +49,8 @@ void main() {
   web_driver.main();
   web_element.main();
   window.main();
+
+  test('one-time teardown', () {
+    closeDriver();
+  });
 }
