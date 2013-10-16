@@ -27,11 +27,9 @@ void main() {
     WebDriver driver;
 
     setUp(() {
-      driver = new WebDriver(desired: Capabilities.chrome);
+      driver = freshDriver;
       driver.url = 'http://www.google.com';
     });
-
-    tearDown(() => driver.quit());
 
     test('forward/back', () {
       driver.url = testPagePath;

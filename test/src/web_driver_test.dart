@@ -25,11 +25,9 @@ void main() {
     WebDriver driver;
 
     setUp(() {
-      driver = new WebDriver(desired: Capabilities.chrome);
+      driver = freshDriver;
       driver.url = testPagePath;
     });
-
-    tearDown(() => driver.quit());
 
     test('set url', () {
       driver.url = 'http://www.google.com';
@@ -113,12 +111,11 @@ void main() {
       expect(e.text, 'new text');
     });
 
-// TODO(fisherii): Figure out why this is timing out and fix.
-//    test('captureScreenshot', () {
-//      var screenshot = driver.captureScreenshot();
-//      expect(screenshot, hasLength(isPositive));
-//      expect(screenshot, everyElement(new isInstanceOf<int>()));
-//      expect(screenshot, everyElement(inInclusiveRange(0, 255)));
-//    });
+    test('captureScreenshot', () {
+      var screenshot = driver.captureScreenshot();
+      expect(screenshot, hasLength(isPositive));
+      expect(screenshot, everyElement(new isInstanceOf<int>()));
+      expect(screenshot, everyElement(inInclusiveRange(0, 255)));
+    });
   });
 }

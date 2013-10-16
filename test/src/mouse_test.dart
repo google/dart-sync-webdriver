@@ -28,12 +28,10 @@ void main() {
     WebElement button;
 
     setUp(() {
-      driver = new WebDriver(desired: Capabilities.chrome);
+      driver = freshDriver;
       driver.url = testPagePath;
       button = driver.findElement(new By.tagName('button'));
     });
-
-    tearDown(() => driver.quit());
 
     test('moveTo element/click', () {
       driver.mouse

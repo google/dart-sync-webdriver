@@ -16,6 +16,8 @@ limitations under the License.
 
 library webdriver_test.window;
 
+import 'dart:math' show Point;
+
 import 'package:unittest/unittest.dart';
 import 'package:sync_webdriver/sync_webdriver.dart';
 import '../test_util.dart';
@@ -26,9 +28,7 @@ void main() {
 
     WebDriver driver;
 
-    setUp(() => driver = new WebDriver(desired: Capabilities.chrome));
-
-    tearDown(() => driver.quit());
+    setUp(() => driver = freshDriver);
 
     test('size', () {
       driver.window.size = new Size(400, 600);

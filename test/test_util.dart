@@ -17,6 +17,7 @@ limitations under the License.
 library webdriver_test_util;
 
 import 'dart:io';
+import 'dart:math' show Point;
 import 'package:path/path.dart' as path;
 import 'package:unittest/unittest.dart';
 import 'package:sync_webdriver/sync_webdriver.dart';
@@ -45,3 +46,37 @@ String _getTestPagePath() {
 }
 
 String _testPagePath;
+
+WebDriver _driver;
+
+WebDriver get freshDriver {
+  if (_driver != null) {
+    try {
+      Window firstWindow = null;
+
+      for (Window window in _driver.windows) {
+        if (firstWindow == null) {
+          firstWindow = window;
+        } else {
+          _driver.switchTo.window(window);
+          _driver.close();
+        }
+      }
+      _driver.switchTo.window(firstWindow);
+      _driver.url = 'about:';
+    } catch (e) {
+      closeDriver();
+    }
+  }
+  if (_driver == null) {
+    _driver = new WebDriver(desired: Capabilities.chrome);
+  }
+  return _driver;
+}
+
+void closeDriver() {
+  try {
+    _driver.quit();
+  } catch (e) { }
+  _driver = null;
+}

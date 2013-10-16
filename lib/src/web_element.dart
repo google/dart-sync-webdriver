@@ -56,7 +56,7 @@ class WebElement extends _WebDriverBase implements SearchContext {
   bool get displayed => _get('displayed');
 
   /// The location within the document of this element.
-  Point get location => new Point.fromJson(_get('location'));
+  Point<int> get location => _jsonToPoint(_get('location'));
 
   /// The size of this element.
   Size get size => new Size.fromJson(_get('size'));

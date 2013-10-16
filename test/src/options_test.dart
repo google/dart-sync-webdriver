@@ -18,6 +18,7 @@ library webdriver_test.options;
 
 import 'package:unittest/unittest.dart';
 import 'package:sync_webdriver/sync_webdriver.dart';
+import '../test_util.dart';
 
 void main() {
 
@@ -26,11 +27,9 @@ void main() {
     WebDriver driver;
 
     setUp(() {
-      driver = new WebDriver(desired: Capabilities.chrome);
+      driver = freshDriver;
       driver.url = 'http://www.google.com';
     });
-
-    tearDown(() => driver.quit());
 
     test('add simple cookie', () {
       driver.cookies.add(new Cookie('mycookie', 'myvalue'));
@@ -87,9 +86,7 @@ void main() {
   group('TimeOuts', () {
     WebDriver driver;
 
-    setUp(() => driver = new WebDriver(desired: Capabilities.chrome));
-
-    tearDown(() => driver.quit());
+    setUp(() => driver = freshDriver);
 
     test('set all timeouts', () {
       expect(driver.timeouts.scriptTimeout, isNull);

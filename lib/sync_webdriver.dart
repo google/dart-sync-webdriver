@@ -18,6 +18,7 @@ library sync.webdriver;
 
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math' show Point;
 
 import 'package:crypto/crypto.dart';
 import 'package:meta/meta.dart';
