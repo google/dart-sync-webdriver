@@ -17,11 +17,24 @@ limitations under the License.
 part of sync.pageloader;
 
 /**
+ * Normally if an element is not found, an exception is thrown.  This makes
+ * it difficult to test for the absence of something in the DOM.  To allow an
+ * element to be absent from the DOM, annotate it with this.
+ */
+const Nullable = const _Nullable();
+
+class _Nullable {
+  const _Nullable();
+}
+
+const Root = const _Root();
+
+/**
  * Matches the root [WebElement] being used for constructing the current page
  * object.
  */
-class Root implements Finder, HasFilterFinderOptions {
-  const Root();
+class _Root implements Finder, HasFilterFinderOptions {
+  const _Root();
 
   @override
   WebElement findElement(SearchContext context) {
