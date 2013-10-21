@@ -107,11 +107,12 @@ abstract class _FieldInfo {
     }
 
     var isList = false;
-
     if (type.simpleName == const Symbol('List')) {
       isList = true;
       type = null;
     }
+
+    var isNullable = false;
 
     var implicitDisplayFiltering = true;
 
@@ -134,6 +135,8 @@ abstract class _FieldInfo {
         }
         isList = true;
         type = reflectClass(datum.type);
+      } else if (datum is _Nullable) {
+        isNullable = true;
       }
 
       if (datum is HasFilterFinderOptions &&
@@ -148,11 +151,11 @@ abstract class _FieldInfo {
     }
 
     if (implicitDisplayFiltering) {
-      filters.insert(0, new WithState.visible());
+      filters.insert(0, const WithState.visible());
     }
 
     if (finder != null) {
-      return new _FinderFieldInfo._(name, finder, filters, type, isList);
+      return new _FinderFieldInfo(name, finder, filters, type, isList, isNullable);
     } else if (type.simpleName == const Symbol('PageLoader')) {
       return new _InjectedPageLoaderInfo(name);
     } else if (type.simpleName == const Symbol('WebDriver')) {
@@ -196,13 +199,15 @@ class _FinderFieldInfo implements _FieldInfo {
   final List<Filter> _filters;
   final ClassMirror _instanceType;
   final bool _isList;
+  final bool _isNullable;
 
-  _FinderFieldInfo._(
+  _FinderFieldInfo(
       this._fieldName,
       this._finder,
       this._filters,
       this._instanceType,
-      this._isList);
+      this._isList,
+      this._isNullable);
 
   @override
   void setField(
@@ -212,13 +217,14 @@ class _FinderFieldInfo implements _FieldInfo {
     List elements = _getElements(context);
 
     if (!_isList) {
-      if (elements.length == 0) {
-        throw new StateError(
-            'Unable to find element for non-list field $_fieldName');
+      if (elements.isEmpty && !_isNullable) {
+        throw new StateError('Unable to find element for non-nullable, non-list'
+            ' field $_fieldName');
       }
+
       if (elements.length > 1) {
         throw new StateError(
-            'Found ${elements.length} for non-list field $_fieldName');
+            'Found ${elements.length} elements for non-list field $_fieldName');
       }
     }
 
@@ -230,7 +236,7 @@ class _FinderFieldInfo implements _FieldInfo {
     if (_isList) {
       instance.setField(_fieldName, new UnmodifiableListView(elements));
     } else {
-      instance.setField(_fieldName, elements[0]);
+      instance.setField(_fieldName, elements.isEmpty ? null : elements[0]);
     }
   }
 

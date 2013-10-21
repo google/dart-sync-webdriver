@@ -65,6 +65,11 @@ void main() {
     expect(() => loader.getInstance(PageForNoMatchingElementTest), throws);
   });
 
+  test('no matching but nullable element', () {
+    PageForNullableElementTest page = loader.getInstance(PageForNullableElementTest);
+    expect(page.doesntExist, isNull);
+  });
+
   test('multiple matching element', () {
     expect(() => loader.getInstance(PageForMultipleMatchingElementTest),
         throws);
@@ -165,6 +170,12 @@ class PageForSkipFieldsWithoutFinderTest {
 
 class PageForNoMatchingElementTest {
   @By.id('non-existent id')
+  WebElement doesntExist;
+}
+
+class PageForNullableElementTest {
+  @By.id('non-existent id')
+  @Optional
   WebElement doesntExist;
 }
 
