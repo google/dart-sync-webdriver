@@ -21,10 +21,10 @@ part of sync.pageloader;
  * it difficult to test for the absence of something in the DOM.  To allow an
  * element to be absent from the DOM, annotate it with this.
  */
-const Nullable = const _Nullable();
+const Optional = const _Optional();
 
-class _Nullable {
-  const _Nullable();
+class _Optional {
+  const _Optional();
 }
 
 const Root = const _Root();

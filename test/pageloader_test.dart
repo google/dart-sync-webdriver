@@ -175,7 +175,7 @@ class PageForNoMatchingElementTest {
 
 class PageForNullableElementTest {
   @By.id('non-existent id')
-  @Nullable
+  @Optional
   WebElement doesntExist;
 }
 
