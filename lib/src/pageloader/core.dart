@@ -42,7 +42,7 @@ class PageLoader {
 
     var symbols = new Set<Symbol>();
 
-    for (MethodMirror field in type.setters.values) {
+    for (MethodMirror field in _allSetters(type)) {
       if (!symbols.contains(field.simpleName)) {
         var fieldInfo = new _FieldInfo(field);
         if (fieldInfo != null) {
@@ -52,7 +52,7 @@ class PageLoader {
       }
     }
 
-    for (VariableMirror field in type.variables.values) {
+    for (VariableMirror field in _allVariables(type)) {
       if (!symbols.contains(field.simpleName) && !field.isFinal) {
         var fieldInfo = new _FieldInfo(field);
         if (fieldInfo != null) {
@@ -83,6 +83,22 @@ class PageLoader {
       throw new StateError('$aClass has no acceptable constructors');
     }
     return page;
+  }
+
+  Iterable<MethodMirror> _allSetters(ClassMirror type) {
+    var setters = new List.from(type.setters.values);
+    if (type.superclass != null) {
+      setters.addAll(_allSetters(type.superclass));
+    }
+    return setters;
+  }
+
+  Iterable<VariableMirror> _allVariables(ClassMirror type) {
+    var variables = new List.from(type.variables.values);
+    if (type.superclass != null) {
+      variables.addAll(_allVariables(type.superclass));
+    }
+    return variables;
   }
 }
 

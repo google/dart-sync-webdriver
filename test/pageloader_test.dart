@@ -35,6 +35,19 @@ void main() {
     expect(page.loader, loader);
   });
 
+  test('sub-class', () {
+    SubclassPage page = loader.getInstance(SubclassPage);
+    expect(page.table.rows, hasLength(2));
+    expect(page.table.rows[0].cells, hasLength(2));
+    expect(page.table.rows[1].cells, hasLength(2));
+    expect(page.table.rows[0].cells[0].text, 'r1c1');
+    expect(page.table.rows[0].cells[1].text, 'r1c2');
+    expect(page.table.rows[1].cells[0].text, 'r2c1');
+    expect(page.table.rows[1].cells[1].text, 'r2c2');
+    expect(page.driver, driver);
+    expect(page.loader, loader);
+  });
+
   test('displayed filtering', () {
     PageForDisplayedFilteringTest page =
         loader.getInstance(PageForDisplayedFilteringTest);
@@ -119,6 +132,8 @@ class PageForSimpleTest {
   @By.tagName('table')
   Table table;
 }
+
+class SubclassPage extends PageForSimpleTest {}
 
 class Table {
   @By.tagName('tr')
