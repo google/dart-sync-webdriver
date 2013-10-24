@@ -111,10 +111,10 @@ abstract class _FieldInfo {
     var name;
 
     if (field is VariableMirror) {
-      type = field.type;
+      type = (field as VariableMirror).type;
       name = field.simpleName;
-    } else if (field is MethodMirror && field.isSetter) {
-      type = field.parameters.first.type;
+    } else if (field is MethodMirror && (field as MethodMirror).isSetter) {
+      type = (field as MethodMirror).parameters.first.type;
       // HACK to get correct symbol name for operating with setField.
       name = field.simpleName.toString();
       name = new Symbol(name.substring(8, name.length - 3));
@@ -128,7 +128,7 @@ abstract class _FieldInfo {
       type = null;
     }
 
-    var isNullable = false;
+    var isOptional = false;
 
     var implicitDisplayFiltering = true;
 
@@ -151,8 +151,8 @@ abstract class _FieldInfo {
         }
         isList = true;
         type = reflectClass(datum.type);
-      } else if (datum is _Nullable) {
-        isNullable = true;
+      } else if (datum is _Optional) {
+        isOptional = true;
       }
 
       if (datum is HasFilterFinderOptions &&
@@ -171,7 +171,7 @@ abstract class _FieldInfo {
     }
 
     if (finder != null) {
-      return new _FinderFieldInfo(name, finder, filters, type, isList, isNullable);
+      return new _FinderFieldInfo(name, finder, filters, type, isList, isOptional);
     } else if (type.simpleName == const Symbol('PageLoader')) {
       return new _InjectedPageLoaderInfo(name);
     } else if (type.simpleName == const Symbol('WebDriver')) {
@@ -215,7 +215,7 @@ class _FinderFieldInfo implements _FieldInfo {
   final List<Filter> _filters;
   final ClassMirror _instanceType;
   final bool _isList;
-  final bool _isNullable;
+  final bool _isOptional;
 
   _FinderFieldInfo(
       this._fieldName,
@@ -223,7 +223,7 @@ class _FinderFieldInfo implements _FieldInfo {
       this._filters,
       this._instanceType,
       this._isList,
-      this._isNullable);
+      this._isOptional);
 
   @override
   void setField(
@@ -233,7 +233,7 @@ class _FinderFieldInfo implements _FieldInfo {
     List elements = _getElements(context);
 
     if (!_isList) {
-      if (elements.isEmpty && !_isNullable) {
+      if (elements.isEmpty && !_isOptional) {
         throw new StateError('Unable to find element for non-nullable, non-list'
             ' field $_fieldName');
       }
