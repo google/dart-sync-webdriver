@@ -18,7 +18,6 @@ library sync.pageloader;
 
 import 'dart:mirrors';
 
-import 'package:meta/meta.dart';
 import 'package:unmodifiable_collection/unmodifiable_collection.dart';
 
 import 'sync_webdriver.dart';
