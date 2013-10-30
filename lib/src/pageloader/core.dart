@@ -83,7 +83,7 @@ class PageLoader {
     var allTypes = new Set();
 
     while (typesToProcess.isNotEmpty) {
-      var current = typesToProcess.removeAt(0);
+      var current = typesToProcess.removeLast();
       if (!allTypes.contains(current)) {
         allTypes.add(current);
         if (current.superclass != null) {
