@@ -63,6 +63,7 @@ class PageLoader {
     return page;
   }
 
+  // TODO(zachconrad): Investigate supporting mix-ins.
   Iterable<_FieldInfo> _fieldInfos(ClassMirror type) {
     var infos = <_FieldInfo>[];
 
