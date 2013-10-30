@@ -118,8 +118,8 @@ class WebElement extends _WebDriverBase implements SearchContext {
 
   @override
   bool operator ==(Object other) => other is WebElement &&
-      driver == (other as WebElement).driver &&
-      _elementId == (other as WebElement)._elementId;
+      driver == other.driver &&
+      _elementId == other._elementId;
 
   @override
   int get hashCode => _elementId.hashCode >> 3 + driver.hashCode;

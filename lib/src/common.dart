@@ -45,8 +45,8 @@ class Size {
 
   @override
   bool operator ==(Object other) => other is Size &&
-      height == (other as Size).height &&
-      width == (other as Size).width;
+      height == other.height &&
+      width == other.width;
 
   @override
   int get hashCode => width.hashCode << 3 + height.hashCode;
@@ -156,8 +156,8 @@ class By implements Finder {
 
   @override
   bool operator ==(Object other) => other is By &&
-      _using == (other as By)._using &&
-      _value == (other as By)._value;
+      _using == other._using &&
+      _value == other._value;
 
   @override
   int get hashCode => _using.hashCode << 3 + _value.hashCode;

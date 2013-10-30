@@ -37,30 +37,8 @@ class PageLoader {
   }
 
   _getInstance(ClassMirror type, SearchContext context) {
-    var fieldInfos = [];
+    var fieldInfos = _fieldInfos(type);
     var instance = _reflectedInstance(type);
-
-    var symbols = new Set<Symbol>();
-
-    for (MethodMirror field in _allSetters(type)) {
-      if (!symbols.contains(field.simpleName)) {
-        var fieldInfo = new _FieldInfo(field);
-        if (fieldInfo != null) {
-          fieldInfos.add(fieldInfo);
-          symbols.add(fieldInfo._fieldName);
-        }
-      }
-    }
-
-    for (VariableMirror field in _allVariables(type)) {
-      if (!symbols.contains(field.simpleName) && !field.isFinal) {
-        var fieldInfo = new _FieldInfo(field);
-        if (fieldInfo != null) {
-          fieldInfos.add(fieldInfo);
-          symbols.add(fieldInfo._fieldName);
-        }
-      }
-    }
 
     for (var fieldInfo in fieldInfos) {
       fieldInfo.setField(instance, context, this);
@@ -85,20 +63,21 @@ class PageLoader {
     return page;
   }
 
-  Iterable<MethodMirror> _allSetters(ClassMirror type) {
-    var setters = new List.from(type.setters.values);
-    if (type.superclass != null) {
-      setters.addAll(_allSetters(type.superclass));
-    }
-    return setters;
-  }
+  // TODO(zachconrad): Investigate supporting mix-ins.
+  Iterable<_FieldInfo> _fieldInfos(ClassMirror type) {
+    var infos = <_FieldInfo>[];
 
-  Iterable<VariableMirror> _allVariables(ClassMirror type) {
-    var variables = new List.from(type.variables.values);
-    if (type.superclass != null) {
-      variables.addAll(_allVariables(type.superclass));
+    while (type != null) {
+      for (DeclarationMirror decl in type.declarations.values) {
+        _FieldInfo info = new _FieldInfo(decl);
+        if (info != null) {
+          infos.add(info);
+        }
+      }
+      type = type.superclass;
     }
-    return variables;
+
+    return infos;
   }
 }
 
@@ -110,16 +89,16 @@ abstract class _FieldInfo {
     var type;
     var name;
 
-    if (field is VariableMirror) {
-      type = (field as VariableMirror).type;
+    if (field is VariableMirror && !field.isFinal) {
+      type = field.type;
       name = field.simpleName;
-    } else if (field is MethodMirror && (field as MethodMirror).isSetter) {
-      type = (field as MethodMirror).parameters.first.type;
+    } else if (field is MethodMirror && field.isSetter) {
+      type = field.parameters.first.type;
       // HACK to get correct symbol name for operating with setField.
       name = field.simpleName.toString();
       name = new Symbol(name.substring(8, name.length - 3));
     } else {
-      throw new StateError('This should not happen');
+      return null;
     }
 
     var isList = false;
