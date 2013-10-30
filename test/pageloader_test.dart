@@ -117,6 +117,22 @@ void main() {
     expect(() => loader.getInstance(PageForAmbiguousTest), throws);
   });
 
+  test('mixin', () {
+    PageForMixinTest page = loader.getInstance(PageForMixinTest);
+    expect(page.table.rows, hasLength(2));
+    expect(page.table.rows[0].cells, hasLength(2));
+    expect(page.table.rows[1].cells, hasLength(2));
+    expect(page.table.rows[0].cells[0].text, 'r1c1');
+    expect(page.table.rows[0].cells[1].text, 'r1c2');
+    expect(page.table.rows[1].cells[0].text, 'r2c1');
+    expect(page.table.rows[1].cells[1].text, 'r2c2');
+    expect(page.driver, driver);
+    expect(page.loader, loader);
+    expect(page.shouldHaveOneElement, hasLength(1));
+    expect(page.shouldBeEmpty, isEmpty);
+    expect(page.shouldAlsoBeEmpty, isEmpty);
+  });
+
   // This test needs to be last to properly close the browser.
   test('one-time teardown', () {
     closeDriver();
@@ -224,4 +240,9 @@ class PageForWithAttributeTest {
 class PageForAmbiguousTest {
   @By.tagName('input')
   WebElement element;
+}
+
+class PageForMixinTest extends PageForSimpleTest
+    with PageForDisplayedFilteringTest {
+
 }
