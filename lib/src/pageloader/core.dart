@@ -40,8 +40,6 @@ class PageLoader {
     var fieldInfos = _fieldInfos(type);
     var instance = _reflectedInstance(type);
 
-    var symbols = new Set<Symbol>();
-
     for (var fieldInfo in fieldInfos) {
       fieldInfo.setField(instance, context, this);
     }
