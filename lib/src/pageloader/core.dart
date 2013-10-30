@@ -63,21 +63,39 @@ class PageLoader {
     return page;
   }
 
-  // TODO(zachconrad): Investigate supporting mix-ins.
   Iterable<_FieldInfo> _fieldInfos(ClassMirror type) {
     var infos = <_FieldInfo>[];
 
-    while (type != null) {
-      for (DeclarationMirror decl in type.declarations.values) {
+    for (var current in _allTypes(type)) {
+      for (DeclarationMirror decl in current.declarations.values) {
         _FieldInfo info = new _FieldInfo(decl);
         if (info != null) {
           infos.add(info);
         }
       }
-      type = type.superclass;
     }
 
     return infos;
+  }
+
+  Iterable<ClassMirror> _allTypes(ClassMirror type) {
+    var typesToProcess = [ type ];
+    var allTypes = new Set();
+
+    while (typesToProcess.isNotEmpty) {
+      var current = typesToProcess.removeLast();
+      if (!allTypes.contains(current)) {
+        allTypes.add(current);
+        if (current.superclass != null) {
+          typesToProcess.add(current.superclass);
+        }
+        if (current.mixin != null) {
+          typesToProcess.add(current.mixin);
+        }
+      }
+    }
+
+    return allTypes;
   }
 }
 
