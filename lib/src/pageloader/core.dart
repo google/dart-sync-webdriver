@@ -51,7 +51,7 @@ class PageLoader {
     InstanceMirror page;
 
     for (MethodMirror constructor in aClass.constructors.values) {
-      if (constructor.parameters.isEmpty) {
+      if (constructor.parameters.isEmpty && !constructor.isPrivate) {
         page = aClass.newInstance(constructor.constructorName, []);
         break;
       }
@@ -107,14 +107,17 @@ abstract class _FieldInfo {
     var type;
     var name;
 
-    if (field is VariableMirror && !field.isFinal) {
+    if (field is VariableMirror && !field.isFinal &&
+        !field.isStatic) { // TODO(DrMarcII) && !field.isConst
       type = field.type;
       name = field.simpleName;
-    } else if (field is MethodMirror && field.isSetter) {
+    } else if (field is MethodMirror && field.isSetter &&
+        !field.isStatic && !field.isPrivate) {
       type = field.parameters.first.type;
       // HACK to get correct symbol name for operating with setField.
       name = field.simpleName.toString();
-      name = new Symbol(name.substring(8, name.length - 3));
+      name = name.substring(name.indexOf('"') + 1, name.indexOf('='));
+      name = new Symbol(name);
     } else {
       return null;
     }
