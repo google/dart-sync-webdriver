@@ -6,9 +6,9 @@ environment:
   sdk: '>=0.8.7'
 dependencies:
   crypto: '>=0.8.7'
-  path: '>=0.8.7'
   sync_socket:
     path: ../dart-sync-socket
   unmodifiable_collection: '>=0.8.7'
 dev_dependencies:
+  path: '>=0.8.7'
   unittest: '>=0.8.7'
