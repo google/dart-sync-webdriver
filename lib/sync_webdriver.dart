@@ -21,6 +21,7 @@ import 'dart:io';
 import 'dart:math' show Point;
 
 import 'package:crypto/crypto.dart';
+import 'package:path/path.dart' as path;
 import 'package:sync_socket/sync_socket.dart';
 import 'package:unittest/matcher.dart';
 import 'package:unmodifiable_collection/unmodifiable_collection.dart';

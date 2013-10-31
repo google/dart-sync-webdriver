@@ -38,11 +38,13 @@ class Capabilities {
   static const String ENABLE_PROFILING_CAPABILITY =
       "webdriver.logging.profiler.enabled";
   static const String QUIET_EXCEPTIONS = "webdriver.remote.quietExceptions";
+  static const String CHROME_OPTIONS = "chromeOptions";
 
   static Map<String, dynamic> get chrome => empty
       ..[BROWSER_NAME] = Browser.CHROME
       ..[VERSION] = ''
-      ..[PLATFORM] = Platform.ANY;
+      ..[PLATFORM] = Platform.ANY
+      ..[CHROME_OPTIONS] = new ChromeOptions();
 
 
   static Map<String, dynamic> get firefox => empty
@@ -88,4 +90,54 @@ class Browser {
 class Platform {
   static const String ANY = "ANY";
   static const String ANDROID = "ANDROID";
+}
+
+class ChromeOptions {
+  /**
+   * The path to the Chrome executable. This path should exist on the
+   * machine which will launch Chrome. The path should either be absolute or
+   * relative to the location of running ChromeDriver server.
+   */
+  String binary;
+
+  /**
+   * Chrome extensions to install on browser startup. Each [File] should
+   * specify a packed Chrome extension (CRX file) that exists locally.
+   */
+  final List<File> extensions = <File>[];
+
+  /**
+   * Additional command line arguments to be used when starting Chrome.
+   *
+   * Each argument may contain an option "--" prefix: "--foo" or "foo".
+   * Arguments with an associated value should be delimitted with an "=":
+   * "foo=bar".
+   */
+  final List<String> arguments = <String>[];
+
+  /**
+   * New ChromeDriver options not yet exposed through the [ChromeOptions] API.
+   *
+   * All values must be convertible to JSON.
+   */
+  final Map<String, dynamic> experimentalOptions = <String, dynamic>{};
+
+  Map<String, dynamic> toJson() {
+    var json = new Map<String, dynamic>.from(experimentalOptions);
+    if (binary != null) {
+      json['binary'] = binary;
+    }
+    if (arguments.isNotEmpty) {
+      json['args'] = new List<String>.from(arguments, growable: false);
+    }
+    if (extensions.isNotEmpty) {
+      json['extensions'] =
+          extensions.map(_encodeExtension).toList(growable: false);
+    }
+
+    return json;
+  }
+
+  String _encodeExtension(File file) =>
+      CryptoUtils.bytesToBase64(file.readAsBytesSync());
 }
