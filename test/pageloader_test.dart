@@ -182,6 +182,34 @@ void main() {
 //    expect(page.loader, loader);
   });
 
+  test('static field', () {
+    PageForStaticFieldsTest page = loader.getInstance(PageForStaticFieldsTest);
+    expect(page.table.rows, hasLength(2));
+    expect(page.table.rows[0].cells, hasLength(2));
+    expect(page.table.rows[1].cells, hasLength(2));
+    expect(page.table.rows[0].cells[0].text, 'r1c1');
+    expect(page.table.rows[0].cells[1].text, 'r1c2');
+    expect(page.table.rows[1].cells[0].text, 'r2c1');
+    expect(page.table.rows[1].cells[1].text, 'r2c2');
+    expect(page.driver, driver);
+    expect(page.loader, loader);
+    expect(PageForStaticFieldsTest.dontSet, isNull);
+  });
+
+  test('static setter', () {
+    PageForStaticSettersTest page = loader.getInstance(PageForStaticSettersTest);
+    expect(page.table.rows, hasLength(2));
+    expect(page.table.rows[0].cells, hasLength(2));
+    expect(page.table.rows[1].cells, hasLength(2));
+    expect(page.table.rows[0].cells[0].text, 'r1c1');
+    expect(page.table.rows[0].cells[1].text, 'r1c2');
+    expect(page.table.rows[1].cells[0].text, 'r2c1');
+    expect(page.table.rows[1].cells[1].text, 'r2c2');
+    expect(page.driver, driver);
+    expect(page.loader, loader);
+    expect(PageForStaticFieldsTest.dontSet, isNull);
+  });
+
   // This test needs to be last to properly close the browser.
   test('one-time teardown', () {
     closeDriver();
@@ -324,4 +352,18 @@ class PageForPrivateSettersTest {
   set _loader(PageLoader l) => loader = l;
   @By.tagName('table')
   set _table(Table t) => table = t;
+}
+
+class PageForStaticFieldsTest extends PageForSimpleTest {
+  @By.tagName("table")
+  static WebElement dontSet;
+}
+
+class PageForStaticSettersTest extends PageForSimpleTest{
+  static var _dontSet;
+
+  @By.tagName("table")
+  static set dontSet(WebElement el) { _dontSet = el; }
+
+  static get dontSet => _dontSet;
 }
