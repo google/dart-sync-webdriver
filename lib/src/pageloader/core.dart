@@ -116,7 +116,8 @@ abstract class _FieldInfo {
       type = field.parameters.first.type;
       // HACK to get correct symbol name for operating with setField.
       name = field.simpleName.toString();
-      name = new Symbol(name.substring(8, name.length - 3));
+      name = name.substring(name.indexOf('"') + 1, name.indexOf('='));
+      name = new Symbol(name);
     } else {
       return null;
     }
