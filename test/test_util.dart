@@ -22,7 +22,7 @@ import 'package:path/path.dart' as path;
 import 'package:unittest/unittest.dart';
 import 'package:sync_webdriver/sync_webdriver.dart';
 
-final Matcher isWebDriverError = new isInstanceOf<WebDriverError>();
+final Matcher isWebDriverError = new isInstanceOf<WebDriverException>();
 final Matcher isWebElement = new isInstanceOf<WebElement>();
 final Matcher isSize = new isInstanceOf<Size>();
 final Matcher isPoint = new isInstanceOf<Point>();

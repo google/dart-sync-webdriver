@@ -79,18 +79,18 @@ class PageLoader {
   }
 
   Iterable<ClassMirror> _allTypes(ClassMirror type) {
-    var typesToProcess = [ type ];
-    var allTypes = new Set();
+    var typesToProcess = new ListQueue<ClassMirror>()..addLast(type);
+    var allTypes = new Set<ClassMirror>();
 
     while (typesToProcess.isNotEmpty) {
-      var current = typesToProcess.removeLast();
+      var current = typesToProcess.removeFirst();
       if (!allTypes.contains(current)) {
         allTypes.add(current);
         if (current.superclass != null) {
-          typesToProcess.add(current.superclass);
+          typesToProcess.addLast(current.superclass);
         }
         if (current.mixin != null) {
-          typesToProcess.add(current.mixin);
+          typesToProcess.addLast(current.mixin);
         }
       }
     }
@@ -265,10 +265,7 @@ class _FinderFieldInfo implements _FieldInfo {
   }
 }
 
-/**
- * Enum of options for that can be returned by
- *  [HasFilterFinderOptions.options].
- */
+/// Enum of options that can be returned by [HasFilterFinderOptions.options].
 class FilterFinderOption {
   final String option;
 
@@ -295,39 +292,8 @@ abstract class ElementFilter implements Filter {
   const ElementFilter();
 
   List<WebElement> filter(List<WebElement> elements) =>
-      new UnmodifiableListView<WebElement>(elements.where(keep));
+      new UnmodifiableListView<WebElement>(
+          elements.where(keep).toList(growable: false));
 
   bool keep(WebElement element);
-}
-
-
-class ListOf {
-  final Type type;
-
-  const ListOf([this.type = WebElement]);
-}
-
-class WithState extends ElementFilter implements HasFilterFinderOptions {
-
-  final bool _displayed;
-
-  const WithState._(this._displayed);
-
-  const WithState.present() : this._(null);
-
-  const WithState.visible() : this._(true);
-
-  const WithState.invisible() : this._(false);
-
-  @override
-  List<FilterFinderOption> get options =>
-      const [ FilterFinderOption.DISABLE_IMPLICIT_DISPLAY_FILTERING ];
-
-  @override
-  bool keep(WebElement element) {
-    if (_displayed != null) {
-      return element.displayed == _displayed;
-    }
-    return true;
-  }
 }

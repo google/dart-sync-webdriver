@@ -17,6 +17,49 @@ limitations under the License.
 part of sync.pageloader;
 
 /**
+ * Used to indicate that a field should be a list of some type.
+ *
+ * By default fields of type [List]<?> are treated as [List<WebElement>] if no
+ * [ListOf] annotation is present (this is due to a limitation in mirrors). By
+ * adding a [ListOf] annotation you can have fields that are lists of other
+ * types.
+ */
+class ListOf {
+  final Type type;
+
+  const ListOf([this.type = WebElement]);
+}
+
+/// Filters element based on visibility.
+class WithState extends ElementFilter implements HasFilterFinderOptions {
+
+  final bool _displayed;
+
+  const WithState._(this._displayed);
+
+  /// Match any element as long as it present in the DOM.
+  const WithState.present() : this._(null);
+
+  /// Match only elements that are visible (the default behavior in most cases).
+  const WithState.visible() : this._(true);
+
+  /// Match only element that are present but invisible.
+  const WithState.invisible() : this._(false);
+
+  @override
+  List<FilterFinderOption> get options =>
+      const [ FilterFinderOption.DISABLE_IMPLICIT_DISPLAY_FILTERING ];
+
+  @override
+  bool keep(WebElement element) {
+    if (_displayed != null) {
+      return element.displayed == _displayed;
+    }
+    return true;
+  }
+}
+
+/**
  * Normally if an element is not found, an exception is thrown.  This makes
  * it difficult to test for the absence of something in the DOM.  To allow an
  * element to be absent from the DOM, annotate it with this.
@@ -27,12 +70,12 @@ class _Optional {
   const _Optional();
 }
 
-const Root = const _Root();
-
 /**
  * Matches the root [WebElement] being used for constructing the current page
  * object.
  */
+const Root = const _Root();
+
 class _Root implements Finder, HasFilterFinderOptions {
   const _Root();
 
@@ -84,7 +127,7 @@ abstract class _ByScript implements Finder {
   WebElement findElement(SearchContext context) {
     List<WebElement> results = findElements(context);
     if (results.isEmpty) {
-      throw new NoSuchElementError(-1,
+      throw new NoSuchElementException(-1,
           'An element could not be located on the page using the given search '
           'parameters.');
     }
@@ -128,18 +171,55 @@ abstract class _ByScript implements Finder {
   ScriptExecutor executor(SearchContext context);
 }
 
+/// Finds [WebElement]s using a JavaScript script and [WebDriver.execute()].
 class ByJs extends _ByScript {
 
+  /**
+   * Creates a locator that finds an element with the given script.
+   *
+   * If [arg] is provided it will be passed to the script as arguments as
+   * follows:
+   *   [arg] is a [List] of length n: will be used as the first n-arguments
+   *   [arg] is not a [List]: will be used as the first argument
+   *
+   * In either case, the arguments will be handled as specified in
+   * [WebDriver.execute()] (must be JSON-able types; [WebElement]s are
+   * translated to the corresponding js DOM Elements automatically).
+   */
   const ByJs(String js, [arg]) : super(js, arg);
 
+  /**
+   * If [context] is a [WebElement] it will be passed as the last argument to
+   * the script.
+   */
   @override
   ScriptExecutor executor(SearchContext context) => context.driver.execute;
 }
 
+/**
+ * Finds [WebElement]s using a JavaScript script and [WebDriver.executeAsync()].
+ */
 class ByAsyncJs extends _ByScript {
 
+  /**
+   * Creates a locator that finds an element with the given script.
+   *
+   * If [arg] is provided it will be passed to the script as arguments as
+   * follows:
+   *   [arg] is a [List] of length n: will be used as the first n-arguments
+   *   [arg] is not a [List]: will be used as the first argument
+   *
+   * In either case, the arguments will be handled as specified in
+   * [WebDriver.execute()] (must be JSON-able types; [WebElement]s are
+   * translated to the corresponding js DOM Elements automatically).
+   */
   const ByAsyncJs(String js, [arg]) : super(js, arg);
 
+  /**
+   * If [context] is a [WebElement] it will be passed as the second to last
+   * argument to the script (the callback to signal completion is always the
+   * last argument).
+   */
   @override
   ScriptExecutor executor(SearchContext context) => context.driver.executeAsync;
 }

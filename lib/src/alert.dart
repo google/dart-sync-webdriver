@@ -32,8 +32,7 @@ class Alert extends _WebDriverBase {
    * Accepts the currently displayed alert (may not be the alert for which
    * this object was created).
    *
-   * Throws [WebDriverError] no such alert exception if there isn't currently an
-   * alert.
+   * Throws [NoAlertOpenException] if there isn't currently an alert.
    */
   void accept() => _post('accept_alert');
 
@@ -41,8 +40,7 @@ class Alert extends _WebDriverBase {
    * Dismisses the currently displayed alert (may not be the alert for which
    * this object was created).
    *
-   * Throws [WebDriverError] no such alert exception if there isn't currently an
-   * alert.
+   * Throws [NoAlertOpenException] if there isn't currently an alert.
    */
   void dismiss() => _post('dismiss_alert');
 
@@ -50,8 +48,7 @@ class Alert extends _WebDriverBase {
    * Sends keys to the currently displayed alert (may not be the alert for which
    * this object was created).
    *
-   * Throws [WebDriverError] no such alert exception if there isn't currently an
-   * alert.
+   * Throws [NoAlertOpenException] if there isn't currently an alert.
    */
   void sendKeys(String keysToSend) =>
       _post('alert_text', { 'text': keysToSend });

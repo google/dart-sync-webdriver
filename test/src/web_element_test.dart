@@ -139,7 +139,7 @@ void main() {
 
     test('findElement -- failure', () {
       expect(() => button.findElement(new By.tagName('tr')),
-          throwsA(new isInstanceOf<NoSuchElementError>()));
+          throwsA(new isInstanceOf<NoSuchElementException>()));
     });
 
     test('findElements -- 1 found', () {

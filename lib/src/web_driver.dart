@@ -60,7 +60,7 @@ class WebDriver implements SearchContext {
         var jsonResp = _parseBody(resp);
 
         if (jsonResp == null || jsonResp['status'] != 0) {
-          throw new WebDriverError(
+          throw new WebDriverException(
               httpStatusCode: resp.statusCode,
               httpReasonPhrase: resp.reasonPhrase,
               jsonResp: jsonResp);
@@ -71,7 +71,7 @@ class WebDriver implements SearchContext {
         capabilities = new UnmodifiableMapView(jsonResp['value']);
         break;
       default:
-        throw new WebDriverError(
+        throw new WebDriverException(
             httpStatusCode: resp.statusCode,
             httpReasonPhrase: resp.reasonPhrase,
             jsonResp: _parseBody(resp));
@@ -235,7 +235,7 @@ class WebDriver implements SearchContext {
     if (resp.statusCode != HttpStatus.OK
         || jsonBody == null
         || jsonBody['status'] != 0) {
-      throw new WebDriverError(
+      throw new WebDriverException(
           httpStatusCode: resp.statusCode,
           httpReasonPhrase: resp.reasonPhrase,
           jsonResp: jsonBody);

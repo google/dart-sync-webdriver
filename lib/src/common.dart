@@ -73,8 +73,7 @@ abstract class SearchContext {
   /**
    * Searchs for an element within the context.
    *
-   * Throws [WebDriverError] no such element exception if no matching element is
-   * found.
+   * Throws [NoSuchElementException] if no matching element is found.
    */
   WebElement findElement(Finder by);
 }

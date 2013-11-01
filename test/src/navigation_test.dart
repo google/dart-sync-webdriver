@@ -43,7 +43,7 @@ void main() {
       var element = driver.findElement(new By.name('q'));
       driver.navigate.refresh();
       expect(() => element.name,
-          throwsA(new isInstanceOf<StaleElementReferenceError>()));
+          throwsA(new isInstanceOf<StaleElementReferenceException>()));
     });
   });
 }
