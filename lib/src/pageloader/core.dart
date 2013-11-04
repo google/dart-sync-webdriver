@@ -51,32 +51,30 @@ class _ClassInfo {
   final List<Filter> _filters;
   final bool _finderIsOptional;
 
-  factory _ClassInfo(ClassMirror type) {
-    if (_classInfoCache.containsKey(type)) {
-      return _classInfoCache[type];
-    }
-    Finder finder = null;
-    List<Filter> filters = <Filter>[];
-    bool finderIsOptional = false;
-    for (InstanceMirror metadatum in type.metadata) {
-      if (!metadatum.hasReflectee) {
-        continue;
-      }
-      var datum = metadatum.reflectee;
-      if (datum is Finder) {
-        if (finder != null) {
-          throw new PageLoaderException('Multiple finders found on $type');
+  factory _ClassInfo(ClassMirror type) =>
+    _classInfoCache.putIfAbsent(type, () {
+      Finder finder = null;
+      List<Filter> filters = <Filter>[];
+      bool finderIsOptional = false;
+      for (InstanceMirror metadatum in type.metadata) {
+        if (!metadatum.hasReflectee) {
+          continue;
         }
-        finder = datum;
-      } else if (datum is Filter) {
-        filters.add(datum);
-      } else if (datum is _Optional) {
-        finderIsOptional = true;
+        var datum = metadatum.reflectee;
+        if (datum is Finder) {
+          if (finder != null) {
+            throw new PageLoaderException('Multiple finders found on $type');
+          }
+          finder = datum;
+        } else if (datum is Filter) {
+          filters.add(datum);
+        } else if (datum is _Optional) {
+          finderIsOptional = true;
+        }
       }
-    }
 
-    return new _ClassInfo._(type, _fieldInfos(type), finder, filters, finderIsOptional);
-  }
+      return new _ClassInfo._(type, _fieldInfos(type), finder, filters, finderIsOptional);
+    });
 
   _ClassInfo._(this._class, this._fields, this._finder, this._filters, this._finderIsOptional);
 
