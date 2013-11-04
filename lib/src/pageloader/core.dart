@@ -22,6 +22,8 @@ part of sync.pageloader;
  */
 class PageLoader {
   final WebDriver _driver;
+  final Map<ClassMirror, _ClassInfo> _classInfoCache =
+      <ClassMirror, _ClassInfo>{};
 
   PageLoader(this._driver);
 
@@ -36,34 +38,45 @@ class PageLoader {
     return _getInstance(reflectClass(type), context);
   }
 
-  _getInstance(ClassMirror type, SearchContext context) {
-    var fieldInfos = _fieldInfos(type);
-    var instance = _reflectedInstance(type);
+  _getInstance(ClassMirror type, SearchContext context) =>
+      _classInfoCache.putIfAbsent(type, () => new _ClassInfo(type))
+          .getInstance(context, this);
+}
 
-    for (var fieldInfo in fieldInfos) {
-      fieldInfo.setField(instance, context, this);
-    }
+class _ClassInfo {
+  final ClassMirror _class;
+  final List<_FieldInfo> _fields;
+  final Finder _finder;
+  final List<Filter> _filters;
+  final bool _finderIsOptional;
 
-    return instance.reflectee;
-  }
-
-  InstanceMirror _reflectedInstance(ClassMirror aClass) {
-    InstanceMirror page;
-
-    for (MethodMirror constructor in aClass.constructors.values) {
-      if (constructor.parameters.isEmpty && !constructor.isPrivate) {
-        page = aClass.newInstance(constructor.constructorName, []);
-        break;
+  factory _ClassInfo(ClassMirror type) {
+    Finder finder = null;
+    List<Filter> filters = <Filter>[];
+    bool finderIsOptional = false;
+    for (InstanceMirror metadatum in type.metadata) {
+      if (!metadatum.hasReflectee) {
+        continue;
+      }
+      var datum = metadatum.reflectee;
+      if (datum is Finder) {
+        if (finder != null) {
+          throw new PageLoaderException('Multiple finders found on $type');
+        }
+        finder = datum;
+      } else if (datum is Filter) {
+        filters.add(datum);
+      } else if (datum is _Optional) {
+        finderIsOptional = true;
       }
     }
 
-    if (page == null) {
-      throw new StateError('$aClass has no acceptable constructors');
-    }
-    return page;
+    return new _ClassInfo._(type, _fieldInfos(type), finder, filters, finderIsOptional);
   }
 
-  Iterable<_FieldInfo> _fieldInfos(ClassMirror type) {
+  _ClassInfo._(this._class, this._fields, this._finder, this._filters, this._finderIsOptional);
+
+  static Iterable<_FieldInfo> _fieldInfos(ClassMirror type) {
     var infos = <_FieldInfo>[];
 
     for (var current in _allTypes(type)) {
@@ -78,7 +91,7 @@ class PageLoader {
     return infos;
   }
 
-  Iterable<ClassMirror> _allTypes(ClassMirror type) {
+  static Iterable<ClassMirror> _allTypes(ClassMirror type) {
     var typesToProcess = new ListQueue<ClassMirror>()..addLast(type);
     var allTypes = new Set<ClassMirror>();
 
@@ -96,6 +109,41 @@ class PageLoader {
     }
 
     return allTypes;
+  }
+
+  dynamic getInstance(SearchContext context, PageLoader loader) {
+    try {
+      if (_finder != null) {
+        SearchContext ctx = _getElement(context, _finder, _filters, _finderIsOptional);
+        if (ctx != null) {
+          context = ctx;
+        }
+      }
+      InstanceMirror page = _reflectedInstance();
+      for (var fieldInfo in _fields) {
+        fieldInfo.setField(page, context, loader);
+      }
+
+      return page.reflectee;
+    } catch (e) {
+      throw new PageLoaderException('Unable to create $_class caused by\n$e');
+    }
+  }
+
+  InstanceMirror _reflectedInstance() {
+    InstanceMirror page;
+
+    for (MethodMirror constructor in _class.constructors.values) {
+      if (constructor.parameters.isEmpty && !constructor.isPrivate) {
+        page = _class.newInstance(constructor.constructorName, []);
+        break;
+      }
+    }
+
+    if (page == null) {
+      throw new PageLoaderException('$_class has no acceptable constructors');
+    }
+    return page;
   }
 }
 
@@ -140,14 +188,14 @@ abstract class _FieldInfo {
 
       if (datum is Finder) {
         if (finder != null) {
-          throw new StateError('Cannot have multiple finders on field');
+          throw new PageLoaderException('Cannot have multiple finders on field');
         }
         finder = datum;
       } else if (datum is Filter) {
         filters.add(datum);
       } else if (datum is ListOf) {
         if (type != null && type.simpleName != const Symbol('dynamic')) {
-          throw new StateError('Field type is not compatible with ListOf');
+          throw new PageLoaderException('Field type is not compatible with ListOf');
         }
         isList = true;
         type = reflectClass(datum.type);
@@ -230,38 +278,32 @@ class _FinderFieldInfo implements _FieldInfo {
       InstanceMirror instance,
       SearchContext context,
       PageLoader loader) {
-    List elements = _getElements(context);
-
-    if (!_isList) {
-      if (elements.isEmpty && !_isOptional) {
-        throw new StateError('Unable to find element for non-nullable, non-list'
-            ' field $_fieldName');
-      }
-
-      if (elements.length > 1) {
-        throw new StateError(
-            'Found ${elements.length} elements for non-list field $_fieldName');
-      }
-    }
-
-    if (_instanceType.simpleName != const Symbol('WebElement')) {
-      elements = elements.map((element) =>
-          loader._getInstance(_instanceType, element)).toList();
-    }
 
     if (_isList) {
-      instance.setField(_fieldName, new UnmodifiableListView(elements));
-    } else {
-      instance.setField(_fieldName, elements.isEmpty ? null : elements[0]);
+      try {
+        List elements = _getElements(context, _finder, _filters);
+        if (_instanceType.simpleName != const Symbol('WebElement')) {
+          elements = elements.map((element) =>
+              loader._getInstance(_instanceType, element)).toList();
+        }
+        instance.setField(_fieldName, elements);
+      } catch (e) {
+        throw new PageLoaderException(
+            'Unable to load field $_fieldName caused by\n$e');
+      }
+      return;
     }
-  }
 
-  List<WebElement> _getElements(SearchContext context) {
-    List<WebElement> elements = _finder.findElements(context);
-    for (var filter in _filters) {
-      elements = filter.filter(elements);
+    try {
+      var element = _getElement(context, _finder, _filters, _isOptional);
+      if (_instanceType.simpleName != const Symbol('WebElement') && element != null) {
+        element = loader._getInstance(_instanceType, element);
+      }
+      instance.setField(_fieldName, element);
+    } catch (e) {
+      throw new PageLoaderException(
+          'Unable to load field $_fieldName caused by\n$e');
     }
-    return elements;
   }
 }
 
@@ -296,4 +338,36 @@ abstract class ElementFilter implements Filter {
           elements.where(keep).toList(growable: false));
 
   bool keep(WebElement element);
+}
+
+class PageLoaderException {
+  final String message;
+
+  const PageLoaderException(this.message);
+
+  String toString() => 'PageLoaderExeption: $message';
+}
+
+List<WebElement> _getElements(SearchContext context, Finder finder, List<Filter> filters) {
+  List<WebElement> elements = finder.findElements(context);
+  for (var filter in filters) {
+    elements = filter.filter(elements);
+  }
+  return new UnmodifiableListView(elements);
+}
+
+WebElement _getElement(SearchContext context, Finder finder, List<Filter> filters, bool optional) {
+  List<WebElement> elements = _getElements(context, finder, filters);
+  if (elements.isEmpty) {
+    if (!optional) {
+      throw new PageLoaderException(
+          'Unable to find element with finder: $finder and filters: $filters');
+    }
+    return null;
+  }
+  if (elements.length > 1) {
+    throw new PageLoaderException(
+        'Found ${elements.length} elements for finder: $finder and filters: $filters');
+  }
+  return elements[0];
 }

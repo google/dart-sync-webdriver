@@ -16,7 +16,6 @@ limitations under the License.
 
 library sync.webdriver;
 
-import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math' show Point;
