@@ -22,8 +22,6 @@ part of sync.pageloader;
  */
 class PageLoader {
   final WebDriver _driver;
-  final Map<ClassMirror, _ClassInfo> _classInfoCache =
-      <ClassMirror, _ClassInfo>{};
 
   PageLoader(this._driver);
 
@@ -39,11 +37,14 @@ class PageLoader {
   }
 
   _getInstance(ClassMirror type, SearchContext context) =>
-      _classInfoCache.putIfAbsent(type, () => new _ClassInfo(type))
-          .getInstance(context, this);
+     new _ClassInfo(type).getInstance(context, this);
 }
 
 class _ClassInfo {
+
+  static final Map<ClassMirror, _ClassInfo> _classInfoCache =
+      <ClassMirror, _ClassInfo>{};
+
   final ClassMirror _class;
   final List<_FieldInfo> _fields;
   final Finder _finder;
@@ -51,6 +52,9 @@ class _ClassInfo {
   final bool _finderIsOptional;
 
   factory _ClassInfo(ClassMirror type) {
+    if (_classInfoCache.containsKey(type)) {
+      return _classInfoCache[type];
+    }
     Finder finder = null;
     List<Filter> filters = <Filter>[];
     bool finderIsOptional = false;
