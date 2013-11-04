@@ -31,8 +31,7 @@ class TargetLocator extends _WebDriverBase {
    *               element.
    *   not provided: selects the first frame on the page or the main document.
    *
-   * Throws [WebDriverError] no such frame if the specified frame can't be
-   * found.
+   * Throws [NoSuchFrameException] if the specified frame can't be found.
    */
   void frame([/* String | int | WebElement */ frame]) =>
       _post('frame', { 'id': frame });
@@ -41,8 +40,7 @@ class TargetLocator extends _WebDriverBase {
    * Switch the focus of future commands for this driver to the window with the
    * given name/handle.
    *
-   * Throws [WebDriverError] no such window if the specified window can't be
-   * found.
+   * Throws [NoSuchWindowException] if the specified window can't be found.
    */
   void window(/* String | Window */ window) =>
       _post('window', { 'name': window });
@@ -51,7 +49,7 @@ class TargetLocator extends _WebDriverBase {
    * Switches to the currently active modal dialog for this particular driver
    * instance.
    *
-   * Throws WebDriverEror no alert present if their is not currently an alert.
+   * Throws [NoAlertOpenException] if there is not currently an alert.
    */
   Alert get alert => new Alert._(_get('alert_text'), driver);
 }

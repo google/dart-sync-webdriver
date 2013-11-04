@@ -16,6 +16,7 @@ limitations under the License.
 
 library sync.pageloader;
 
+import 'dart:collection' show ListQueue;
 import 'dart:mirrors';
 
 import 'package:unmodifiable_collection/unmodifiable_collection.dart';

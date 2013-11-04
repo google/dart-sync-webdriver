@@ -37,7 +37,7 @@ void main() {
 
     test('no alert', () {
       expect(() => driver.switchTo.alert,
-          throwsA(new isInstanceOf<NoAlertOpenError>()));
+          throwsA(new isInstanceOf<NoAlertOpenException>()));
     });
 
     test('text', () {

@@ -51,7 +51,7 @@ void main() {
 
     test('findElement -- failure', () {
       expect(() => driver.findElement(new By.id('non-existent-id')),
-          throwsA(new isInstanceOf<NoSuchElementError>()));
+          throwsA(new isInstanceOf<NoSuchElementException>()));
     });
 
     test('findElements -- 1 found', () {

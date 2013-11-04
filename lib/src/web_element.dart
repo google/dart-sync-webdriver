@@ -70,7 +70,7 @@ class WebElement extends _WebDriverBase implements SearchContext {
   /**
    * Find an element nested within this element.
    *
-   * Throws [WebDriverError] no such element if matching element is not found.
+   * Throws [NoSuchElementException] if matching element is not found.
    */
   @override
   WebElement findElement(Finder finder) {
