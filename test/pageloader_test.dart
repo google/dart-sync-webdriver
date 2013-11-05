@@ -24,6 +24,7 @@ void main() {
 
   test('simple', () {
     PageForSimpleTest page = loader.getInstance(PageForSimpleTest);
+    expect(page.table.root.name, 'table');
     expect(page.table.rows, hasLength(2));
     expect(page.table.rows[0].cells, hasLength(2));
     expect(page.table.rows[1].cells, hasLength(2));
@@ -33,6 +34,30 @@ void main() {
     expect(page.table.rows[1].cells[1].text, 'r2c2');
     expect(page.driver, driver);
     expect(page.loader, loader);
+  });
+
+  test('class annotations', () {
+    Table page = loader.getInstance(Table);
+    expect(page.root.name, 'table');
+    expect(page.rows, hasLength(2));
+    expect(page.rows[0].cells, hasLength(2));
+    expect(page.rows[1].cells, hasLength(2));
+    expect(page.rows[0].cells[0].text, 'r1c1');
+    expect(page.rows[0].cells[1].text, 'r1c2');
+    expect(page.rows[1].cells[0].text, 'r2c1');
+    expect(page.rows[1].cells[1].text, 'r2c2');
+  });
+
+  test('class annotation on nested field', () {
+    PageForClassAnnotationTest page = loader.getInstance(PageForClassAnnotationTest);
+    expect(page.table.root.name, 'table');
+    expect(page.table.rows, hasLength(2));
+    expect(page.table.rows[0].cells, hasLength(2));
+    expect(page.table.rows[1].cells, hasLength(2));
+    expect(page.table.rows[0].cells[0].text, 'r1c1');
+    expect(page.table.rows[0].cells[1].text, 'r1c2');
+    expect(page.table.rows[1].cells[0].text, 'r2c1');
+    expect(page.table.rows[1].cells[1].text, 'r2c2');
   });
 
   test('sub-class', () {
@@ -78,6 +103,10 @@ void main() {
     expect(() => loader.getInstance(PageForNoMatchingElementTest), throws);
   });
 
+  test('no matching class element', () {
+    expect(() => loader.getInstance(PageForNoMatchingClassElementTest), throws);
+  });
+
   test('no matching but nullable element', () {
     PageForNullableElementTest page = loader.getInstance(PageForNullableElementTest);
     expect(page.doesntExist, isNull);
@@ -88,8 +117,17 @@ void main() {
         throws);
   });
 
+  test('multiple matching element', () {
+    expect(() => loader.getInstance(PageForMultipleMatchingClassElementTest),
+        throws);
+  });
+
   test('multiple finders', () {
     expect(() => loader.getInstance(PageForMultipleFinderTest), throws);
+  });
+
+  test('multiple class finders', () {
+    expect(() => loader.getInstance(PageForMultipleClassFinderTest), throws);
   });
 
   test('invalid constructor', () {
@@ -228,7 +266,11 @@ class PageForSimpleTest {
 
 class SubclassPage extends PageForSimpleTest {}
 
+@By.tagName('table') @Optional
 class Table {
+  @Root
+  WebElement root;
+
   @By.tagName('tr')
   @ListOf(Row)
   List<Row> rows;
@@ -237,6 +279,11 @@ class Table {
 class Row {
   @By.tagName('td')
   List<WebElement> cells;
+}
+
+class PageForClassAnnotationTest {
+  @Root
+  Table table;
 }
 
 class PageForDisplayedFilteringTest {
@@ -281,6 +328,12 @@ class PageForNoMatchingElementTest {
   WebElement doesntExist;
 }
 
+@By.id('non-existent id')
+class PageForNoMatchingClassElementTest {
+  @Root
+  WebElement doesntExist;
+}
+
 class PageForNullableElementTest {
   @By.id('non-existent id')
   @Optional
@@ -292,8 +345,20 @@ class PageForMultipleMatchingElementTest {
   WebElement doesntExist;
 }
 
+@By.tagName('td')
+class PageForMultipleMatchingClassElementTest {
+  @Root
+  WebElement doesntExist;
+}
+
 class PageForMultipleFinderTest {
   @By.id('non-existent id') @By.name('a-name')
+  WebElement multipleFinder;
+}
+
+@By.id('non-existent id') @By.name('a-name')
+class PageForMultipleClassFinderTest {
+  @Root
   WebElement multipleFinder;
 }
 
