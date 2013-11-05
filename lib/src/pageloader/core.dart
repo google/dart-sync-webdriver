@@ -136,6 +136,7 @@ class _ClassInfo {
     InstanceMirror page;
 
     for (MethodMirror constructor in _class.constructors.values) {
+      // TODO(DrMarcII): Support private constructors when they are working
       if (constructor.parameters.isEmpty && !constructor.isPrivate) {
         page = _class.newInstance(constructor.constructorName, []);
         break;
@@ -161,6 +162,7 @@ abstract class _FieldInfo {
         !field.isStatic) { // TODO(DrMarcII) && !field.isConst
       type = field.type;
       name = field.simpleName;
+      // TODO(DrMarcII): Support private setters when they work again
     } else if (field is MethodMirror && field.isSetter &&
         !field.isStatic && !field.isPrivate) {
       type = field.parameters.first.type;
