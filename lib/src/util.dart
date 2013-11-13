@@ -82,3 +82,35 @@ _waitFor(condition(), Duration timeout, Duration interval,
   throw new StateError(
       'Condition timeout after $timeout.  It evaluated to $result');
 }
+
+final Matcher isEnabled = wrapMatcher((WebElement e) => e.enabled);
+
+final Matcher isNotEnabled = isNot(isEnabled);
+
+final Matcher isDisplayed = wrapMatcher((WebElement e) => e.displayed);
+
+final Matcher isNotDisplayed = isNot(isDisplayed);
+
+final Matcher isSelected = wrapMatcher((WebElement e) => e.selected);
+
+final Matcher isNotSelected = isNot(isSelected);
+
+Matcher hasText(matcher) => new _HasText(wrapMatcher(matcher));
+
+class _HasText extends Matcher {
+  final Matcher _matcher;
+  const _HasText(this._matcher);
+
+  bool matches(item, Map matchState) =>
+      item is WebElement && _matcher.matches(item.text, matchState);
+
+  Description describe(Description description) =>
+    description.add('a WebElement with text of ')
+        .addDescriptionOf(_matcher);
+
+  Description describeMismatch(item, Description mismatchDescription,
+                               Map matchState, bool verbose) {
+    return mismatchDescription.add('has text of ')
+        .addDescriptionOf(item.text);
+  }
+}
