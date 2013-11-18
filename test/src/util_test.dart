@@ -22,15 +22,14 @@ import '../test_util.dart';
 
 void main() {
 
+  WebDriver driver;
+
+  setUp(() {
+    driver = freshDriver;
+    driver.url = testPagePath;
+  });
 
   group('waitFor()', () {
-
-    WebDriver driver;
-
-    setUp(() {
-      driver = freshDriver;
-      driver.url = testPagePath;
-    });
 
     test('that returns a string', () {
       driver.url = 'http://www.google.com';
@@ -59,13 +58,6 @@ void main() {
 
   group('waitForValue()', () {
 
-    WebDriver driver;
-
-    setUp(() {
-      driver = freshDriver;
-      driver.url = testPagePath;
-    });
-
     test('that returns a string', () {
       driver.url = 'http://www.google.com';
       var title = waitForValue(() => driver.title);
@@ -83,7 +75,6 @@ void main() {
         return null;
       }
 
-      driver.url = 'http://www.google.com';
       var result = waitForValue(() => nullUntilSecondInvocation());
       expect(result, NOT_NULL);
     });
@@ -92,6 +83,35 @@ void main() {
       driver.url = 'http://www.google.com';
       var result = waitForValue(() => driver.findElement(const By.name('btnG')).displayed);
       expect(result, isFalse);
+    });
+  });
+
+  group('custom Matcher', () {
+
+    test('isDisplayed', () {
+      var body = driver.findElement(const By.tagName('body'));
+      expect(body, isDisplayed);
+    });
+
+    test('isNotDisplayed', () {
+      var div = driver.findElement(const By.tagName('div'));
+      expect(div, isNotDisplayed);
+    });
+
+    test('isEnabled', () {
+      var body = driver.findElement(const By.tagName('body'));
+      expect(body, isEnabled);
+    });
+
+    test('isNotEnabled', () {
+      var input = driver.findElement(const By.cssSelector('input[type=password]'));
+      expect(input, isNotEnabled);
+    });
+
+    test('hasText', () {
+      var button = driver.findElement(const By.tagName('button'));
+      expect(button, hasText('button'));
+      expect(button, hasText(equalsIgnoringCase('BUTTON')));
     });
   });
 }
