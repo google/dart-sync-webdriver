@@ -109,7 +109,7 @@ void main() {
     });
 
     test('hasText', () {
-      var button = driver.findElement(new By.tagName('button'));
+      var button = driver.findElement(const By.tagName('button'));
       expect(button, hasText('button'));
       expect(button, hasText(equalsIgnoringCase('BUTTON')));
     });
