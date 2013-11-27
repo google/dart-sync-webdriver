@@ -208,7 +208,7 @@ void main() {
     expect(PageForStaticFieldsTest.dontSet, isNull);
   });
 
-  solo_test('function field', () {
+  test('function field', () {
     PageForFunctionTest page = loader.getInstance(PageForFunctionTest);
     // Functions
     expect(page.noReturnsFn().text, 'r1c1 r1c2\nr2c1 r2c2');
@@ -217,6 +217,7 @@ void main() {
     verifyTable(page.tableFn());
     // Functions + Lists
     expect(page.noTypesFn(), hasLength(2));
+    expect(page.returnsGenericListFn(), hasLength(2));
     expect(page.webElementsFn(), hasLength(2));
     verifyRows(page.rowsFn());
     // TypeDefs
