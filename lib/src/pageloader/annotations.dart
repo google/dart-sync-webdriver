@@ -16,21 +16,6 @@ limitations under the License.
 
 part of sync.pageloader;
 
-/**
- * Used to indicate that a field should be a list of some type.
- *
- * By default fields of type [List]<?> are treated as [List<WebElement>] if no
- * [ListOf] annotation is present (this is due to a limitation in mirrors). By
- * adding a [ListOf] annotation you can have fields that are lists of other
- * types.
- */
-@deprecated
-class ListOf {
-  final Type type;
-
-  const ListOf([this.type = WebElement]);
-}
-
 /// Filters element based on visibility.
 class WithState extends ElementFilter implements HasFilterFinderOptions {
 
