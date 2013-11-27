@@ -24,6 +24,7 @@ part of sync.pageloader;
  * adding a [ListOf] annotation you can have fields that are lists of other
  * types.
  */
+@deprecated
 class ListOf {
   final Type type;
 
