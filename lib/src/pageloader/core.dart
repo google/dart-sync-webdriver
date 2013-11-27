@@ -155,7 +155,7 @@ abstract class _FieldInfo {
   factory _FieldInfo(DeclarationMirror field) {
     var finder;
     var filters = new List<Filter>();
-    var type;
+    ClassMirror type;
     var name;
 
     if (field is VariableMirror && !field.isFinal &&
@@ -177,7 +177,9 @@ abstract class _FieldInfo {
     var isList = false;
     if (type.simpleName == const Symbol('List')) {
       isList = true;
-      type = null;
+      type = type.typeArguments.isEmpty
+          ? reflectClass(WebElement)
+          : type.typeArguments.single;
     }
 
     var isOptional = false;
@@ -197,12 +199,6 @@ abstract class _FieldInfo {
         finder = datum;
       } else if (datum is Filter) {
         filters.add(datum);
-      } else if (datum is ListOf) {
-        if (type != null && type.simpleName != const Symbol('dynamic')) {
-          throw new PageLoaderException('Field type is not compatible with ListOf');
-        }
-        isList = true;
-        type = reflectClass(datum.type);
       } else if (datum is _Optional) {
         isOptional = true;
       }

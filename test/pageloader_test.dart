@@ -272,7 +272,6 @@ class Table {
   WebElement root;
 
   @By.tagName('tr')
-  @ListOf(Row)
   List<Row> rows;
 }
 
@@ -294,8 +293,7 @@ class PageForDisplayedFilteringTest {
   List<WebElement> shouldBeEmpty;
 
   @By.id('div') @WithState.visible()
-  @ListOf()
-  dynamic shouldAlsoBeEmpty;
+  List shouldAlsoBeEmpty;
 }
 
 class PageForSettersTest {
