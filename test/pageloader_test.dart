@@ -22,53 +22,43 @@ void main() {
     loader = new PageLoader(driver);
   });
 
+  verifyRows(List<Row> rows) {
+    expect(rows, hasLength(2));
+    expect(rows[0].cells, hasLength(2));
+    expect(rows[1].cells, hasLength(2));
+    expect(rows[0].cells[0].text, 'r1c1');
+    expect(rows[0].cells[1].text, 'r1c2');
+    expect(rows[1].cells[0].text, 'r2c1');
+    expect(rows[1].cells[1].text, 'r2c2');
+  }
+
+  verifyTable(Table table) {
+    verifyRows(table.rows);
+  }
+
   test('simple', () {
     PageForSimpleTest page = loader.getInstance(PageForSimpleTest);
     expect(page.table.root.name, 'table');
-    expect(page.table.rows, hasLength(2));
-    expect(page.table.rows[0].cells, hasLength(2));
-    expect(page.table.rows[1].cells, hasLength(2));
-    expect(page.table.rows[0].cells[0].text, 'r1c1');
-    expect(page.table.rows[0].cells[1].text, 'r1c2');
-    expect(page.table.rows[1].cells[0].text, 'r2c1');
-    expect(page.table.rows[1].cells[1].text, 'r2c2');
+    verifyTable(page.table);
     expect(page.driver, driver);
     expect(page.loader, loader);
   });
 
   test('class annotations', () {
-    Table page = loader.getInstance(Table);
-    expect(page.root.name, 'table');
-    expect(page.rows, hasLength(2));
-    expect(page.rows[0].cells, hasLength(2));
-    expect(page.rows[1].cells, hasLength(2));
-    expect(page.rows[0].cells[0].text, 'r1c1');
-    expect(page.rows[0].cells[1].text, 'r1c2');
-    expect(page.rows[1].cells[0].text, 'r2c1');
-    expect(page.rows[1].cells[1].text, 'r2c2');
+    Table table = loader.getInstance(Table);
+    expect(table.root.name, 'table');
+    verifyTable(table);
   });
 
   test('class annotation on nested field', () {
     PageForClassAnnotationTest page = loader.getInstance(PageForClassAnnotationTest);
     expect(page.table.root.name, 'table');
-    expect(page.table.rows, hasLength(2));
-    expect(page.table.rows[0].cells, hasLength(2));
-    expect(page.table.rows[1].cells, hasLength(2));
-    expect(page.table.rows[0].cells[0].text, 'r1c1');
-    expect(page.table.rows[0].cells[1].text, 'r1c2');
-    expect(page.table.rows[1].cells[0].text, 'r2c1');
-    expect(page.table.rows[1].cells[1].text, 'r2c2');
+    verifyTable(page.table);
   });
 
   test('sub-class', () {
     SubclassPage page = loader.getInstance(SubclassPage);
-    expect(page.table.rows, hasLength(2));
-    expect(page.table.rows[0].cells, hasLength(2));
-    expect(page.table.rows[1].cells, hasLength(2));
-    expect(page.table.rows[0].cells[0].text, 'r1c1');
-    expect(page.table.rows[0].cells[1].text, 'r1c2');
-    expect(page.table.rows[1].cells[0].text, 'r2c1');
-    expect(page.table.rows[1].cells[1].text, 'r2c2');
+    verifyTable(page.table);
     expect(page.driver, driver);
     expect(page.loader, loader);
   });
@@ -136,13 +126,7 @@ void main() {
 
   test('ByJs', () {
     PageForByJsTest page = loader.getInstance(PageForByJsTest);
-    expect(page.table.rows, hasLength(2));
-    expect(page.table.rows[0].cells, hasLength(2));
-    expect(page.table.rows[1].cells, hasLength(2));
-    expect(page.table.rows[0].cells[0].text, 'r1c1');
-    expect(page.table.rows[0].cells[1].text, 'r1c2');
-    expect(page.table.rows[1].cells[0].text, 'r2c1');
-    expect(page.table.rows[1].cells[1].text, 'r2c2');
+    verifyTable(page.table);
   });
 
   test('WithAttribute', () {
@@ -157,13 +141,7 @@ void main() {
 
   test('mixin', () {
     PageForMixinTest page = loader.getInstance(PageForMixinTest);
-    expect(page.table.rows, hasLength(2));
-    expect(page.table.rows[0].cells, hasLength(2));
-    expect(page.table.rows[1].cells, hasLength(2));
-    expect(page.table.rows[0].cells[0].text, 'r1c1');
-    expect(page.table.rows[0].cells[1].text, 'r1c2');
-    expect(page.table.rows[1].cells[0].text, 'r2c1');
-    expect(page.table.rows[1].cells[1].text, 'r2c2');
+    verifyTable(page.table);
     expect(page.driver, driver);
     expect(page.loader, loader);
     expect(page.shouldHaveOneElement, hasLength(1));
@@ -191,13 +169,7 @@ void main() {
   test('private fields', () {
     PageForPrivateFieldsTest page =
         loader.getInstance(PageForPrivateFieldsTest);
-    expect(page.table.rows, hasLength(2));
-    expect(page.table.rows[0].cells, hasLength(2));
-    expect(page.table.rows[1].cells, hasLength(2));
-    expect(page.table.rows[0].cells[0].text, 'r1c1');
-    expect(page.table.rows[0].cells[1].text, 'r1c2');
-    expect(page.table.rows[1].cells[0].text, 'r2c1');
-    expect(page.table.rows[1].cells[1].text, 'r2c2');
+    verifyTable(page.table);
     expect(page.driver, driver);
     expect(page.loader, loader);
   });
@@ -222,13 +194,7 @@ void main() {
 
   test('static field', () {
     PageForStaticFieldsTest page = loader.getInstance(PageForStaticFieldsTest);
-    expect(page.table.rows, hasLength(2));
-    expect(page.table.rows[0].cells, hasLength(2));
-    expect(page.table.rows[1].cells, hasLength(2));
-    expect(page.table.rows[0].cells[0].text, 'r1c1');
-    expect(page.table.rows[0].cells[1].text, 'r1c2');
-    expect(page.table.rows[1].cells[0].text, 'r2c1');
-    expect(page.table.rows[1].cells[1].text, 'r2c2');
+    verifyTable(page.table);
     expect(page.driver, driver);
     expect(page.loader, loader);
     expect(PageForStaticFieldsTest.dontSet, isNull);
@@ -236,16 +202,25 @@ void main() {
 
   test('static setter', () {
     PageForStaticSettersTest page = loader.getInstance(PageForStaticSettersTest);
-    expect(page.table.rows, hasLength(2));
-    expect(page.table.rows[0].cells, hasLength(2));
-    expect(page.table.rows[1].cells, hasLength(2));
-    expect(page.table.rows[0].cells[0].text, 'r1c1');
-    expect(page.table.rows[0].cells[1].text, 'r1c2');
-    expect(page.table.rows[1].cells[0].text, 'r2c1');
-    expect(page.table.rows[1].cells[1].text, 'r2c2');
+    verifyTable(page.table);
     expect(page.driver, driver);
     expect(page.loader, loader);
     expect(PageForStaticFieldsTest.dontSet, isNull);
+  });
+
+  solo_test('function field', () {
+    PageForFunctionTest page = loader.getInstance(PageForFunctionTest);
+    // Functions
+    expect(page.webElementFn().text, 'r1c1 r1c2\nr2c1 r2c2');
+    verifyTable(page.tableFn());
+    // TypeDefs
+    expect(page.webElementTypeDef().text, 'r1c1 r1c2\nr2c1 r2c2');
+    verifyTable(page.tableTypeDef());
+    // Functions + Lists
+    expect(page.webElementsFn(), hasLength(2));
+    // TypeDefs + Lists
+    expect(page.webElementsTypeDef(), hasLength(2));
+    verifyRows(page.rowsTypeDef());
   });
 
   // This test needs to be last to properly close the browser.
@@ -429,4 +404,51 @@ class PageForStaticSettersTest extends PageForSimpleTest{
   static set dontSet(WebElement el) { _dontSet = el; }
 
   static get dontSet => _dontSet;
+}
+
+typedef WebElement WebElementFn();
+
+typedef Table TableFn();
+
+typedef List<WebElement> WebElementsFn();
+
+typedef List<Row> RowsFn();
+
+class PageForFunctionTest {
+
+  // Functions
+
+  @By.tagName('table')
+  @Returns(WebElement)
+  Function webElementFn;
+
+  @By.tagName('table')
+  @Returns(Table)
+  Function tableFn;
+
+  // Functions + Lists
+
+  @By.cssSelector('table tr')
+  @ReturnsList(WebElement)
+  Function webElementsFn;
+
+  @By.cssSelector('table tr')
+  @ReturnsList(Row)
+  Function rowsFn;
+
+  // TypeDefs
+
+  @By.tagName('table')
+  WebElementFn webElementTypeDef;
+
+  @By.tagName('table')
+  TableFn tableTypeDef;
+
+  // TypeDefs + Lists
+
+  @By.cssSelector('table tr')
+  WebElementsFn webElementsTypeDef;
+
+  @By.cssSelector('table tr')
+  RowsFn rowsTypeDef;
 }
