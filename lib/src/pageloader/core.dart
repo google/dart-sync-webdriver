@@ -221,13 +221,12 @@ abstract class _FieldInfo {
         implicitDisplayFiltering = false;
       }
     }
-    if (type.simpleName == const Symbol('List')) {
+    if (type != null && type.simpleName == const Symbol('List')) {
       isList = true;
-      type = type.typeArguments.isEmpty
-          ? null
-          : type.typeArguments.single;
+      type = type.typeArguments.isNotEmpty
+          ? type.typeArguments.single
+          : null;
     }
-
     if (type == null || type.simpleName == const Symbol('dynamic')) {
       type = reflectClass(WebElement);
     }

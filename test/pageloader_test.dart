@@ -208,17 +208,22 @@ void main() {
     expect(PageForStaticFieldsTest.dontSet, isNull);
   });
 
-  solo_test('function field', () {
+  test('function field', () {
     PageForFunctionTest page = loader.getInstance(PageForFunctionTest);
     // Functions
+    expect(page.noTypeFn().text, 'r1c1 r1c2\nr2c1 r2c2');
     expect(page.webElementFn().text, 'r1c1 r1c2\nr2c1 r2c2');
     verifyTable(page.tableFn());
+    // Functions + Lists
+    expect(page.noTypesFn(), hasLength(2));
+    expect(page.webElementsFn(), hasLength(2));
+    verifyRows(page.rowsFn());
     // TypeDefs
+    expect(page.noTypeDef().text, 'r1c1 r1c2\nr2c1 r2c2');
     expect(page.webElementTypeDef().text, 'r1c1 r1c2\nr2c1 r2c2');
     verifyTable(page.tableTypeDef());
-    // Functions + Lists
-    expect(page.webElementsFn(), hasLength(2));
     // TypeDefs + Lists
+    expect(page.noListTypeDef(), hasLength(2));
     expect(page.webElementsTypeDef(), hasLength(2));
     verifyRows(page.rowsTypeDef());
   });
@@ -406,9 +411,13 @@ class PageForStaticSettersTest extends PageForSimpleTest{
   static get dontSet => _dontSet;
 }
 
+typedef NoTypeFn();
+
 typedef WebElement WebElementFn();
 
 typedef Table TableFn();
+
+typedef List NoListTypeFn();
 
 typedef List<WebElement> WebElementsFn();
 
@@ -417,6 +426,9 @@ typedef List<Row> RowsFn();
 class PageForFunctionTest {
 
   // Functions
+
+  @By.tagName('table')
+  Function noTypeFn;
 
   @By.tagName('table')
   @Returns(WebElement)
@@ -429,6 +441,10 @@ class PageForFunctionTest {
   // Functions + Lists
 
   @By.cssSelector('table tr')
+  @Returns(List)
+  Function noTypesFn;
+
+  @By.cssSelector('table tr')
   @ReturnsList(WebElement)
   Function webElementsFn;
 
@@ -439,12 +455,18 @@ class PageForFunctionTest {
   // TypeDefs
 
   @By.tagName('table')
+  NoTypeFn noTypeDef;
+
+  @By.tagName('table')
   WebElementFn webElementTypeDef;
 
   @By.tagName('table')
   TableFn tableTypeDef;
 
   // TypeDefs + Lists
+
+  @By.cssSelector('table tr')
+  NoListTypeFn noListTypeDef;
 
   @By.cssSelector('table tr')
   WebElementsFn webElementsTypeDef;
