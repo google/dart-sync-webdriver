@@ -208,9 +208,10 @@ void main() {
     expect(PageForStaticFieldsTest.dontSet, isNull);
   });
 
-  test('function field', () {
+  solo_test('function field', () {
     PageForFunctionTest page = loader.getInstance(PageForFunctionTest);
     // Functions
+    expect(page.noReturnsFn().text, 'r1c1 r1c2\nr2c1 r2c2');
     expect(page.noTypeFn().text, 'r1c1 r1c2\nr2c1 r2c2');
     expect(page.webElementFn().text, 'r1c1 r1c2\nr2c1 r2c2');
     verifyTable(page.tableFn());
@@ -428,7 +429,11 @@ class PageForFunctionTest {
   // Functions
 
   @By.tagName('table')
-  Function noTypeFn;
+  Function noReturnsFn;
+
+  @By.tagName('table')
+  @Returns(WebElement)
+  var noTypeFn;
 
   @By.tagName('table')
   @Returns(WebElement)
@@ -442,7 +447,11 @@ class PageForFunctionTest {
 
   @By.cssSelector('table tr')
   @Returns(List)
-  Function noTypesFn;
+  var noTypesFn;
+
+  @By.cssSelector('table tr')
+  @Returns(List)
+  Function returnsGenericListFn;
 
   @By.cssSelector('table tr')
   @ReturnsList(WebElement)
