@@ -1,14 +1,14 @@
 name: sync_webdriver
-version: 0.0.5
+version: 0.0.6
 author: Marc Fisher II
 description: Provides WebDriver bindings for Dart. These use the WebDriver JSON interface, and as such, require the use of the WebDriver remote server.
 environment:
-  sdk: '>=0.8.7'
+  sdk: '>=0.8.10+6 <2.0.0'
 dependencies:
-  crypto: '>=0.8.7'
+  crypto: '>=0.9.0 <0.10.0'
   sync_socket:
     path: ../dart-sync-socket
-  unmodifiable_collection: '>=0.8.7'
+  unmodifiable_collection: '>=0.9.0 <0.10.0'
 dev_dependencies:
-  path: '>=0.8.7'
-  unittest: '>=0.8.7'
+  path: '>=0.9.0 <0.10.0'
+  unittest: '>=0.9.0 <0.10.0'
