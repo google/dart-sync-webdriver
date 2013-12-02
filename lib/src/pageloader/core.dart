@@ -155,7 +155,7 @@ abstract class _FieldInfo {
   factory _FieldInfo(DeclarationMirror field) {
     var finder;
     var filters = new List<Filter>();
-    ClassMirror type;
+    TypeMirror type;
     var name;
 
     if (field is VariableMirror && !field.isFinal &&
@@ -174,16 +174,19 @@ abstract class _FieldInfo {
       return null;
     }
 
-    var isList = false;
-    if (type.simpleName == const Symbol('List')) {
-      isList = true;
-      type = type.typeArguments.isEmpty
-          ? reflectClass(WebElement)
-          : type.typeArguments.single;
+    var isFunction = false;
+    if (type.simpleName == const Symbol('Function')
+        || type is TypedefMirror) {
+      isFunction = true;
+      if (type is TypedefMirror) {
+        type = (type as TypedefMirror).referent.returnType;
+      } else {
+        type = null;
+      }
     }
 
+    var isList = false;
     var isOptional = false;
-
     var implicitDisplayFiltering = true;
 
     for (InstanceMirror metadatum in field.metadata) {
@@ -199,6 +202,15 @@ abstract class _FieldInfo {
         finder = datum;
       } else if (datum is Filter) {
         filters.add(datum);
+      } else if (datum is Returns) {
+        if (type != null && type.simpleName != const Symbol('dynamic')) {
+          throw new PageLoaderException('Field type is not compatible with Returns');
+        }
+        isFunction = true;
+        if (datum is ReturnsList) {
+          isList = true;
+        }
+        type = reflectClass(datum.type);
       } else if (datum is _Optional) {
         isOptional = true;
       }
@@ -209,7 +221,12 @@ abstract class _FieldInfo {
         implicitDisplayFiltering = false;
       }
     }
-
+    if (type != null && type.simpleName == const Symbol('List')) {
+      isList = true;
+      type = type.typeArguments.isNotEmpty
+          ? type.typeArguments.single
+          : null;
+    }
     if (type == null || type.simpleName == const Symbol('dynamic')) {
       type = reflectClass(WebElement);
     }
@@ -219,7 +236,13 @@ abstract class _FieldInfo {
     }
 
     if (finder != null) {
-      return new _FinderFieldInfo(name, finder, filters, type, isList, isOptional);
+      var fieldInfo = isList
+          ? new _FinderListFieldInfo(name, finder, filters, type)
+          : new _FinderSingleFieldInfo(name, finder, filters, type, isOptional);
+      if (isFunction) {
+        fieldInfo = new _FinderFunctionFieldInfo(fieldInfo);
+      }
+      return fieldInfo;
     } else if (type.simpleName == const Symbol('PageLoader')) {
       return new _InjectedPageLoaderInfo(name);
     } else if (type.simpleName == const Symbol('WebDriver')) {
@@ -257,53 +280,85 @@ class _InjectedWebDriverInfo implements _FieldInfo {
   }
 }
 
-class _FinderFieldInfo implements _FieldInfo {
-  final Symbol _fieldName;
-  final Finder _finder;
-  final List<Filter> _filters;
-  final ClassMirror _instanceType;
-  final bool _isList;
-  final bool _isOptional;
+abstract class _FinderFieldInfo implements _FieldInfo {
 
-  _FinderFieldInfo(
-      this._fieldName,
-      this._finder,
-      this._filters,
-      this._instanceType,
-      this._isList,
-      this._isOptional);
+  final Symbol _fieldName;
+
+  _FinderFieldInfo(this._fieldName);
+
+  calculateFieldValue(SearchContext context, PageLoader loader);
 
   @override
-  void setField(
-      InstanceMirror instance,
-      SearchContext context,
-      PageLoader loader) {
-
-    if (_isList) {
-      try {
-        List elements = _getElements(context, _finder, _filters);
-        if (_instanceType.simpleName != const Symbol('WebElement')) {
-          elements = elements.map((element) =>
-              loader._getInstance(_instanceType, element)).toList();
-        }
-        instance.setField(_fieldName, elements);
-      } catch (e) {
-        throw new PageLoaderException(
-            'Unable to load field $_fieldName caused by\n$e');
-      }
-      return;
-    }
-
+  void setField(InstanceMirror instance,
+                SearchContext context,
+                PageLoader loader) {
     try {
-      var element = _getElement(context, _finder, _filters, _isOptional);
-      if (_instanceType.simpleName != const Symbol('WebElement') && element != null) {
-        element = loader._getInstance(_instanceType, element);
-      }
-      instance.setField(_fieldName, element);
+      instance.setField(_fieldName, calculateFieldValue(context, loader));
     } catch (e) {
       throw new PageLoaderException(
           'Unable to load field $_fieldName caused by\n$e');
     }
+  }
+}
+
+class _FinderSingleFieldInfo extends _FinderFieldInfo {
+
+  final Finder _finder;
+  final List<Filter> _filters;
+  final ClassMirror _instanceType;
+  final bool _isOptional;
+
+  _FinderSingleFieldInfo(
+      Symbol fieldName,
+      this._finder,
+      this._filters,
+      this._instanceType,
+      this._isOptional) : super(fieldName);
+
+  @override
+  calculateFieldValue(SearchContext context, PageLoader loader) {
+    var element = _getElement(context, _finder, _filters, _isOptional);
+    if (_instanceType.simpleName != const Symbol('WebElement') && element != null) {
+      element = loader._getInstance(_instanceType, element);
+    }
+    return element;
+  }
+}
+
+class _FinderListFieldInfo extends _FinderFieldInfo {
+
+  final Finder _finder;
+  final List<Filter> _filters;
+  final ClassMirror _instanceType;
+
+  _FinderListFieldInfo(
+      Symbol fieldName,
+      this._finder,
+      this._filters,
+      this._instanceType) : super(fieldName);
+
+  @override
+  calculateFieldValue(SearchContext context, PageLoader loader) {
+    List elements = _getElements(context, _finder, _filters);
+    if (_instanceType.simpleName != const Symbol('WebElement')) {
+      elements = elements.map((element) =>
+          loader._getInstance(_instanceType, element)).toList();
+    }
+    return elements;
+  }
+}
+
+class _FinderFunctionFieldInfo extends _FinderFieldInfo {
+
+  _FinderFieldInfo _impl;
+
+  _FinderFunctionFieldInfo(_FinderFieldInfo impl) : super(impl._fieldName) {
+    this._impl = impl;
+  }
+
+  @override
+  calculateFieldValue(SearchContext context, PageLoader loader) {
+    return () => _impl.calculateFieldValue(context, loader);
   }
 }
 

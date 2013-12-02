@@ -16,6 +16,17 @@ limitations under the License.
 
 part of sync.pageloader;
 
+class Returns {
+  final Type type;
+
+  const Returns(this.type);
+}
+
+class ReturnsList extends Returns {
+
+  const ReturnsList(Type type) : super(type);
+}
+
 /// Filters element based on visibility.
 class WithState extends ElementFilter implements HasFilterFinderOptions {
 
