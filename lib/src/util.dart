@@ -121,6 +121,54 @@ class UnexpectedTagNameException extends FormatException {
     : super('Element should have been "$expectedTagName" but was "$actualTagName"');
 }
 
+_setSelected(WebElement option) {
+  if (!option.selected) {
+    option.click();
+  }
+}
+
+_unsetSelected(WebElement option) {
+  if (option.selected) {
+    option.click();
+  }
+}
+
+String _escapeQuotes(String toEscape) {
+  // Convert strings with both quotes and ticks into: foo'"bar -> concat("foo'", '"', "bar")
+  if (toEscape.indexOf("\"") > -1 && toEscape.indexOf("'") > -1) {
+    var quoteIsLast = false;
+    if (toEscape.lastIndexOf("\"") == toEscape.length - 1) {
+      quoteIsLast = true;
+    }
+    var substrings = toEscape.split("\"");
+
+    var quoted = new StringBuffer("concat(");
+    for (int i = 0; i < substrings.length; i++) {
+      quoted.write("\"").append(substrings[i]).append("\"");
+      quoted.write(((i == substrings.length - 1) ? (quoteIsLast ? ", '\"')" : ")") : ", '\"', "));
+    }
+    return quoted.toString();
+  }
+
+  // Escape string with just a quote into being single quoted: f"oo -> 'f"oo'
+  if (toEscape.indexOf('"') > -1) {
+    return "'$toEscape'";
+  }
+
+  // Otherwise return the quoted string
+  return '"$toEscape"';
+}
+
+String _getLongestSubstringWithoutSpace(String value) {
+  var longest = "";
+  value.split(" ").forEach((item) {
+    if (item.length > longest.length) {
+      longest = item;
+    }
+  });
+  return longest;
+}
+
 /**
  * Models a SELECT tag, providing helper methods to select and deselect options.
  */
@@ -339,53 +387,5 @@ class Select {
       candidates = _element.findElements(new By.xpath(buffer.toString()));
     }
     return candidates;
-  }
-
-  _setSelected(WebElement option) {
-    if (!option.selected) {
-      option.click();
-    }
-  }
-
-  _unsetSelected(WebElement option) {
-    if (option.selected) {
-      option.click();
-    }
-  }
-
-  String _escapeQuotes(String toEscape) {
-    // Convert strings with both quotes and ticks into: foo'"bar -> concat("foo'", '"', "bar")
-    if (toEscape.indexOf("\"") > -1 && toEscape.indexOf("'") > -1) {
-      var quoteIsLast = false;
-      if (toEscape.lastIndexOf("\"") == toEscape.length - 1) {
-        quoteIsLast = true;
-      }
-      var substrings = toEscape.split("\"");
-
-      var quoted = new StringBuffer("concat(");
-      for (int i = 0; i < substrings.length; i++) {
-        quoted.write("\"").append(substrings[i]).append("\"");
-        quoted.write(((i == substrings.length - 1) ? (quoteIsLast ? ", '\"')" : ")") : ", '\"', "));
-      }
-      return quoted.toString();
-    }
-
-    // Escape string with just a quote into being single quoted: f"oo -> 'f"oo'
-    if (toEscape.indexOf('"') > -1) {
-      return "'$toEscape'";
-    }
-
-    // Otherwise return the quoted string
-    return '"$toEscape"';
-  }
-
-  String _getLongestSubstringWithoutSpace(String value) {
-    var longest = "";
-    value.split(" ").forEach((item) {
-      if (item.length > longest.length) {
-        longest = item;
-      }
-    });
-    return longest;
   }
 }
