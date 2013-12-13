@@ -167,4 +167,7 @@ class By implements Finder {
   @override
   List<WebElement> findElements(SearchContext context) =>
       context.findElements(this);
+
+  @override
+  String toString() => toJson().toString();
 }
