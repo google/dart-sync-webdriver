@@ -114,4 +114,154 @@ void main() {
       expect(button, hasText(equalsIgnoringCase('BUTTON')));
     });
   });
+
+  group('Select class', () {
+
+    WebElement selectSimple;
+    WebElement selectMulti;
+
+    setUp(() {
+      driver = freshDriver;
+      driver.url = testPagePath;
+      selectSimple = driver.findElement(const By.id('select-simple'));
+      selectMulti = driver.findElement(const By.id('select-multi'));
+    });
+
+    test('isMultiple', () {
+      expect(new Select(selectSimple).isMultiple, false);
+      expect(new Select(selectMulti).isMultiple, true);
+    });
+
+    test('selectByIndex simple', () {
+      var select = new Select(selectSimple)
+        ..selectByIndex(2);
+      var options = select.options;
+
+      expect(options[0].selected, false);
+      expect(options[1].selected, false);
+      expect(options[2].selected, true);
+      expect(options[3].selected, false);
+      expect(options[2], select.firstSelectedOption);
+      expect(options[2].text, "Apple");
+      expect(options[2].value, "appleValue");
+      expect(select.allSelectedOptions, [ options[2] ]);
+      expect(select.value, "appleValue");
+    });
+
+    test('[de]selectByIndex multiple', () {
+      var select = new Select(selectMulti)
+        ..selectByIndex(1)
+        ..selectByIndex(3);
+      var options = select.options;
+
+      expect(options[0].selected, false);
+      expect(options[1].selected, true);
+      expect(options[2].selected, false);
+      expect(options[3].selected, true);
+      expect(options[1], select.firstSelectedOption);
+      expect(options[1].text, "Green");
+      expect(options[1].value, "greenValue");
+      expect(select.allSelectedOptions, [ options[1], options[3] ]);
+      expect(select.value, "greenValue");
+
+      select.deselectAll();
+      expect(options[0].selected, false);
+      expect(options[1].selected, false);
+      expect(options[2].selected, false);
+      expect(options[3].selected, false);
+
+      select
+        ..selectByIndex(1)
+        ..selectByIndex(3)
+        ..deselectByIndex(3);
+      expect(options[0].selected, false);
+      expect(options[1].selected, true);
+      expect(options[2].selected, false);
+      expect(options[3].selected, false);
+    });
+
+    test('selectByValue simple', () {
+      var select = new Select(selectSimple)
+        ..selectByValue("appleValue");
+      var options = select.options;
+
+      expect(options[2].selected, true);
+      expect(options[2], select.firstSelectedOption);
+      expect(options[2].text, "Apple");
+      expect(options[2].value, "appleValue");
+      expect(select.allSelectedOptions, [ options[2] ]);
+      expect(select.value, "appleValue");
+    });
+
+    test('[de]selectByValue multiple', () {
+      var select = new Select(selectMulti)
+        ..selectByValue("greenValue")
+        ..selectByValue("yellowValue");
+      var options = select.options;
+
+      expect(options[1].selected, true);
+      expect(options[1], select.firstSelectedOption);
+      expect(options[1].text, "Green");
+      expect(options[1].value, "greenValue");
+      expect(select.allSelectedOptions, [ options[1], options[3] ]);
+      expect(select.value, "greenValue");
+
+      select.deselectAll();
+      expect(options[0].selected, false);
+      expect(options[1].selected, false);
+      expect(options[2].selected, false);
+      expect(options[3].selected, false);
+
+      select
+        ..selectByValue("greenValue")
+        ..selectByValue("yellowValue")
+        ..deselectByValue("yellowValue");
+      expect(options[0].selected, false);
+      expect(options[1].selected, true);
+      expect(options[2].selected, false);
+      expect(options[3].selected, false);
+    });
+
+    test('selectByVisibleText simple', () {
+      var select = new Select(selectSimple)
+        ..selectByVisibleText("Apple");
+      var options = select.options;
+
+      expect(options[2].selected, true);
+      expect(options[2], select.firstSelectedOption);
+      expect(options[2].text, "Apple");
+      expect(options[2].value, "appleValue");
+      expect(select.allSelectedOptions, [ options[2] ]);
+      expect(select.value, "appleValue");
+    });
+
+    test('[de]selectByVisibleText multiple', () {
+      var select = new Select(selectMulti)
+        ..selectByVisibleText("Green")
+        ..selectByVisibleText("Yellow");
+      var options = select.options;
+
+      expect(options[1].selected, true);
+      expect(options[1], select.firstSelectedOption);
+      expect(options[1].text, "Green");
+      expect(options[1].value, "greenValue");
+      expect(select.allSelectedOptions, [ options[1], options[3] ]);
+      expect(select.value, "greenValue");
+
+      select.deselectAll();
+      expect(options[0].selected, false);
+      expect(options[1].selected, false);
+      expect(options[2].selected, false);
+      expect(options[3].selected, false);
+
+      select
+        ..selectByVisibleText("Green")
+        ..selectByVisibleText("Yellow")
+        ..deselectByVisibleText("Yellow");
+      expect(options[0].selected, false);
+      expect(options[1].selected, true);
+      expect(options[2].selected, false);
+      expect(options[3].selected, false);
+    });
+  });
 }

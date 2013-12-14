@@ -172,7 +172,8 @@ String _getLongestSubstringWithoutSpace(String value) {
 /**
  * Models a SELECT tag, providing helper methods to select and deselect options.
  */
-class Select {
+@proxy
+class Select implements WebElement {
   WebElement _element;
   bool _isMulti;
 
@@ -195,6 +196,9 @@ class Select {
     _isMulti = multi != null && multi != "false";
   }
 
+  /// Delegates to the WebElement
+  noSuchMethod(Invocation msg) => reflect(_element).delegate(msg);
+
   /**
    * Whether this select element support selecting multiple options at the same time?
    * This is done by checking the value of the "multiple" attribute.
@@ -209,7 +213,7 @@ class Select {
   /**
    * All selected options belonging to this select tag
    */
-  List<WebElement> get allSelectedOptions => options.where((option) => option.selected);
+  List<WebElement> get allSelectedOptions => options.where((option) => option.selected).toList(growable: false);
 
   /**
    * The first selected option in this select tag (or the currently selected
