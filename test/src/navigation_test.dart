@@ -28,7 +28,7 @@ void main() {
 
     setUp(() {
       driver = freshDriver;
-      driver.url = 'http://www.google.com';
+      driver.url = 'http://www.google.com/ncr';
     });
 
     test('forward/back', () {

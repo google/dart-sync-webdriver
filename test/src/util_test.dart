@@ -32,7 +32,7 @@ void main() {
   group('waitFor()', () {
 
     test('that returns a string', () {
-      driver.url = 'http://www.google.com';
+      driver.url = 'http://www.google.com/ncr';
       driver.findElement(new By.name('q'))
         .sendKeys('webdriver');
       driver.findElement(new By.name('btnG')).click();
@@ -41,13 +41,13 @@ void main() {
     });
 
     test('that returns null', () {
-      driver.url = 'http://www.google.com';
+      driver.url = 'http://www.google.com/ncr';
       var result = waitFor(() => null, isNull);
       expect(result, isNull);
     });
 
     test('that returns false', () {
-      driver.url = 'http://www.google.com';
+      driver.url = 'http://www.google.com/ncr';
       driver.findElement(new By.name('q'))
         .sendKeys('webdriver');
       driver.findElement(new By.name('btnG')).click();
@@ -59,7 +59,7 @@ void main() {
   group('waitForValue()', () {
 
     test('that returns a string', () {
-      driver.url = 'http://www.google.com';
+      driver.url = 'http://www.google.com/ncr';
       var title = waitForValue(() => driver.title);
       expect(title, equals('Google'));
     });
@@ -80,7 +80,7 @@ void main() {
     });
 
     test('that returns false', () {
-      driver.url = 'http://www.google.com';
+      driver.url = 'http://www.google.com/ncr';
       var result = waitForValue(() => driver.findElement(const By.name('btnG')).displayed);
       expect(result, isFalse);
     });
