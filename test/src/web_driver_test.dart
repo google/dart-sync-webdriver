@@ -30,7 +30,7 @@ void main() {
     });
 
     test('set url', () {
-      driver.url = 'http://www.google.com';
+      driver.url = 'http://www.google.com/ncr';
       driver.findElement(new By.name('q'));
       driver.url = testPagePath;
       driver.findElement(new By.id('table1'));
@@ -40,7 +40,7 @@ void main() {
       var url = driver.url;
       expect(url, startsWith('file:'));
       expect(url, endsWith('test_page.html'));
-      driver.url = 'http://www.google.com';
+      driver.url = 'http://www.google.com/ncr';
       url = driver.url;
       expect(url, contains('www.google.com'));
     });
