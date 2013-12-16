@@ -19,6 +19,7 @@ library sync.webdriver;
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math' show Point;
+import 'dart:mirrors';
 
 import 'package:crypto/crypto.dart';
 import 'package:sync_socket/sync_socket.dart';

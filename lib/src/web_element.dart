@@ -46,7 +46,7 @@ class WebElement extends _WebDriverBase implements SearchContext {
   /// Clear the content of a text element.
   void clear() => _post('clear');
 
-  /// Is this radio button/checkbox selected?
+  /// Is this radio button/checkbox/option selected?
   bool get selected => _get('selected');
 
   /// Is this form element enabled?
@@ -64,8 +64,11 @@ class WebElement extends _WebDriverBase implements SearchContext {
   /// The tag name for this element.
   String get name => _get('name');
 
-  ///  Visible text within this element.
+  /// Visible text within this element.
   String get text => _get('text');
+
+  /// The value for this element
+  String get value => _get('value');
 
   /**
    * Find an element nested within this element.
