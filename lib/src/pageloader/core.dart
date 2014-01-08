@@ -135,9 +135,9 @@ class _ClassInfo {
   InstanceMirror _reflectedInstance() {
     InstanceMirror page;
 
-    for (MethodMirror constructor in _class.constructors.values) {
-      // TODO(DrMarcII): Support private constructors when they are working
-      if (constructor.parameters.isEmpty && !constructor.isPrivate) {
+    for (DeclarationMirror constructor in _class.declarations.values) {
+      if (constructor is MethodMirror && constructor.isConstructor &&
+          constructor.parameters.isEmpty) {
         page = _class.newInstance(constructor.constructorName, []);
         break;
       }
@@ -159,7 +159,7 @@ abstract class _FieldInfo {
     var name;
 
     if (field is VariableMirror && !field.isFinal &&
-        !field.isStatic) { // TODO(DrMarcII) && !field.isConst
+        !field.isStatic && !field.isConst) {
       type = field.type;
       name = field.simpleName;
       // TODO(DrMarcII): Support private setters when they work again
