@@ -21,10 +21,10 @@ import 'dart:io';
 import 'dart:math' show Point;
 import 'dart:mirrors';
 
+import 'package:collection/wrappers.dart';
 import 'package:crypto/crypto.dart';
 import 'package:sync_socket/sync_socket.dart';
 import 'package:unittest/matcher.dart';
-import "package:collection/wrappers.dart";
 
 part 'src/alert.dart';
 part 'src/capabilities.dart';
