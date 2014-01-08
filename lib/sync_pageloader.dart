@@ -19,7 +19,7 @@ library sync.pageloader;
 import 'dart:collection' show ListQueue;
 import 'dart:mirrors';
 
-import 'package:unmodifiable_collection/unmodifiable_collection.dart';
+import "package:collection_helpers/wrappers.dart";
 
 import 'sync_webdriver.dart';
 

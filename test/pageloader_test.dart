@@ -149,21 +149,19 @@ void main() {
     expect(page.shouldAlsoBeEmpty, isEmpty);
   });
 
-  // TODO(DrMarcII) Change if private constructors get fixed.
   test('private constructor', () {
-    expect(() => loader.getInstance(PageForPrivateConstructorTest), throws);
-//    PageForPrivateConstructorTest page =
-//        loader.getInstance(PageForPrivateConstructorTest);
-//
-//    expect(page.table.rows, hasLength(2));
-//    expect(page.table.rows[0].cells, hasLength(2));
-//    expect(page.table.rows[1].cells, hasLength(2));
-//    expect(page.table.rows[0].cells[0].text, 'r1c1');
-//    expect(page.table.rows[0].cells[1].text, 'r1c2');
-//    expect(page.table.rows[1].cells[0].text, 'r2c1');
-//    expect(page.table.rows[1].cells[1].text, 'r2c2');
-//    expect(page.driver, driver);
-//    expect(page.loader, loader);
+    PageForPrivateConstructorTest page =
+        loader.getInstance(PageForPrivateConstructorTest);
+
+    expect(page.table.rows, hasLength(2));
+    expect(page.table.rows[0].cells, hasLength(2));
+    expect(page.table.rows[1].cells, hasLength(2));
+    expect(page.table.rows[0].cells[0].text, 'r1c1');
+    expect(page.table.rows[0].cells[1].text, 'r1c2');
+    expect(page.table.rows[1].cells[0].text, 'r2c1');
+    expect(page.table.rows[1].cells[1].text, 'r2c2');
+    expect(page.driver, driver);
+    expect(page.loader, loader);
   });
 
   test('private fields', () {

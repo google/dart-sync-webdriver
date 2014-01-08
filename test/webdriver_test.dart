@@ -16,7 +16,7 @@ limitations under the License.
 
 library webdriver_test;
 
-import 'package:unittest/compact_vm_config.dart';
+import 'package:unittest/vm_config.dart';
 import 'package:unittest/unittest.dart' show test;
 
 import 'test_util.dart' show closeDriver;
@@ -37,18 +37,18 @@ import 'src/window_test.dart' as window;
  * as they are slow and they have external dependencies.
  */
 void main() {
-  useCompactVMConfiguration();
+  useVMConfiguration();
 
-  alert.main();
-  keyboard.main();
-  mouse.main();
-  navigation.main();
-  options.main();
-  target_locator.main();
-  util.main();
+//  alert.main();
+//  keyboard.main();
+//  mouse.main();
+//  navigation.main();
+//  options.main();
+//  target_locator.main();
+//  util.main();
   web_driver.main();
-  web_element.main();
-  window.main();
+//  web_element.main();
+//  window.main();
 
   // This test needs to be last to properly close the browser.
   test('one-time teardown', () {
