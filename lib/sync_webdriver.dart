@@ -24,7 +24,7 @@ import 'dart:mirrors';
 import 'package:crypto/crypto.dart';
 import 'package:sync_socket/sync_socket.dart';
 import 'package:unittest/matcher.dart';
-import 'package:unmodifiable_collection/unmodifiable_collection.dart';
+import "package:collection/wrappers.dart";
 
 part 'src/alert.dart';
 part 'src/capabilities.dart';
