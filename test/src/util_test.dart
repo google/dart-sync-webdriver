@@ -36,7 +36,8 @@ void main() {
       driver.findElement(new By.name('q'))
         .sendKeys('webdriver');
       driver.findElement(new By.name('btnG')).click();
-      var title = waitFor(() => driver.title, equals('webdriver - Google Search'));
+      var title =
+          waitFor(() => driver.title, equals('webdriver - Google Search'));
       expect(title, equals('webdriver - Google Search'));
     });
 
@@ -51,7 +52,8 @@ void main() {
       driver.findElement(new By.name('q'))
         .sendKeys('webdriver');
       driver.findElement(new By.name('btnG')).click();
-      var result = waitFor(() => driver.findElement(const By.name('btnI')).displayed, isFalse);
+      var result = waitFor(
+          () => driver.findElement(const By.name('btnI')).displayed, isFalse);
       expect(result, isFalse);
     });
   });
@@ -81,7 +83,8 @@ void main() {
 
     test('that returns false', () {
       driver.url = 'http://www.google.com/ncr';
-      var result = waitForValue(() => driver.findElement(const By.name('btnG')).displayed);
+      var result = waitForValue
+          (() => driver.findElement(const By.name('btnG')).displayed);
       expect(result, isFalse);
     });
   });
@@ -104,7 +107,8 @@ void main() {
     });
 
     test('isNotEnabled', () {
-      var input = driver.findElement(const By.cssSelector('input[type=password]'));
+      var input =
+          driver.findElement(const By.cssSelector('input[type=password]'));
       expect(input, isNotEnabled);
     });
 

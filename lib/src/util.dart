@@ -117,8 +117,8 @@ class _HasText extends Matcher {
 
 // TODO Exception management
 class UnexpectedTagNameException extends FormatException {
-  UnexpectedTagNameException(String expectedTagName, String actualTagName)
-    : super('Element should have been "$expectedTagName" but was "$actualTagName"');
+  UnexpectedTagNameException(String expected, String actual)
+    : super('Element should have been "$expected" but was "$actual"');
 }
 
 _setSelected(WebElement option) {
@@ -134,7 +134,8 @@ _unsetSelected(WebElement option) {
 }
 
 String _escapeQuotes(String toEscape) {
-  // Convert strings with both quotes and ticks into: foo'"bar -> concat("foo'", '"', "bar")
+  // Convert strings with both quotes and ticks into:
+  //   foo'"bar -> concat("foo'", '"', "bar")
   if (toEscape.indexOf("\"") > -1 && toEscape.indexOf("'") > -1) {
     var quoteIsLast = false;
     if (toEscape.lastIndexOf("\"") == toEscape.length - 1) {
@@ -144,8 +145,13 @@ String _escapeQuotes(String toEscape) {
 
     var quoted = new StringBuffer("concat(");
     for (int i = 0; i < substrings.length; i++) {
-      quoted.write("\"").append(substrings[i]).append("\"");
-      quoted.write(((i == substrings.length - 1) ? (quoteIsLast ? ", '\"')" : ")") : ", '\"', "));
+      quoted
+          ..write("\"")
+          ..write(substrings[i])
+          ..write("\"")
+          ..write((i == substrings.length - 1)
+              ? (quoteIsLast ? ", '\"')" : ")")
+              : ", '\"', ");
     }
     return quoted.toString();
   }
@@ -208,23 +214,27 @@ class Select implements WebElement {
   /**
    * All options belonging to this select tag
    */
-  List<WebElement> get options => _element.findElements(const By.tagName("option"));
+  List<WebElement> get options =>
+      _element.findElements(const By.tagName("option"));
 
   /**
    * All selected options belonging to this select tag
    */
-  List<WebElement> get allSelectedOptions => options.where((option) => option.selected).toList(growable: false);
+  List<WebElement> get allSelectedOptions =>
+      options.where((option) => option.selected).toList(growable: false);
 
   /**
    * The first selected option in this select tag (or the currently selected
    * option in a normal select)
    */
   // TODO Exception management
-  WebElement get firstSelectedOption => options.firstWhere((option) => option.selected);
+  WebElement get firstSelectedOption =>
+      options.firstWhere((option) => option.selected);
 
   /**
    * Select the option at the given [index].
-   * This is done by examing the "index" attribute of an element, and not merely by counting.
+   * This is done by examing the "index" attribute of an element, and not
+   * merely by counting.
    */
   selectByIndex(int index) {
     var match = index.toString();
@@ -242,7 +252,8 @@ class Select implements WebElement {
 
     if (!matched) {
       // TODO Exception management
-      throw new NoSuchElementException(0, "Cannot locate option with index: $index");
+      throw new NoSuchElementException(0,
+          "Cannot locate option with index: $index");
     }
   }
 
@@ -262,7 +273,8 @@ class Select implements WebElement {
 
     if (!matched) {
       // TODO Exception management
-      throw new NoSuchElementException(0, "Cannot locate option with value: $value");
+      throw new NoSuchElementException(0,
+          "Cannot locate option with value: $value");
     }
   }
 
@@ -298,7 +310,8 @@ class Select implements WebElement {
 
     if (!matched) {
       // TODO Exception management
-      throw new NoSuchElementException(0, "Cannot locate element with text: " + text);
+      throw new NoSuchElementException(0,
+          "Cannot locate element with text: $text");
     }
   }
 
@@ -309,7 +322,8 @@ class Select implements WebElement {
   deselectAll() {
     if (!isMultiple) {
       // TODO Exception management
-      throw new Exception("You may only deselect all options of a multi-select");
+      throw new Exception(
+          "You may only deselect all options of a multi-select");
     }
 
     for (var option in options) {
@@ -319,7 +333,8 @@ class Select implements WebElement {
 
   /**
    * Deselect the option at the given [index].
-   * This is done by examing the "index" attribute of an element, and not merely by counting.
+   * This is done by examing the "index" attribute of an element, and not
+   * merely by counting.
    */
   deselectByIndex(int index) {
     var match = index.toString();
