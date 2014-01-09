@@ -45,7 +45,7 @@ void main() {
     });
 
     test('add complex cookie', () {
-      var date = new DateTime.utc(2014);
+      var date = new DateTime.utc(2099);
       driver.cookies.add(new Cookie(
           'mycomplexcookie',
           'myvalue',
