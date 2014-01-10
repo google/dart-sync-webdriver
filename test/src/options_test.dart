@@ -78,8 +78,10 @@ void main() {
     });
 
     test('delete all cookies', () {
+      driver.cookies.add(new Cookie('mycookie', 'myvalue'));
+      waitFor(() => driver.cookies.all, hasLength(isPositive));
       driver.cookies.deleteAll();
-      expect(driver.cookies.all, isEmpty);
+      waitFor(() => driver.cookies.all, isEmpty);
     });
   });
 
