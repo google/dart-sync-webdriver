@@ -16,7 +16,7 @@ limitations under the License.
 
 part of sync.webdriver;
 
-class WebDriver implements SearchContext {
+class WebDriver extends SearchContext {
   static final Uri DEFAULT_URI = new Uri.http('127.0.0.1:4444', '/wd/hub');
   static final HttpClientSync _client = new HttpClientSync();
 
@@ -93,24 +93,6 @@ class WebDriver implements SearchContext {
   String get url => _get('url');
 
   String get title => _get('title');
-
-  @override
-  WebElement findElement(Finder finder) {
-    if (finder is By) {
-      return _post('element', finder);
-    } else {
-      return finder.findElement(this);
-    }
-  }
-
-  @override
-  List<WebElement> findElements(Finder finder) {
-    if (finder is By) {
-      return new UnmodifiableListView<WebElement>(_post('elements', finder));
-    } else {
-      return new UnmodifiableListView<WebElement>(finder.findElements(this));
-    }
-  }
 
   String get pageSource => _get('source');
 
@@ -243,6 +225,9 @@ class WebDriver implements SearchContext {
 
     return jsonBody['value'];
   }
+
+  @override
+  String toString() => '{WebDriver $_uri}';
 }
 
 final _NUL_REGEXP = new RegExp('\u{0}');

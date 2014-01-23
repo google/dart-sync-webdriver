@@ -19,9 +19,14 @@ part of sync.webdriver;
 final ContentType _CONTENT_TYPE_JSON =
     new ContentType("application", "json", charset: "utf-8");
 
-class WebElement extends _WebDriverBase implements SearchContext {
+class WebElement extends _WebDriverBase with SearchContext {
 
   final String _elementId;
+
+  // The following three fields identify the provenance of this element
+  SearchContext _context;
+  Finder _finder;
+  int _index;
 
   WebElement._(WebDriver driver, String elementId)
     : super(driver, 'element/$elementId'),
@@ -71,30 +76,6 @@ class WebElement extends _WebDriverBase implements SearchContext {
   String get value => _get('value');
 
   /**
-   * Find an element nested within this element.
-   *
-   * Throws [NoSuchElementException] if matching element is not found.
-   */
-  @override
-  WebElement findElement(Finder finder) {
-    if (finder is By) {
-      return _post('element', finder);
-    } else {
-      return finder.findElement(this);
-    }
-  }
-
-  /// Find multiple elements nested within this element.
-  @override
-  List<WebElement> findElements(Finder finder) {
-    if (finder is By) {
-      return new UnmodifiableListView(_post('elements', finder));
-    } else {
-      return new UnmodifiableListView(finder.findElements(this));
-    }
-  }
-
-  /**
    * Access to the HTML attributes of this tag.
    *
    * TODO(DrMarcII): consider special handling of boolean attributes.
@@ -127,6 +108,33 @@ class WebElement extends _WebDriverBase implements SearchContext {
   @override
   int get hashCode => _elementId.hashCode >> 3 + driver.hashCode;
 
+  void _updateProvenance(
+      SearchContext context, Finder finder, [int index = -1]) {
+    this._context = context;
+    this._finder = finder;
+    this._index = index;
+  }
+
   @override
-  String toString() => toJson().toString();
+  String toString() {
+    StringBuffer result = new StringBuffer('{WebElement ');
+    result.write(_elementId);
+    if (_context != null && _finder != null) {
+      result..write(' ')..write(_context);
+      if (_index >= 0) {
+        result.write('.findElements(');
+      } else {
+        result.write('.findElement(');
+      }
+      result.write(_finder);
+      if (_index >= 0) {
+        result..write(')[')
+            ..write(_index)
+            ..write(']}');
+      } else {
+        result.write(')}');
+      }
+    }
+    return result.toString();
+  }
 }

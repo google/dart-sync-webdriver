@@ -36,13 +36,13 @@ void main() {
     setUp(() {
       driver = freshDriver;
       driver.url = testPagePath;
-      table = driver.findElement(new By.tagName('table'));
-      button = driver.findElement(new By.tagName('button'));
-      form = driver.findElement(new By.tagName('form'));
-      textInput = driver.findElement(new By.cssSelector('input[type=text]'));
-      checkbox = driver.findElement(new By.cssSelector('input[type=checkbox]'));
-      disabled = driver.findElement(new By.cssSelector('input[type=password]'));
-      invisible = driver.findElement(new By.tagName('div'));
+      table = driver.findElement(const By.tagName('table'));
+      button = driver.findElement(const By.tagName('button'));
+      form = driver.findElement(const By.tagName('form'));
+      textInput = driver.findElement(const By.cssSelector('input[type=text]'));
+      checkbox = driver.findElement(const By.cssSelector('input[type=checkbox]'));
+      disabled = driver.findElement(const By.cssSelector('input[type=password]'));
+      invisible = driver.findElement(const By.tagName('div'));
     });
 
     test('click', () {
@@ -134,28 +134,28 @@ void main() {
     });
 
     test('findElement -- success', () {
-      expect(table.findElement(new By.tagName('tr')), isWebElement);
+      expect(table.findElement(const By.tagName('tr')), isWebElement);
     });
 
     test('findElement -- failure', () {
-      expect(() => button.findElement(new By.tagName('tr')),
+      expect(() => button.findElement(const By.tagName('tr')),
           throwsA(new isInstanceOf<NoSuchElementException>()));
     });
 
     test('findElements -- 1 found', () {
-      var elements = form.findElements(new By.cssSelector('input[type=text]'));
+      var elements = form.findElements(const By.cssSelector('input[type=text]'));
       expect(elements, hasLength(1));
       expect(elements, everyElement(isWebElement));
     });
 
     test('findElements -- 4 found', () {
-      var elements = table.findElements(new By.tagName('td'));
+      var elements = table.findElements(const By.tagName('td'));
       expect(elements, hasLength(4));
       expect(elements, everyElement(isWebElement));
     });
 
     test('findElements -- 0 found', () {
-      expect(form.findElements(new By.tagName('td')), isEmpty);
+      expect(form.findElements(const By.tagName('td')), isEmpty);
     });
 
     test('attributes', () {
@@ -177,6 +177,21 @@ void main() {
       expect(invisible.equals(disabled), isFalse);
       var element = driver.findElement(new By.cssSelector('table'));
       expect(element.equals(table), isTrue);
+    });
+
+    test('toString includes provenance info', () {
+      expect(table.toString(), contains(driver.toString()));
+      expect(table.toString(), contains(const By.tagName('table').toString()));
+      expect(table.toString(), contains('findElement('));
+
+      var elements = table.findElements(const By.tagName('td'));
+      expect(elements[0].toString(), contains(table.toString()));
+      expect(elements[0].toString(), contains(const By.tagName('td').toString()));
+      expect(elements[0].toString(), contains('findElements('));
+      expect(elements[0].toString(), contains('[0]'));
+      expect(elements[1].toString(), contains('[1]'));
+      expect(elements[2].toString(), contains('[2]'));
+      expect(elements[3].toString(), contains('[3]'));
     });
   });
 }
