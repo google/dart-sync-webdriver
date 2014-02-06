@@ -67,15 +67,39 @@ Map<String, int> _pointToJson(Point point) =>
 abstract class SearchContext {
   WebDriver get driver;
 
-  /// Searches for multiple elements within the context.
-  List<WebElement> findElements(Finder by);
-
   /**
-   * Searchs for an element within the context.
+   * Find an element nested within this element.
    *
-   * Throws [NoSuchElementException] if no matching element is found.
+   * Throws [NoSuchElementException] if matching element is not found.
    */
-  WebElement findElement(Finder by);
+  WebElement findElement(Finder finder) {
+    var element;
+    if (finder is By) {
+      element = _post('element', finder);
+    } else {
+      element = finder.findElement(this);
+    }
+    element._updateProvenance(this, finder);
+    return element;
+  }
+
+  /// Find multiple elements nested within this element.
+  List<WebElement> findElements(Finder finder) {
+    var elements;
+    if (finder is By) {
+      elements = _post('elements', finder);
+    } else {
+      elements = finder.findElements(this);
+    }
+
+    for (int i = 0; i < elements.length; i++) {
+      elements[i]._updateProvenance(this, finder, i);
+    }
+
+    return new UnmodifiableListView<WebElement>(elements);
+  }
+
+  dynamic _post(String command, [dynamic args]);
 }
 
 abstract class _WebDriverBase {
@@ -169,5 +193,18 @@ class By implements Finder {
       context.findElements(this);
 
   @override
-  String toString() => toJson().toString();
+  String toString() {
+    switch(_using) {
+      case 'link text':
+        return 'By.linkText($_value)';
+      case 'partial link text':
+        return 'By.partialLinkText($_value)';
+      case 'class name':
+        return 'By.className($_value)';
+      case 'tag name':
+        return 'By.tagName($_value)';
+      default:
+        return 'By.$_using($_value)';
+    }
+  }
 }

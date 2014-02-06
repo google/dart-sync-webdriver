@@ -85,6 +85,9 @@ class Cookie {
     }
     return json;
   }
+
+  @override
+  String toString() => toJson().toString();
 }
 
 class Timeouts extends _WebDriverBase {

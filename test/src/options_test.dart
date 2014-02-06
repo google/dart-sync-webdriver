@@ -45,7 +45,7 @@ void main() {
     });
 
     test('add complex cookie', () {
-      var date = new DateTime.utc(2014);
+      var date = new DateTime.utc(2099);
       driver.cookies.add(new Cookie(
           'mycomplexcookie',
           'myvalue',
@@ -78,8 +78,10 @@ void main() {
     });
 
     test('delete all cookies', () {
+      driver.cookies.add(new Cookie('mycookie', 'myvalue'));
+      waitFor(() => driver.cookies.all, hasLength(isPositive));
       driver.cookies.deleteAll();
-      expect(driver.cookies.all, isEmpty);
+      waitFor(() => driver.cookies.all, isEmpty);
     });
   });
 
