@@ -231,6 +231,9 @@ class Select implements WebElement {
   WebElement get firstSelectedOption =>
       options.firstWhere((option) => option.selected);
 
+  /// String representation of the current value of this select.
+  String get value => _element.attributes['value'];
+
   /**
    * Select the option at the given [index].
    * This is done by examing the "index" attribute of an element, and not
