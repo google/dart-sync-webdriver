@@ -16,6 +16,8 @@ limitations under the License.
 
 library webdriver_test.navigation;
 
+import 'dart:io';
+
 import 'package:unittest/unittest.dart';
 import 'package:sync_webdriver/sync_webdriver.dart';
 import '../test_util.dart';
@@ -42,6 +44,7 @@ void main() {
     test('refresh', () {
       var element = driver.findElement(new By.name('q'));
       driver.navigate.refresh();
+      sleep(new Duration(seconds: 1));
       expect(() => element.name,
           throwsA(new isInstanceOf<StaleElementReferenceException>()));
     });

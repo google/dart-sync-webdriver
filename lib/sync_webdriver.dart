@@ -23,8 +23,8 @@ import 'dart:mirrors';
 
 import 'package:collection/wrappers.dart';
 import 'package:crypto/crypto.dart';
+import 'package:matcher/matcher.dart';
 import 'package:sync_socket/sync_socket.dart';
-import 'package:unittest/matcher.dart';
 
 part 'src/alert.dart';
 part 'src/capabilities.dart';

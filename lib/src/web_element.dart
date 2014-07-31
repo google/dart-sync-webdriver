@@ -72,9 +72,6 @@ class WebElement extends _WebDriverBase with SearchContext {
   /// Visible text within this element.
   String get text => _get('text');
 
-  /// The value for this element
-  String get value => _get('value');
-
   /**
    * Access to the HTML attributes of this tag.
    *
