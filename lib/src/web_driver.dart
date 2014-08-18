@@ -42,6 +42,7 @@ class WebDriver extends SearchContext {
       jsonParams["requiredCapabilities"] = required;
     }
 
+    request.headers.contentType = _CONTENT_TYPE_JSON;
     request.write(JSON.encode(jsonParams));
 
     var resp = request.close();
