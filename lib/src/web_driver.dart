@@ -97,9 +97,13 @@ class WebDriver extends SearchContext {
 
   String get pageSource => _get('source');
 
-  void close() => _delete('window');
+  void close() {
+    _delete('window');
+  }
 
-  void quit() => _delete('');
+  void quit() {
+    _delete('');
+  }
 
   Iterable<Window> get windows => _get('window_handles')
       .map((handle) => new Window._(this, handle));
