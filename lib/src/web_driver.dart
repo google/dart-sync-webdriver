@@ -42,6 +42,7 @@ class WebDriver extends SearchContext {
       jsonParams["requiredCapabilities"] = required;
     }
 
+    request.headers.contentType = _CONTENT_TYPE_JSON;
     request.write(JSON.encode(jsonParams));
 
     var resp = request.close();
@@ -96,9 +97,13 @@ class WebDriver extends SearchContext {
 
   String get pageSource => _get('source');
 
-  void close() => _delete('window');
+  void close() {
+    _delete('window');
+  }
 
-  void quit() => _delete('');
+  void quit() {
+    _delete('');
+  }
 
   Iterable<Window> get windows => _get('window_handles')
       .map((handle) => new Window._(this, handle));
