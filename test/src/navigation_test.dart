@@ -28,25 +28,25 @@ void main() {
 
     WebDriver driver;
 
-    setUp(() {
-      driver = freshDriver;
+    setUp(() => freshDriver.then((_d) {
+      driver = _d;
       driver.url = 'http://www.google.com/ncr';
-    });
+    }));
 
     test('forward/back', () {
       driver.url = testPagePath;
       driver.navigate.back();
-      expect(driver.title, contains('Google'));
+      waitFor(() => driver.title, contains('Google'));
       driver.navigate.forward();
-      expect(driver.title, contains('test_page'));
+      waitFor(() => driver.title, contains('test_page'));
     });
 
     test('refresh', () {
       var element = driver.findElement(new By.name('q'));
       driver.navigate.refresh();
-      sleep(new Duration(seconds: 1));
-      expect(() => element.name,
+      waitFor(() => () => element.name,
           throwsA(new isInstanceOf<StaleElementReferenceException>()));
     });
   });
 }
+
