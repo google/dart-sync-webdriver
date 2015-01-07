@@ -22,6 +22,7 @@ import 'package:unittest/unittest.dart' show test;
 import 'test_util.dart' show closeDriver;
 
 import 'src/alert_test.dart' as alert;
+import 'src/command_listener_test.dart' as command_listener;
 import 'src/keyboard_test.dart' as keyboard;
 import 'src/mouse_test.dart' as mouse;
 import 'src/navigation_test.dart' as navigation;
@@ -40,6 +41,7 @@ void main() {
   useVMConfiguration();
 
   alert.main();
+  command_listener.main();
   keyboard.main();
   mouse.main();
   navigation.main();
