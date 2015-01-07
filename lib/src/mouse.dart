@@ -16,8 +16,7 @@ limitations under the License.
 
 part of sync.webdriver;
 
-class Mouse extends _WebDriverBase{
-
+class Mouse extends _WebDriverBase {
   static const int LEFT = 0;
   static const int MIDDLE = 1;
   static const int RIGHT = 2;
@@ -83,6 +82,6 @@ class Mouse extends _WebDriverBase{
       json['xoffset'] = xOffset.floor();
       json['yoffset'] = yOffset.floor();
     }
-     _post('moveto', json);
+    _post('moveto', json);
   }
 }

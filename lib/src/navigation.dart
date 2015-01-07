@@ -17,7 +17,6 @@ limitations under the License.
 part of sync.webdriver;
 
 class Navigation extends _WebDriverBase {
-
   Navigation._(driver) : super(driver, '');
 
   ///  Navigate forwards in the browser history, if possible.

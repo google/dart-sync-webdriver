@@ -16,8 +16,7 @@ limitations under the License.
 
 part of sync.webdriver;
 
-class Touch extends _WebDriverBase{
-
+class Touch extends _WebDriverBase {
   Touch._(driver) : super(driver, 'touch');
 
   /**
@@ -47,7 +46,7 @@ class Touch extends _WebDriverBase{
    * will start scrolling from an arbitrary location.
    */
   void scroll(int xOffset, int yOffset, [WebElement start]) {
-    var json = { 'xoffset': xOffset.floor(), 'yoffset': yOffset.floor()};
+    var json = {'xoffset': xOffset.floor(), 'yoffset': yOffset.floor()};
     if (start is WebElement) {
       json['element'] = start._elementId;
     }
@@ -69,18 +68,15 @@ class Touch extends _WebDriverBase{
    */
   void flickElement(WebElement start, int xOffset, int yOffset, int speed) =>
       _post('flick', {
-        'element': start._elementId,
-        'xoffset': xOffset.floor(),
-        'yoffset': yOffset.floor(),
-        'speed': speed.floor()
-      });
+    'element': start._elementId,
+    'xoffset': xOffset.floor(),
+    'yoffset': yOffset.floor(),
+    'speed': speed.floor()
+  });
 
   /**
    * Flick on the touch screen using finger motion events.
    */
   void flick(int xSpeed, int ySpeed) =>
-      _post('flick', {
-        'xspeed': xSpeed.floor(),
-        'yspeed': ySpeed.floor()
-      });
+      _post('flick', {'xspeed': xSpeed.floor(), 'yspeed': ySpeed.floor()});
 }

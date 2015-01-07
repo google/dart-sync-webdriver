@@ -24,9 +24,7 @@ class Alert extends _WebDriverBase {
    */
   final String text;
 
-
-  Alert._(this.text, commandProcessor)
-      : super(commandProcessor, '');
+  Alert._(this.text, commandProcessor) : super(commandProcessor, '');
 
   /**
    * Accepts the currently displayed alert (may not be the alert for which
@@ -50,6 +48,5 @@ class Alert extends _WebDriverBase {
    *
    * Throws [NoAlertOpenException] if there isn't currently an alert.
    */
-  void sendKeys(String keysToSend) =>
-      _post('alert_text', { 'text': keysToSend });
+  void sendKeys(String keysToSend) => _post('alert_text', {'text': keysToSend});
 }

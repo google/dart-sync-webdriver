@@ -21,9 +21,7 @@ import 'package:sync_webdriver/sync_webdriver.dart';
 import '../test_util.dart';
 
 void main() {
-
   group('Cookies', () {
-
     WebDriver driver;
 
     setUp(() {
@@ -46,13 +44,8 @@ void main() {
 
     test('add complex cookie', () {
       var date = new DateTime.utc(2099);
-      driver.cookies.add(new Cookie(
-          'mycomplexcookie',
-          'myvalue',
-          path: '/',
-          domain: '.google.com',
-          secure: false,
-          expiry: date));
+      driver.cookies.add(new Cookie('mycomplexcookie', 'myvalue',
+          path: '/', domain: '.google.com', secure: false, expiry: date));
       var found = false;
       for (var cookie in driver.cookies.all) {
         if (cookie.name == 'mycomplexcookie') {

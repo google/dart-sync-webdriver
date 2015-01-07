@@ -17,7 +17,6 @@ limitations under the License.
 part of sync.webdriver;
 
 class TargetLocator extends _WebDriverBase {
-
   TargetLocator._(driver) : super(driver, '');
 
   /**
@@ -34,7 +33,7 @@ class TargetLocator extends _WebDriverBase {
    * Throws [NoSuchFrameException] if the specified frame can't be found.
    */
   void frame([/* String | int | WebElement */ frame]) =>
-      _post('frame', { 'id': frame });
+      _post('frame', {'id': frame});
 
   /**
    * Switch the focus of future commands for this driver to the window with the
@@ -43,7 +42,7 @@ class TargetLocator extends _WebDriverBase {
    * Throws [NoSuchWindowException] if the specified window can't be found.
    */
   void window(/* String | Window */ window) =>
-      _post('window', { 'name': window });
+      _post('window', {'name': window});
 
   /**
    * Switches to the currently active modal dialog for this particular driver

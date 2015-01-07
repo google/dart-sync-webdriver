@@ -23,9 +23,7 @@ import 'package:sync_webdriver/sync_webdriver.dart';
 import '../test_util.dart';
 
 void main() {
-
   group('Window', () {
-
     WebDriver driver;
 
     setUp(() => driver = freshDriver);

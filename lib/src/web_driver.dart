@@ -26,17 +26,14 @@ class WebDriver extends SearchContext {
   JsonCodec _jsonDecoder;
   Timeouts _timeouts;
 
-  factory WebDriver({
-      Uri uri: null,
-      Map<String, String> required: null,
+  factory WebDriver({Uri uri: null, Map<String, String> required: null,
       Map<String, String> desired: const <String, String>{}}) {
-
     if (uri == null) {
       uri = DEFAULT_URI;
     }
     var request =
         _client.postUrl(new Uri.http(uri.authority, '${uri.path}/session'));
-    var jsonParams = { "desiredCapabilities": desired };
+    var jsonParams = {"desiredCapabilities": desired};
 
     if (required != null) {
       jsonParams["requiredCapabilities"] = required;
@@ -67,8 +64,8 @@ class WebDriver extends SearchContext {
               jsonResp: jsonResp);
         }
 
-        sessionUri = new Uri.http(uri.authority,
-            '${uri.path}/session/${jsonResp['sessionId']}');
+        sessionUri = new Uri.http(
+            uri.authority, '${uri.path}/session/${jsonResp['sessionId']}');
         capabilities = new UnmodifiableMapView(jsonResp['value']);
         break;
       default:
@@ -105,8 +102,8 @@ class WebDriver extends SearchContext {
     _delete('');
   }
 
-  Iterable<Window> get windows => _get('window_handles')
-      .map((handle) => new Window._(this, handle));
+  Iterable<Window> get windows =>
+      _get('window_handles').map((handle) => new Window._(this, handle));
 
   Window get window => new Window._(this, _get('window_handle'));
 
@@ -147,10 +144,7 @@ class WebDriver extends SearchContext {
    * result will be converted to WebElements.
    */
   dynamic executeAsync(String script, List args) =>
-      _post('execute_async', {
-        'script': script,
-        'args': args
-      });
+      _post('execute_async', {'script': script, 'args': args});
 
   /**
    * Inject a snippet of JavaScript into the page for execution in the context
@@ -167,10 +161,7 @@ class WebDriver extends SearchContext {
    * result will be converted to WebElements.
    */
   dynamic execute(String script, List args) =>
-      _post('execute', {
-        'script': script,
-        'args': args
-      });
+      _post('execute', {'script': script, 'args': args});
 
   List<int> captureScreenshot() => new UnmodifiableListView(
       CryptoUtils.base64StringToBytes(_get('screenshot')));
@@ -184,7 +175,7 @@ class WebDriver extends SearchContext {
 
   _post(String command, params) {
     var path = _processCommand(command);
-    var request =  _client.postUrl(new Uri.http(_uri.authority, path));
+    var request = _client.postUrl(new Uri.http(_uri.authority, path));
     if (params != null) {
       request.headers.contentType = _CONTENT_TYPE_JSON;
       request.write(JSON.encode(params));
@@ -219,9 +210,9 @@ class WebDriver extends SearchContext {
     }
     var jsonBody = _parseBody(resp, _jsonDecoder);
 
-    if (resp.statusCode != HttpStatus.OK
-        || jsonBody == null
-        || jsonBody['status'] != 0) {
+    if (resp.statusCode != HttpStatus.OK ||
+        jsonBody == null ||
+        jsonBody['status'] != 0) {
       throw new WebDriverException(
           httpStatusCode: resp.statusCode,
           httpReasonPhrase: resp.reasonPhrase,

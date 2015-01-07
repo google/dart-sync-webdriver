@@ -16,8 +16,7 @@ limitations under the License.
 
 part of sync.webdriver;
 
-class Keyboard extends _WebDriverBase{
-
+class Keyboard extends _WebDriverBase {
   Keyboard._(driver) : super(driver, 'keys');
 
   /**
@@ -25,8 +24,8 @@ class Keyboard extends _WebDriverBase{
    */
   void sendKeys(dynamic keysToSend) {
     if (keysToSend is String) {
-      keysToSend = [ keysToSend ];
+      keysToSend = [keysToSend];
     }
-     _post('', { 'value' : keysToSend as List<String>});
+    _post('', {'value': keysToSend as List<String>});
   }
 }

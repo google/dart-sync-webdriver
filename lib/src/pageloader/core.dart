@@ -37,11 +37,10 @@ class PageLoader {
   }
 
   _getInstance(ClassMirror type, SearchContext context) =>
-     new _ClassInfo(type).getInstance(context, this);
+      new _ClassInfo(type).getInstance(context, this);
 }
 
 class _ClassInfo {
-
   static final Map<ClassMirror, _ClassInfo> _classInfoCache =
       <ClassMirror, _ClassInfo>{};
 
@@ -51,32 +50,33 @@ class _ClassInfo {
   final List<Filter> _filters;
   final bool _finderIsOptional;
 
-  factory _ClassInfo(ClassMirror type) =>
-    _classInfoCache.putIfAbsent(type, () {
-      Finder finder = null;
-      List<Filter> filters = <Filter>[];
-      bool finderIsOptional = false;
-      for (InstanceMirror metadatum in type.metadata) {
-        if (!metadatum.hasReflectee) {
-          continue;
-        }
-        var datum = metadatum.reflectee;
-        if (datum is Finder) {
-          if (finder != null) {
-            throw new PageLoaderException('Multiple finders found on $type');
-          }
-          finder = datum;
-        } else if (datum is Filter) {
-          filters.add(datum);
-        } else if (datum is _Optional) {
-          finderIsOptional = true;
-        }
+  factory _ClassInfo(ClassMirror type) => _classInfoCache.putIfAbsent(type, () {
+    Finder finder = null;
+    List<Filter> filters = <Filter>[];
+    bool finderIsOptional = false;
+    for (InstanceMirror metadatum in type.metadata) {
+      if (!metadatum.hasReflectee) {
+        continue;
       }
+      var datum = metadatum.reflectee;
+      if (datum is Finder) {
+        if (finder != null) {
+          throw new PageLoaderException('Multiple finders found on $type');
+        }
+        finder = datum;
+      } else if (datum is Filter) {
+        filters.add(datum);
+      } else if (datum is _Optional) {
+        finderIsOptional = true;
+      }
+    }
 
-      return new _ClassInfo._(type, _fieldInfos(type), finder, filters, finderIsOptional);
-    });
+    return new _ClassInfo._(
+        type, _fieldInfos(type), finder, filters, finderIsOptional);
+  });
 
-  _ClassInfo._(this._class, this._fields, this._finder, this._filters, this._finderIsOptional);
+  _ClassInfo._(this._class, this._fields, this._finder, this._filters,
+      this._finderIsOptional);
 
   static Iterable<_FieldInfo> _fieldInfos(ClassMirror type) {
     var infos = <_FieldInfo>[];
@@ -116,7 +116,8 @@ class _ClassInfo {
   dynamic getInstance(SearchContext context, PageLoader loader) {
     try {
       if (_finder != null) {
-        SearchContext ctx = _getElement(context, _finder, _filters, _finderIsOptional);
+        SearchContext ctx =
+            _getElement(context, _finder, _filters, _finderIsOptional);
         if (ctx != null) {
           context = ctx;
         }
@@ -136,7 +137,8 @@ class _ClassInfo {
     InstanceMirror page;
 
     for (DeclarationMirror constructor in _class.declarations.values) {
-      if (constructor is MethodMirror && constructor.isConstructor &&
+      if (constructor is MethodMirror &&
+          constructor.isConstructor &&
           constructor.parameters.isEmpty) {
         page = _class.newInstance(constructor.constructorName, []);
         break;
@@ -151,20 +153,23 @@ class _ClassInfo {
 }
 
 abstract class _FieldInfo {
-
   factory _FieldInfo(DeclarationMirror field) {
     var finder;
     var filters = new List<Filter>();
     TypeMirror type;
     var name;
 
-    if (field is VariableMirror && !field.isFinal &&
-        !field.isStatic && !field.isConst) {
+    if (field is VariableMirror &&
+        !field.isFinal &&
+        !field.isStatic &&
+        !field.isConst) {
       type = field.type;
       name = field.simpleName;
       // TODO(DrMarcII): Support private setters when they work again
-    } else if (field is MethodMirror && field.isSetter &&
-        !field.isStatic && !field.isPrivate) {
+    } else if (field is MethodMirror &&
+        field.isSetter &&
+        !field.isStatic &&
+        !field.isPrivate) {
       type = field.parameters.first.type;
       // HACK to get correct symbol name for operating with setField.
       name = field.simpleName.toString();
@@ -175,8 +180,7 @@ abstract class _FieldInfo {
     }
 
     var isFunction = false;
-    if (type.simpleName == const Symbol('Function')
-        || type is TypedefMirror) {
+    if (type.simpleName == const Symbol('Function') || type is TypedefMirror) {
       isFunction = true;
       if (type is TypedefMirror) {
         type = (type as TypedefMirror).referent.returnType;
@@ -197,14 +201,16 @@ abstract class _FieldInfo {
 
       if (datum is Finder) {
         if (finder != null) {
-          throw new PageLoaderException('Cannot have multiple finders on field');
+          throw new PageLoaderException(
+              'Cannot have multiple finders on field');
         }
         finder = datum;
       } else if (datum is Filter) {
         filters.add(datum);
       } else if (datum is Returns) {
         if (type != null && type.simpleName != const Symbol('dynamic')) {
-          throw new PageLoaderException('Field type is not compatible with Returns');
+          throw new PageLoaderException(
+              'Field type is not compatible with Returns');
         }
         isFunction = true;
         if (datum is ReturnsList) {
@@ -223,9 +229,7 @@ abstract class _FieldInfo {
     }
     if (type != null && type.simpleName == const Symbol('List')) {
       isList = true;
-      type = type.typeArguments.isNotEmpty
-          ? type.typeArguments.single
-          : null;
+      type = type.typeArguments.isNotEmpty ? type.typeArguments.single : null;
     }
     if (type == null || type.simpleName == const Symbol('dynamic')) {
       type = reflectClass(WebElement);
@@ -236,9 +240,9 @@ abstract class _FieldInfo {
     }
 
     if (finder != null) {
-      var fieldInfo = isList
-          ? new _FinderListFieldInfo(name, finder, filters, type)
-          : new _FinderSingleFieldInfo(name, finder, filters, type, isOptional);
+      var fieldInfo = isList ?
+          new _FinderListFieldInfo(name, finder, filters, type) :
+          new _FinderSingleFieldInfo(name, finder, filters, type, isOptional);
       if (isFunction) {
         fieldInfo = new _FinderFunctionFieldInfo(fieldInfo);
       }
@@ -253,9 +257,7 @@ abstract class _FieldInfo {
   }
 
   void setField(
-      InstanceMirror instance,
-      SearchContext context,
-      PageLoader loader);
+      InstanceMirror instance, SearchContext context, PageLoader loader);
 }
 
 class _InjectedPageLoaderInfo implements _FieldInfo {
@@ -281,7 +283,6 @@ class _InjectedWebDriverInfo implements _FieldInfo {
 }
 
 abstract class _FinderFieldInfo implements _FieldInfo {
-
   final Symbol _fieldName;
 
   _FinderFieldInfo(this._fieldName);
@@ -289,9 +290,8 @@ abstract class _FinderFieldInfo implements _FieldInfo {
   calculateFieldValue(SearchContext context, PageLoader loader);
 
   @override
-  void setField(InstanceMirror instance,
-                SearchContext context,
-                PageLoader loader) {
+  void setField(
+      InstanceMirror instance, SearchContext context, PageLoader loader) {
     try {
       instance.setField(_fieldName, calculateFieldValue(context, loader));
     } catch (e) {
@@ -302,23 +302,19 @@ abstract class _FinderFieldInfo implements _FieldInfo {
 }
 
 class _FinderSingleFieldInfo extends _FinderFieldInfo {
-
   final Finder _finder;
   final List<Filter> _filters;
   final ClassMirror _instanceType;
   final bool _isOptional;
 
-  _FinderSingleFieldInfo(
-      Symbol fieldName,
-      this._finder,
-      this._filters,
-      this._instanceType,
-      this._isOptional) : super(fieldName);
+  _FinderSingleFieldInfo(Symbol fieldName, this._finder, this._filters,
+      this._instanceType, this._isOptional) : super(fieldName);
 
   @override
   calculateFieldValue(SearchContext context, PageLoader loader) {
     var element = _getElement(context, _finder, _filters, _isOptional);
-    if (_instanceType.simpleName != const Symbol('WebElement') && element != null) {
+    if (_instanceType.simpleName != const Symbol('WebElement') &&
+        element != null) {
       element = loader._getInstance(_instanceType, element);
     }
     return element;
@@ -326,30 +322,27 @@ class _FinderSingleFieldInfo extends _FinderFieldInfo {
 }
 
 class _FinderListFieldInfo extends _FinderFieldInfo {
-
   final Finder _finder;
   final List<Filter> _filters;
   final ClassMirror _instanceType;
 
   _FinderListFieldInfo(
-      Symbol fieldName,
-      this._finder,
-      this._filters,
-      this._instanceType) : super(fieldName);
+      Symbol fieldName, this._finder, this._filters, this._instanceType)
+      : super(fieldName);
 
   @override
   calculateFieldValue(SearchContext context, PageLoader loader) {
     List elements = _getElements(context, _finder, _filters);
     if (_instanceType.simpleName != const Symbol('WebElement')) {
-      elements = elements.map((element) =>
-          loader._getInstance(_instanceType, element)).toList();
+      elements = elements
+          .map((element) => loader._getInstance(_instanceType, element))
+          .toList();
     }
     return elements;
   }
 }
 
 class _FinderFunctionFieldInfo extends _FinderFieldInfo {
-
   _FinderFieldInfo _impl;
 
   _FinderFunctionFieldInfo(_FinderFieldInfo impl) : super(impl._fieldName) {
@@ -403,7 +396,8 @@ class PageLoaderException {
   String toString() => 'PageLoaderExeption: $message';
 }
 
-List<WebElement> _getElements(SearchContext context, Finder finder, List<Filter> filters) {
+List<WebElement> _getElements(
+    SearchContext context, Finder finder, List<Filter> filters) {
   List<WebElement> elements = finder.findElements(context);
   for (var filter in filters) {
     elements = filter.filter(elements);
@@ -411,7 +405,8 @@ List<WebElement> _getElements(SearchContext context, Finder finder, List<Filter>
   return new UnmodifiableListView(elements);
 }
 
-WebElement _getElement(SearchContext context, Finder finder, List<Filter> filters, bool optional) {
+WebElement _getElement(
+    SearchContext context, Finder finder, List<Filter> filters, bool optional) {
   List<WebElement> elements = _getElements(context, finder, filters);
   if (elements.isEmpty) {
     if (!optional) {
