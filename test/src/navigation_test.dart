@@ -16,8 +16,6 @@ limitations under the License.
 
 library webdriver_test.navigation;
 
-import 'dart:io';
-
 import 'package:unittest/unittest.dart';
 import 'package:sync_webdriver/sync_webdriver.dart';
 import '../test_util.dart';
@@ -26,10 +24,10 @@ void main() {
   group('Navigation', () {
     WebDriver driver;
 
-    setUp(() => freshDriver.then((_d) {
-      driver = _d;
+    setUp(() {
+      driver = freshDriver;
       driver.url = 'http://www.google.com/ncr';
-    }));
+    });
 
     test('forward/back', () {
       driver.url = testPagePath;

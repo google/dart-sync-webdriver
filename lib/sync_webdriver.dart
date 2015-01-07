@@ -16,12 +16,12 @@ limitations under the License.
 
 library sync.webdriver;
 
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math' show Point;
 import 'dart:mirrors';
 
-import 'package:collection/wrappers.dart';
 import 'package:crypto/crypto.dart';
 import 'package:matcher/matcher.dart';
 import 'package:sync_socket/sync_socket.dart';
