@@ -21,9 +21,7 @@ import 'package:sync_webdriver/sync_webdriver.dart';
 import '../test_util.dart';
 
 void main() {
-
   group('Mouse', () {
-
     WebDriver driver;
     WebElement button;
 
@@ -35,40 +33,40 @@ void main() {
 
     test('moveTo element/click', () {
       driver.mouse
-          ..moveTo(element: button)
-          ..click();
+        ..moveTo(element: button)
+        ..click();
       driver.switchTo.alert.dismiss();
     });
 
     test('moveTo coordinates/click', () {
       var pos = button.location;
       driver.mouse
-          ..moveTo(xOffset: pos.x + 5, yOffset: pos.y + 5)
-          ..click();
+        ..moveTo(xOffset: pos.x + 5, yOffset: pos.y + 5)
+        ..click();
       driver.switchTo.alert.dismiss();
     });
 
     test('moveTo element coordinates/click', () {
       driver.mouse
-          ..moveTo(element: button, xOffset: 5, yOffset: 5)
-          ..click();
+        ..moveTo(element: button, xOffset: 5, yOffset: 5)
+        ..click();
       driver.switchTo.alert.dismiss();
     });
 
     // TODO(DrMarcII): Better up/down tests
     test('down/up', () {
       driver.mouse
-          ..moveTo(element: button)
-          ..down()
-          ..up();
+        ..moveTo(element: button)
+        ..down()
+        ..up();
       driver.switchTo.alert.dismiss();
     });
 
     // TODO(DrMarcII): Better double click test
     test('doubleClick', () {
       driver.mouse
-          ..moveTo(element: button)
-          ..doubleClick();
+        ..moveTo(element: button)
+        ..doubleClick();
       driver.switchTo.alert.dismiss();
     });
   });

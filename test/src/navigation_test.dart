@@ -23,9 +23,7 @@ import 'package:sync_webdriver/sync_webdriver.dart';
 import '../test_util.dart';
 
 void main() {
-
   group('Navigation', () {
-
     WebDriver driver;
 
     setUp(() => freshDriver.then((_d) {
@@ -49,4 +47,3 @@ void main() {
     });
   });
 }
-

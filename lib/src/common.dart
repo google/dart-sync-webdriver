@@ -23,9 +23,7 @@ const String _ELEMENT = 'ELEMENT';
  * attributes or css styles.
  */
 class Attributes extends _WebDriverBase {
-
-  Attributes._(driver, prefix, command)
-    : super(driver, '$prefix/$command');
+  Attributes._(driver, prefix, command) : super(driver, '$prefix/$command');
 
   String operator [](String name) => _get(name);
 }
@@ -38,15 +36,11 @@ class Size {
 
   Size.fromJson(Map json) : this(json['height'], json['width']);
 
-  Map<String, num> toJson() => {
-    'height': height,
-    'width': width
-  };
+  Map<String, num> toJson() => {'height': height, 'width': width};
 
   @override
-  bool operator ==(Object other) => other is Size &&
-      height == other.height &&
-      width == other.width;
+  bool operator ==(Object other) =>
+      other is Size && height == other.height && width == other.width;
 
   @override
   int get hashCode => width.hashCode << 3 + height.hashCode;
@@ -56,13 +50,10 @@ class Size {
 }
 
 Point<int> _jsonToPoint(Map<String, dynamic> json) =>
-      new Point<int>(json['x'].floor(), json['y'].floor());
+    new Point<int>(json['x'].floor(), json['y'].floor());
 
 Map<String, int> _pointToJson(Point point) =>
-    <String, int>{
-      'x': point.x.floor(),
-      'y': point.y.floor()
-    };
+    <String, int>{'x': point.x.floor(), 'y': point.y.floor()};
 
 abstract class SearchContext {
   WebDriver get driver;
@@ -111,11 +102,9 @@ abstract class _WebDriverBase {
   dynamic _post(String command, [param]) =>
       driver._post(_command(command), param);
 
-  dynamic _get(String command) =>
-      driver._get(_command(command));
+  dynamic _get(String command) => driver._get(_command(command));
 
-  dynamic _delete(String command) =>
-      driver._delete(_command(command));
+  dynamic _delete(String command) => driver._delete(_command(command));
 
   String _command(String command) {
     if (command == null || command.isEmpty) {
@@ -124,8 +113,7 @@ abstract class _WebDriverBase {
       return command;
     } else if (command.startsWith('/')) {
       return '$_prefix$command';
-    } else
-      return '$_prefix/$command';
+    } else return '$_prefix/$command';
   }
 }
 
@@ -156,8 +144,8 @@ class By implements Finder {
    * Returns an anchor element whose visible text partially matches the search
    * value.
    */
-  const By.partialLinkText(String partialLinkText) :
-      this._('partial link text', partialLinkText);
+  const By.partialLinkText(String partialLinkText)
+      : this._('partial link text', partialLinkText);
 
   /// Returns an element whose NAME attribute matches the search value.
   const By.name(String name) : this._('name', name);
@@ -172,15 +160,14 @@ class By implements Finder {
   const By.className(String className) : this._('class name', className);
 
   /// Returns an element matching a CSS selector.
-  const By.cssSelector(String cssSelector) :
-      this._('css selector', cssSelector);
+  const By.cssSelector(String cssSelector)
+      : this._('css selector', cssSelector);
 
-  Map<String, String> toJson() => { 'using': _using, 'value': _value};
+  Map<String, String> toJson() => {'using': _using, 'value': _value};
 
   @override
-  bool operator ==(Object other) => other is By &&
-      _using == other._using &&
-      _value == other._value;
+  bool operator ==(Object other) =>
+      other is By && _using == other._using && _value == other._value;
 
   @override
   int get hashCode => _using.hashCode << 3 + _value.hashCode;
@@ -194,7 +181,7 @@ class By implements Finder {
 
   @override
   String toString() {
-    switch(_using) {
+    switch (_using) {
       case 'link text':
         return 'By.linkText($_value)';
       case 'partial link text':

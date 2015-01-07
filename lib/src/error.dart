@@ -28,17 +28,16 @@ abstract class WebDriverException {
    */
   final String message;
 
-  factory WebDriverException({
-      int httpStatusCode,
-      String httpReasonPhrase,
-      dynamic jsonResp}) {
+  factory WebDriverException(
+      {int httpStatusCode, String httpReasonPhrase, dynamic jsonResp}) {
     if (jsonResp is Map) {
       var status = jsonResp['status'];
       var message = jsonResp['value']['message'];
 
-      switch(status) {
+      switch (status) {
         case 0:
-          throw new StateError('Not a WebDriverError Status: 0 Message: $message');
+          throw new StateError(
+              'Not a WebDriverError Status: 0 Message: $message');
         case 6: // NoSuchDriver
           return new NoSuchDriverException(status, message);
         case 7: // NoSuchElement
@@ -52,7 +51,7 @@ abstract class WebDriverException {
         case 11: // ElementNotVisible
           return new ElementNotVisibleException(status, message);
         case 12: // InvalidElementState
-          return new  InvalidElementStateException(status, message);
+          return new InvalidElementStateException(status, message);
         case 15: // ElementIsNotSelectable
           return new ElementIsNotSelectableException(status, message);
         case 17: // JavaScriptError
@@ -129,11 +128,13 @@ class StaleElementReferenceException extends WebDriverException {
 }
 
 class ElementNotVisibleException extends WebDriverException {
-  ElementNotVisibleException(statusCode, message) : super._(statusCode, message);
+  ElementNotVisibleException(statusCode, message)
+      : super._(statusCode, message);
 }
 
 class InvalidElementStateException extends WebDriverException {
-  InvalidElementStateException(statusCode, message) : super._(statusCode, message);
+  InvalidElementStateException(statusCode, message)
+      : super._(statusCode, message);
 }
 
 class ElementIsNotSelectableException extends WebDriverException {
@@ -158,15 +159,18 @@ class NoSuchWindowException extends WebDriverException {
 }
 
 class InvalidCookieDomainException extends WebDriverException {
-  InvalidCookieDomainException(statusCode, message) : super._(statusCode, message);
+  InvalidCookieDomainException(statusCode, message)
+      : super._(statusCode, message);
 }
 
 class UnableToSetCookieException extends WebDriverException {
-  UnableToSetCookieException(statusCode, message) : super._(statusCode, message);
+  UnableToSetCookieException(statusCode, message)
+      : super._(statusCode, message);
 }
 
 class UnexpectedAlertOpenException extends WebDriverException {
-  UnexpectedAlertOpenException(statusCode, message) : super._(statusCode, message);
+  UnexpectedAlertOpenException(statusCode, message)
+      : super._(statusCode, message);
 }
 
 class NoAlertOpenException extends WebDriverException {
@@ -192,7 +196,8 @@ class InvalidSelectorException extends WebDriverException {
 }
 
 class SessionNotCreatedException extends WebDriverException {
-  SessionNotCreatedException(statusCode, message) : super._(statusCode, message);
+  SessionNotCreatedException(statusCode, message)
+      : super._(statusCode, message);
 }
 
 class MoveTargetOutOfBoundsException extends WebDriverException {

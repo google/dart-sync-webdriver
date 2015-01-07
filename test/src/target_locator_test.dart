@@ -25,9 +25,7 @@ import '../test_util.dart';
  * in other classes.
  */
 void main() {
-
   group('TargetLocator', () {
-
     WebDriver driver;
 
     setUp(() {
@@ -55,13 +53,13 @@ void main() {
       driver.switchTo.frame(0);
       expect(driver.pageSource, contains('this is a frame'));
       driver.switchTo.frame();
-      expect(() => driver.findElement(new By.tagName('button')),
-          returnsNormally);
+      expect(
+          () => driver.findElement(new By.tagName('button')), returnsNormally);
     });
 
     test('window object', () {
       driver.findElement(new By.partialLinkText('Open copy')).click();
-      for(var window in driver.windows) {
+      for (var window in driver.windows) {
         driver.switchTo.window(window);
         expect(driver.window, window);
       }

@@ -21,9 +21,7 @@ import 'package:sync_webdriver/sync_webdriver.dart';
 import '../test_util.dart';
 
 void main() {
-
   group('Alert', () {
-
     WebDriver driver;
     WebElement button;
     WebElement output;

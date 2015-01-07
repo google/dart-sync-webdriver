@@ -21,9 +21,7 @@ import 'package:sync_webdriver/sync_webdriver.dart';
 import '../test_util.dart';
 
 void main() {
-
   group('WebElement', () {
-
     WebDriver driver;
     WebElement table;
     WebElement button;
@@ -40,8 +38,10 @@ void main() {
       button = driver.findElement(const By.tagName('button'));
       form = driver.findElement(const By.tagName('form'));
       textInput = driver.findElement(const By.cssSelector('input[type=text]'));
-      checkbox = driver.findElement(const By.cssSelector('input[type=checkbox]'));
-      disabled = driver.findElement(const By.cssSelector('input[type=password]'));
+      checkbox =
+          driver.findElement(const By.cssSelector('input[type=checkbox]'));
+      disabled =
+          driver.findElement(const By.cssSelector('input[type=password]'));
       invisible = driver.findElement(const By.tagName('div'));
     });
 
@@ -143,7 +143,8 @@ void main() {
     });
 
     test('findElements -- 1 found', () {
-      var elements = form.findElements(const By.cssSelector('input[type=text]'));
+      var elements =
+          form.findElements(const By.cssSelector('input[type=text]'));
       expect(elements, hasLength(1));
       expect(elements, everyElement(isWebElement));
     });
@@ -160,16 +161,14 @@ void main() {
 
     test('attributes', () {
       expect(table.attributes['id'], 'table1');
-      expect(table.attributes['non-standard'],
-          'a non standard attr');
+      expect(table.attributes['non-standard'], 'a non standard attr');
       expect(table.attributes['disabled'], isNull);
       expect(disabled.attributes['disabled'], 'true');
     });
 
     test('cssProperties', () {
       expect(invisible.cssProperties['display'], 'none');
-      expect(invisible.cssProperties['background-color'],
-          'rgba(255, 0, 0, 1)');
+      expect(invisible.cssProperties['background-color'], 'rgba(255, 0, 0, 1)');
       expect(invisible.cssProperties['direction'], 'ltr');
     });
 
@@ -186,7 +185,8 @@ void main() {
 
       var elements = table.findElements(const By.tagName('td'));
       expect(elements[0].toString(), contains(table.toString()));
-      expect(elements[0].toString(), contains(const By.tagName('td').toString()));
+      expect(
+          elements[0].toString(), contains(const By.tagName('td').toString()));
       expect(elements[0].toString(), contains('findElements('));
       expect(elements[0].toString(), contains('[0]'));
       expect(elements[1].toString(), contains('[1]'));
