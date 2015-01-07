@@ -94,7 +94,6 @@ void main() {
       driver.timeouts.pageLoadTimeout = timeout;
       expect(driver.timeouts.pageLoadTimeout, equals(timeout));
 
-      expect(driver.timeouts.implicitWaitTimeout, isNull);
       timeout = new Duration(seconds: 2);
       driver.timeouts.implicitWaitTimeout = timeout;
       expect(driver.timeouts.implicitWaitTimeout, equals(timeout));
