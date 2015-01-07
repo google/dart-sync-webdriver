@@ -14,21 +14,23 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-library webdriver_test.web_driver;
+library webdriver_test.command_listener;
 
 import 'package:unittest/unittest.dart';
 import 'package:sync_webdriver/sync_webdriver.dart';
 import '../test_util.dart';
 
 void main() {
-  group('WebDriver', () {
+  group('CommandListener', () {
     WebDriver driver;
     List<CommandLog> commands = [];
 
     setUp(() {
       driver = freshDriver;
       driver.url = testPagePath;
-      driver.commandListeners.add((method, command, params) { commands.add(new CommandLog(method, command, params));});
+      driver.commandListeners.add((method, command, params) {
+        commands.add(new CommandLog(method, command, params));
+      });
     });
 
     tearDown(() {
@@ -36,7 +38,7 @@ void main() {
       commands.clear();
     });
 
-    test('listen to commands on driver', () {
+    test('listens to commands on driver', () {
       driver.findElements(const By.id('an-id'));
       driver.captureScreenshot();
 
@@ -45,7 +47,7 @@ void main() {
       _checkCommand(commands[1], 'GET', 'screenshot', isNull);
     });
 
-    test('listen to commands on element', () {
+    test('listens to commands on element', () {
       WebElement el = driver.findElement(const By.id('table1'));
       el.name;
       el.displayed;
@@ -54,11 +56,13 @@ void main() {
       expect(commands, hasLength(4));
       _checkCommand(commands[0], 'POST', 'element', isNotNull);
       _checkCommand(commands[1], 'GET', matches('element/.+/name'), isNull);
-      _checkCommand(commands[2], 'GET', matches('element/.+/displayed'), isNull);
-      _checkCommand(commands[3], 'POST', matches('element/.+/elements'), isNotNull);
+      _checkCommand(
+          commands[2], 'GET', matches('element/.+/displayed'), isNull);
+      _checkCommand(
+          commands[3], 'POST', matches('element/.+/elements'), isNotNull);
     });
 
-    test('listen to commands on timeouts', () {
+    test('listens to commands on timeouts', () {
       driver.timeouts.implicitWaitTimeout = new Duration(seconds: 1);
       driver.timeouts.implicitWaitTimeout = new Duration();
 
@@ -69,7 +73,9 @@ void main() {
 
     test('fires multiple listeners', () {
       var localCommands = [];
-      driver.commandListeners.add((method, command, params) { localCommands.add(new CommandLog(method, command, params));});
+      driver.commandListeners.add((method, command, params) {
+        localCommands.add(new CommandLog(method, command, params));
+      });
       driver.findElements(const By.id('an-id'));
       driver.captureScreenshot();
 

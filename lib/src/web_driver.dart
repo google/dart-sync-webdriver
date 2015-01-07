@@ -22,7 +22,7 @@ class WebDriver extends SearchContext {
   static final Uri DEFAULT_URI = new Uri.http('127.0.0.1:4444', '/wd/hub');
   static final HttpClientSync _client = new HttpClientSync();
 
-  final Uri _uri;
+  final Uri uri;
   final Map<String, Object> capabilities;
 
   JsonCodec _jsonDecoder;
@@ -93,7 +93,7 @@ class WebDriver extends SearchContext {
   static Uri _sessionUri(Uri uri, String sessionId) =>
       new Uri.http(uri.authority, '${uri.path}/session/$sessionId');
 
-  WebDriver._(this._uri, this.capabilities) {
+  WebDriver._(this.uri, this.capabilities) {
     _jsonDecoder = new JsonCodec.withReviver(_reviver);
     _timeouts = new Timeouts._(this);
   }
@@ -191,7 +191,7 @@ class WebDriver extends SearchContext {
   _post(String command, [params]) {
     commandListeners.forEach((listener) => listener('POST', command, params));
     var path = _processCommand(command);
-    var request = _client.postUrl(new Uri.http(_uri.authority, path));
+    var request = _client.postUrl(new Uri.http(uri.authority, path));
     if (params != null) {
       request.headers.contentType = _CONTENT_TYPE_JSON;
       request.write(JSON.encode(params));
@@ -202,19 +202,19 @@ class WebDriver extends SearchContext {
   _get(String command) {
     commandListeners.forEach((listener) => listener('GET', command, null));
     var path = _processCommand(command);
-    var request = _client.getUrl(new Uri.http(_uri.authority, path));
+    var request = _client.getUrl(new Uri.http(uri.authority, path));
     return _processResponse(request.close());
   }
 
   _delete(String command) {
     commandListeners.forEach((listener) => listener('DELETE', command, null));
     var path = _processCommand(command);
-    var request = _client.deleteUrl(new Uri.http(_uri.authority, path));
+    var request = _client.deleteUrl(new Uri.http(uri.authority, path));
     return _processResponse(request.close());
   }
 
   String _processCommand(String command) {
-    StringBuffer path = new StringBuffer(_uri.path);
+    StringBuffer path = new StringBuffer(uri.path);
     if (!command.isEmpty && !command.startsWith('/')) {
       path.write('/');
     }
@@ -241,7 +241,7 @@ class WebDriver extends SearchContext {
   }
 
   @override
-  String toString() => '{WebDriver $_uri}';
+  String toString() => '{WebDriver $uri}';
 }
 
 final _NUL_REGEXP = new RegExp('\u{0}');
