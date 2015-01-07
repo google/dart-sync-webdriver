@@ -16,12 +16,13 @@ limitations under the License.
 
 library webdriver_test;
 
-import 'package:unittest/compact_vm_config.dart';
+import 'package:unittest/vm_config.dart';
 import 'package:unittest/unittest.dart' show test;
 
 import 'test_util.dart' show closeDriver;
 
 import 'src/alert_test.dart' as alert;
+import 'src/command_listener_test.dart' as command_listener;
 import 'src/keyboard_test.dart' as keyboard;
 import 'src/mouse_test.dart' as mouse;
 import 'src/navigation_test.dart' as navigation;
@@ -37,9 +38,10 @@ import 'src/window_test.dart' as window;
  * as they are slow and they have external dependencies.
  */
 void main() {
-  useCompactVMConfiguration();
+  useVMConfiguration();
 
   alert.main();
+  command_listener.main();
   keyboard.main();
   mouse.main();
   navigation.main();

@@ -117,5 +117,19 @@ void main() {
       expect(screenshot, everyElement(new isInstanceOf<int>()));
       expect(screenshot, everyElement(inInclusiveRange(0, 255)));
     });
+
+    test('fromExistingSession', () {
+      List path = driver.uri.pathSegments;
+      Uri uri = new Uri.http(
+          driver.uri.authority, path.sublist(0, path.length - 2).join('/'));
+      String session = path.last;
+      var newDriver = new WebDriver.fromExistingSession(session, uri: uri);
+      var url = newDriver.url;
+      expect(url, startsWith('file:'));
+      expect(url, endsWith('test_page.html'));
+      newDriver.url = 'http://www.google.com/ncr';
+      url = driver.url;
+      expect(url, contains('www.google.com'));
+    });
   });
 }
