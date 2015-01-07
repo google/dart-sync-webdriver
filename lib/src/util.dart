@@ -29,12 +29,9 @@ const _INTERVAL = const Duration(milliseconds: 100);
  * Any exceptions raised during the evauluation of [condition] are
  * caught and treated as an unsuccessful evaluation.
  */
-waitForValue(condition(),
-    {Duration timeout: _DEFAULT_WAIT,
-     Duration interval: _INTERVAL,
-     onError(Object error)}) {
-  return waitFor(
-      condition, isNotNull, timeout: timeout, interval: interval);
+waitForValue(condition(), {Duration timeout: _DEFAULT_WAIT,
+    Duration interval: _INTERVAL, onError(Object error)}) {
+  return waitFor(condition, isNotNull, timeout: timeout, interval: interval);
 }
 
 /**
@@ -47,10 +44,8 @@ waitForValue(condition(),
  * Any exceptions raised during the evauluation of [condition] are
  * caught and treated as an unsuccessful evaluation.
  */
-waitFor(condition(), Matcher matcher,
-    {Duration timeout: _DEFAULT_WAIT,
-     Duration interval: _INTERVAL,
-     onError(Object error)}) {
+waitFor(condition(), Matcher matcher, {Duration timeout: _DEFAULT_WAIT,
+    Duration interval: _INTERVAL, onError(Object error)}) {
   conditionWithExpect() {
     var value = condition();
     expect(value, matcher);
@@ -59,8 +54,8 @@ waitFor(condition(), Matcher matcher,
   return _waitFor(conditionWithExpect, timeout, interval, onError);
 }
 
-_waitFor(condition(), Duration timeout, Duration interval,
-         onError(Object error)) {
+_waitFor(
+    condition(), Duration timeout, Duration interval, onError(Object error)) {
   var endTime = new DateTime.now().add(timeout);
 
   var result;
@@ -105,20 +100,18 @@ class _HasText extends Matcher {
       item is WebElement && _matcher.matches(item.text, matchState);
 
   Description describe(Description description) =>
-    description.add('a WebElement with text of ')
-        .addDescriptionOf(_matcher);
+      description.add('a WebElement with text of ').addDescriptionOf(_matcher);
 
-  Description describeMismatch(item, Description mismatchDescription,
-                               Map matchState, bool verbose) {
-    return mismatchDescription.add('has text of ')
-        .addDescriptionOf(item.text);
+  Description describeMismatch(
+      item, Description mismatchDescription, Map matchState, bool verbose) {
+    return mismatchDescription.add('has text of ').addDescriptionOf(item.text);
   }
 }
 
 // TODO Exception management
 class UnexpectedTagNameException extends FormatException {
   UnexpectedTagNameException(String expected, String actual)
-    : super('Element should have been "$expected" but was "$actual"');
+      : super('Element should have been "$expected" but was "$actual"');
 }
 
 _setSelected(WebElement option) {
@@ -146,12 +139,12 @@ String _escapeQuotes(String toEscape) {
     var quoted = new StringBuffer("concat(");
     for (int i = 0; i < substrings.length; i++) {
       quoted
-          ..write("\"")
-          ..write(substrings[i])
-          ..write("\"")
-          ..write((i == substrings.length - 1)
-              ? (quoteIsLast ? ", '\"')" : ")")
-              : ", '\"', ");
+        ..write("\"")
+        ..write(substrings[i])
+        ..write("\"")
+        ..write((i == substrings.length - 1) ?
+            (quoteIsLast ? ", '\"')" : ")") :
+            ", '\"', ");
     }
     return quoted.toString();
   }
@@ -255,8 +248,8 @@ class Select implements WebElement {
 
     if (!matched) {
       // TODO Exception management
-      throw new NoSuchElementException(0,
-          "Cannot locate option with index: $index");
+      throw new NoSuchElementException(
+          0, "Cannot locate option with index: $index");
     }
   }
 
@@ -276,8 +269,8 @@ class Select implements WebElement {
 
     if (!matched) {
       // TODO Exception management
-      throw new NoSuchElementException(0,
-          "Cannot locate option with value: $value");
+      throw new NoSuchElementException(
+          0, "Cannot locate option with value: $value");
     }
   }
 
@@ -313,8 +306,8 @@ class Select implements WebElement {
 
     if (!matched) {
       // TODO Exception management
-      throw new NoSuchElementException(0,
-          "Cannot locate element with text: $text");
+      throw new NoSuchElementException(
+          0, "Cannot locate element with text: $text");
     }
   }
 

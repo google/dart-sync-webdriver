@@ -23,13 +23,11 @@ class Returns {
 }
 
 class ReturnsList extends Returns {
-
   const ReturnsList(Type type) : super(type);
 }
 
 /// Filters element based on visibility.
 class WithState extends ElementFilter implements HasFilterFinderOptions {
-
   final bool _displayed;
 
   const WithState._(this._displayed);
@@ -45,7 +43,7 @@ class WithState extends ElementFilter implements HasFilterFinderOptions {
 
   @override
   List<FilterFinderOption> get options =>
-      const [ FilterFinderOption.DISABLE_IMPLICIT_DISPLAY_FILTERING ];
+      const [FilterFinderOption.DISABLE_IMPLICIT_DISPLAY_FILTERING];
 
   @override
   bool keep(WebElement element) {
@@ -88,7 +86,7 @@ class _Root implements Finder, HasFilterFinderOptions {
   @override
   List<WebElement> findElements(SearchContext context) {
     if (context is WebElement) {
-      return [ context ];
+      return [context];
     } else {
       return context.findElements(const By.xpath('/*'));
     }
@@ -96,13 +94,11 @@ class _Root implements Finder, HasFilterFinderOptions {
 
   @override
   List<FilterFinderOption> get options =>
-      const [ FilterFinderOption.DISABLE_IMPLICIT_DISPLAY_FILTERING ];
+      const [FilterFinderOption.DISABLE_IMPLICIT_DISPLAY_FILTERING];
 }
-
 
 /// Keeps only [WebElement]s that have the given attribute with the given value.
 class WithAttribute extends ElementFilter {
-
   final String name;
   final String value;
 
@@ -115,7 +111,6 @@ class WithAttribute extends ElementFilter {
 typedef ScriptExecutor(String script, List args);
 
 abstract class _ByScript implements Finder {
-
   final String _js;
   final _arg;
 
@@ -135,7 +130,7 @@ abstract class _ByScript implements Finder {
     var listArg;
     if (_arg is List) {
       listArg = new List.from(_arg);
-    } else if (_arg != null){
+    } else if (_arg != null) {
       listArg = [_arg];
     } else {
       listArg = [];

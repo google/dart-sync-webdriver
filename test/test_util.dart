@@ -29,7 +29,7 @@ final Matcher isPoint = new isInstanceOf<Point>();
 final Matcher isWindow = new isInstanceOf<Window>();
 
 String get testPagePath {
-  if(_testPagePath == null) {
+  if (_testPagePath == null) {
     _testPagePath = _getTestPagePath();
   }
   return _testPagePath;
@@ -38,7 +38,7 @@ String get testPagePath {
 String _getTestPagePath() {
   var testPagePath = path.join('test', 'test_page.html');
   testPagePath = path.absolute(testPagePath);
-  if(!FileSystemEntity.isFileSync(testPagePath)) {
+  if (!FileSystemEntity.isFileSync(testPagePath)) {
     throw new Exception('Could not find the test file at "$testPagePath".'
         ' Make sure you are running tests from the root of the project.');
   }
@@ -77,6 +77,6 @@ WebDriver get freshDriver {
 void closeDriver() {
   try {
     _driver.quit();
-  } catch (e) { }
+  } catch (e) {}
   _driver = null;
 }

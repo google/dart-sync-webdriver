@@ -24,10 +24,10 @@ class Window extends _WebDriverBase {
         this._handle = handle;
 
   /// The size of this window.
-  Size get size =>  new Size.fromJson(_get('size'));
+  Size get size => new Size.fromJson(_get('size'));
 
   /// The location of this window.
-  Point<int> get location =>  _jsonToPoint(_get('position'));
+  Point<int> get location => _jsonToPoint(_get('position'));
 
   /// Maximize this window.
   void maximize() => _post('maximize');

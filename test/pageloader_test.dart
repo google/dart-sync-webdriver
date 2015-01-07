@@ -51,7 +51,8 @@ void main() {
   });
 
   test('class annotation on nested field', () {
-    PageForClassAnnotationTest page = loader.getInstance(PageForClassAnnotationTest);
+    PageForClassAnnotationTest page =
+        loader.getInstance(PageForClassAnnotationTest);
     expect(page.table.root.name, 'table');
     verifyTable(page.table);
   });
@@ -98,13 +99,14 @@ void main() {
   });
 
   test('no matching but nullable element', () {
-    PageForNullableElementTest page = loader.getInstance(PageForNullableElementTest);
+    PageForNullableElementTest page =
+        loader.getInstance(PageForNullableElementTest);
     expect(page.doesntExist, isNull);
   });
 
   test('multiple matching element', () {
-    expect(() => loader.getInstance(PageForMultipleMatchingElementTest),
-        throws);
+    expect(
+        () => loader.getInstance(PageForMultipleMatchingElementTest), throws);
   });
 
   test('multiple matching element', () {
@@ -199,7 +201,8 @@ void main() {
   });
 
   test('static setter', () {
-    PageForStaticSettersTest page = loader.getInstance(PageForStaticSettersTest);
+    PageForStaticSettersTest page =
+        loader.getInstance(PageForStaticSettersTest);
     verifyTable(page.table);
     expect(page.driver, driver);
     expect(page.loader, loader);
@@ -235,7 +238,6 @@ void main() {
 }
 
 class PageForSimpleTest {
-
   WebDriver driver;
 
   PageLoader loader;
@@ -246,7 +248,8 @@ class PageForSimpleTest {
 
 class SubclassPage extends PageForSimpleTest {}
 
-@By.tagName('table') @Optional
+@By.tagName('table')
+@Optional
 class Table {
   @Root
   WebElement root;
@@ -266,35 +269,41 @@ class PageForClassAnnotationTest {
 }
 
 class PageForDisplayedFilteringTest {
-  @By.id('div') @WithState.present()
+  @By.id('div')
+  @WithState.present()
   List<WebElement> shouldHaveOneElement;
 
   @By.id('div')
   List<WebElement> shouldBeEmpty;
 
-  @By.id('div') @WithState.visible()
+  @By.id('div')
+  @WithState.visible()
   List shouldAlsoBeEmpty;
 }
 
 class PageForSettersTest {
   List<WebElement> _shouldHaveOneElement;
 
-  @By.id('div') @WithState.present()
+  @By.id('div')
+  @WithState.present()
   set shouldHaveOneElement(List<WebElement> elements) {
     _shouldHaveOneElement = elements;
   }
 }
 
 class PageForSkipFinalTest {
-  @By.id('div') @WithState.present()
+  @By.id('div')
+  @WithState.present()
   List<WebElement> shouldHaveOneElement;
 
-  @By.id('div') @WithState.present()
+  @By.id('div')
+  @WithState.present()
   final List<WebElement> shouldBeNull = null;
 }
 
 class PageForSkipFieldsWithoutFinderTest {
-  @By.id('div') @WithState.present()
+  @By.id('div')
+  @WithState.present()
   List<WebElement> shouldHaveOneElement;
 
   @WithState.present()
@@ -330,11 +339,13 @@ class PageForMultipleMatchingClassElementTest {
 }
 
 class PageForMultipleFinderTest {
-  @By.id('non-existent id') @By.name('a-name')
+  @By.id('non-existent id')
+  @By.name('a-name')
   WebElement multipleFinder;
 }
 
-@By.id('non-existent id') @By.name('a-name')
+@By.id('non-existent id')
+@By.name('a-name')
 class PageForMultipleClassFinderTest {
   @Root
   WebElement multipleFinder;
@@ -343,7 +354,8 @@ class PageForMultipleClassFinderTest {
 class PageForInvalidConstructorTest {
   PageForInvalidConstructorTest(String someArg);
 
-  @By.id('div') @WithState.present()
+  @By.id('div')
+  @WithState.present()
   List<WebElement> shouldHaveOneElement;
 }
 
@@ -353,7 +365,8 @@ class PageForByJsTest {
 }
 
 class PageForWithAttributeTest {
-  @By.tagName('input') @WithAttribute('type', 'checkbox')
+  @By.tagName('input')
+  @WithAttribute('type', 'checkbox')
   WebElement element;
 }
 
@@ -370,7 +383,6 @@ class PageForPrivateConstructorTest extends PageForSimpleTest {
 }
 
 class PageForPrivateFieldsTest {
-
   @By.tagName('table')
   Table _table;
 
@@ -384,7 +396,6 @@ class PageForPrivateFieldsTest {
 }
 
 class PageForPrivateSettersTest {
-
   Table table;
 
   dynamic driver;
@@ -402,11 +413,13 @@ class PageForStaticFieldsTest extends PageForSimpleTest {
   static WebElement dontSet;
 }
 
-class PageForStaticSettersTest extends PageForSimpleTest{
+class PageForStaticSettersTest extends PageForSimpleTest {
   static var _dontSet;
 
   @By.tagName("table")
-  static set dontSet(WebElement el) { _dontSet = el; }
+  static set dontSet(WebElement el) {
+    _dontSet = el;
+  }
 
   static get dontSet => _dontSet;
 }

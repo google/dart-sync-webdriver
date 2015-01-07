@@ -20,7 +20,6 @@ final ContentType _CONTENT_TYPE_JSON =
     new ContentType("application", "json", charset: "utf-8");
 
 class WebElement extends _WebDriverBase with SearchContext {
-
   final String _elementId;
 
   // The following three fields identify the provenance of this element
@@ -29,8 +28,8 @@ class WebElement extends _WebDriverBase with SearchContext {
   int _index;
 
   WebElement._(WebDriver driver, String elementId)
-    : super(driver, 'element/$elementId'),
-      _elementId = elementId;
+      : super(driver, 'element/$elementId'),
+        _elementId = elementId;
 
   /// Click on this element.
   void click() {
@@ -43,9 +42,9 @@ class WebElement extends _WebDriverBase with SearchContext {
   /// Send [keysToSend] (a [String] or [List<String>]) to this element.
   void sendKeys(dynamic keysToSend) {
     if (keysToSend is String) {
-      keysToSend = [ keysToSend ];
+      keysToSend = [keysToSend];
     }
-    _post('value', { 'value' : keysToSend as List<String>});
+    _post('value', {'value': keysToSend as List<String>});
   }
 
   /// Clear the content of a text element.
@@ -105,8 +104,8 @@ class WebElement extends _WebDriverBase with SearchContext {
   @override
   int get hashCode => _elementId.hashCode >> 3 + driver.hashCode;
 
-  void _updateProvenance(
-      SearchContext context, Finder finder, [int index = -1]) {
+  void _updateProvenance(SearchContext context, Finder finder,
+      [int index = -1]) {
     this._context = context;
     this._finder = finder;
     this._index = index;
@@ -117,7 +116,9 @@ class WebElement extends _WebDriverBase with SearchContext {
     StringBuffer result = new StringBuffer('{WebElement ');
     result.write(_elementId);
     if (_context != null && _finder != null) {
-      result..write(' ')..write(_context);
+      result
+        ..write(' ')
+        ..write(_context);
       if (_index >= 0) {
         result.write('.findElements(');
       } else {
@@ -125,9 +126,10 @@ class WebElement extends _WebDriverBase with SearchContext {
       }
       result.write(_finder);
       if (_index >= 0) {
-        result..write(')[')
-            ..write(_index)
-            ..write(']}');
+        result
+          ..write(')[')
+          ..write(_index)
+          ..write(']}');
       } else {
         result.write(')}');
       }

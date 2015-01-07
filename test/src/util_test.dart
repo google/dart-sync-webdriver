@@ -21,42 +21,35 @@ import 'package:sync_webdriver/sync_webdriver.dart';
 import '../test_util.dart';
 
 void main() {
-
   group('waitFor()', () {
     test('that returns a string', () {
       var count = 0;
-      var result = waitFor(
-          () {
-            if (count == 2) return 'webdriver - Google Search';
-            count++;
-            return count;
-          },
-          equals('webdriver - Google Search'));
+      var result = waitFor(() {
+        if (count == 2) return 'webdriver - Google Search';
+        count++;
+        return count;
+      }, equals('webdriver - Google Search'));
 
       expect(result, equals('webdriver - Google Search'));
     });
 
     test('that returns null', () {
       var count = 0;
-      var result = waitFor(
-          () {
-            if (count == 2) return null;
-            count++;
-            return count;
-          },
-          isNull);
+      var result = waitFor(() {
+        if (count == 2) return null;
+        count++;
+        return count;
+      }, isNull);
       expect(result, isNull);
     });
 
     test('that returns false', () {
       var count = 0;
-      var result = waitFor(
-          () {
-            if (count == 2) return false;
-            count++;
-            return count;
-          },
-          isFalse);
+      var result = waitFor(() {
+        if (count == 2) return false;
+        count++;
+        return count;
+      }, isFalse);
       expect(result, isFalse);
     });
   });
@@ -64,27 +57,25 @@ void main() {
   group('waitForValue()', () {
     test('that returns a string', () {
       var count = 0;
-      var result = waitForValue(
-          () {
-            if (count == 2) return 'Google';
-            count++;
-            return null;
-          });
+      var result = waitForValue(() {
+        if (count == 2) return 'Google';
+        count++;
+        return null;
+      });
       expect(result, equals('Google'));
     });
 
     test('that returns false', () {
       var count = 0;
-      var result = waitForValue(
-          () {
-            expect(count, lessThanOrEqualTo(2));
-            if (count == 2) {
-              count++;
-              return false;
-            }
-            count++;
-            return null;
-          });
+      var result = waitForValue(() {
+        expect(count, lessThanOrEqualTo(2));
+        if (count == 2) {
+          count++;
+          return false;
+        }
+        count++;
+        return null;
+      });
       expect(result, isFalse);
     });
   });
@@ -95,7 +86,6 @@ void main() {
       driver = freshDriver;
       driver.url = testPagePath;
     });
-
 
     test('isDisplayed', () {
       var body = driver.findElement(const By.tagName('body'));
@@ -113,7 +103,8 @@ void main() {
     });
 
     test('isNotEnabled', () {
-      var input = driver.findElement(const By.cssSelector('input[type=password]'));
+      var input =
+          driver.findElement(const By.cssSelector('input[type=password]'));
       expect(input, isNotEnabled);
     });
 
@@ -142,8 +133,7 @@ void main() {
     });
 
     test('selectByIndex simple', () {
-      var select = new Select(selectSimple)
-        ..selectByIndex(2);
+      var select = new Select(selectSimple)..selectByIndex(2);
       var options = select.options;
 
       expect(options[0].selected, false);
@@ -153,7 +143,7 @@ void main() {
       expect(options[2], select.firstSelectedOption);
       expect(options[2].text, "Apple");
       expect(options[2].attributes["value"], "appleValue");
-      expect(select.allSelectedOptions, [ options[2] ]);
+      expect(select.allSelectedOptions, [options[2]]);
       expect(select.value, "appleValue");
     });
 
@@ -170,7 +160,7 @@ void main() {
       expect(options[1], select.firstSelectedOption);
       expect(options[1].text, "Green");
       expect(options[1].attributes["value"], "greenValue");
-      expect(select.allSelectedOptions, [ options[1], options[3] ]);
+      expect(select.allSelectedOptions, [options[1], options[3]]);
       expect(select.value, "greenValue");
 
       select.deselectAll();
@@ -190,15 +180,14 @@ void main() {
     });
 
     test('selectByValue simple', () {
-      var select = new Select(selectSimple)
-        ..selectByValue("appleValue");
+      var select = new Select(selectSimple)..selectByValue("appleValue");
       var options = select.options;
 
       expect(options[2].selected, true);
       expect(options[2], select.firstSelectedOption);
       expect(options[2].text, "Apple");
       expect(options[2].attributes["value"], "appleValue");
-      expect(select.allSelectedOptions, [ options[2] ]);
+      expect(select.allSelectedOptions, [options[2]]);
       expect(select.value, "appleValue");
     });
 
@@ -212,7 +201,7 @@ void main() {
       expect(options[1], select.firstSelectedOption);
       expect(options[1].text, "Green");
       expect(options[1].attributes["value"], "greenValue");
-      expect(select.allSelectedOptions, [ options[1], options[3] ]);
+      expect(select.allSelectedOptions, [options[1], options[3]]);
       expect(select.value, "greenValue");
 
       select.deselectAll();
@@ -232,15 +221,14 @@ void main() {
     });
 
     test('selectByVisibleText simple', () {
-      var select = new Select(selectSimple)
-        ..selectByVisibleText("Apple");
+      var select = new Select(selectSimple)..selectByVisibleText("Apple");
       var options = select.options;
 
       expect(options[2].selected, true);
       expect(options[2], select.firstSelectedOption);
       expect(options[2].text, "Apple");
       expect(options[2].attributes["value"], "appleValue");
-      expect(select.allSelectedOptions, [ options[2] ]);
+      expect(select.allSelectedOptions, [options[2]]);
       expect(select.value, "appleValue");
     });
 
@@ -254,7 +242,7 @@ void main() {
       expect(options[1], select.firstSelectedOption);
       expect(options[1].text, "Green");
       expect(options[1].attributes["value"], "greenValue");
-      expect(select.allSelectedOptions, [ options[1], options[3] ]);
+      expect(select.allSelectedOptions, [options[1], options[3]]);
       expect(select.value, "greenValue");
 
       select.deselectAll();
@@ -274,4 +262,3 @@ void main() {
     });
   });
 }
-

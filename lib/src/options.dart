@@ -17,11 +17,10 @@ limitations under the License.
 part of sync.webdriver;
 
 class Cookies extends _WebDriverBase {
-
   Cookies._(driver) : super(driver, 'cookie');
 
   /// Set a cookie.
-  void add(Cookie cookie) => _post('', { 'cookie': cookie });
+  void add(Cookie cookie) => _post('', {'cookie': cookie});
 
   /// Delete the cookie with the given [name].
   void delete(String name) => _delete(name);
@@ -54,12 +53,10 @@ class Cookie {
   factory Cookie.fromJson(Map<String, dynamic> json) {
     var expiry;
     if (json['expiry'] is num) {
-      expiry = new DateTime
-          .fromMillisecondsSinceEpoch(json['expiry']*1000, isUtc: true);
+      expiry = new DateTime.fromMillisecondsSinceEpoch(
+          (json['expiry'] * 1000).round(), isUtc: true);
     }
-    return new Cookie(
-        json['name'],
-        json['value'],
+    return new Cookie(json['name'], json['value'],
         path: json['path'],
         domain: json['domain'],
         secure: json['secure'],
@@ -67,10 +64,7 @@ class Cookie {
   }
 
   Map<String, dynamic> toJson() {
-    var json = {
-        'name': name,
-        'value': value
-    };
+    var json = {'name': name, 'value': value};
     if (path is String) {
       json['path'] = path;
     }
@@ -91,15 +85,14 @@ class Cookie {
 }
 
 class Timeouts extends _WebDriverBase {
-
   Duration _scriptTimeout;
   Duration _implicitWaitTimeout;
   Duration _pageLoadTimeout;
 
-  Timeouts._(driver): super(driver, 'timeouts');
+  Timeouts._(driver) : super(driver, 'timeouts');
 
   _set(String type, Duration duration) =>
-      _post('', { 'type' : type, 'ms': duration.inMilliseconds});
+      _post('', {'type': type, 'ms': duration.inMilliseconds});
 
   /// Get the script timeout.
   Duration get scriptTimeout => _scriptTimeout;

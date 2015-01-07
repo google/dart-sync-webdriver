@@ -16,7 +16,7 @@ limitations under the License.
 
 library webdriver_test;
 
-import 'package:unittest/compact_vm_config.dart';
+import 'package:unittest/vm_config.dart';
 import 'package:unittest/unittest.dart' show test;
 
 import 'test_util.dart' show closeDriver;
@@ -37,7 +37,7 @@ import 'src/window_test.dart' as window;
  * as they are slow and they have external dependencies.
  */
 void main() {
-  useCompactVMConfiguration();
+  useVMConfiguration();
 
   alert.main();
   keyboard.main();

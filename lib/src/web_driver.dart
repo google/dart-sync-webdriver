@@ -16,6 +16,8 @@ limitations under the License.
 
 part of sync.webdriver;
 
+typedef void CommandListener(String method, String endpoint, params);
+
 class WebDriver extends SearchContext {
   static final Uri DEFAULT_URI = new Uri.http('127.0.0.1:4444', '/wd/hub');
   static final HttpClientSync _client = new HttpClientSync();
@@ -26,17 +28,17 @@ class WebDriver extends SearchContext {
   JsonCodec _jsonDecoder;
   Timeouts _timeouts;
 
-  factory WebDriver({
-      Uri uri: null,
-      Map<String, String> required: null,
-      Map<String, String> desired: const <String, String>{}}) {
+  /// Listeners that will be called when each command executes
+  final List<CommandListener> commandListeners = [];
 
+  factory WebDriver({Uri uri: null, Map<String, String> required: null,
+      Map<String, String> desired: const <String, String>{}}) {
     if (uri == null) {
       uri = DEFAULT_URI;
     }
     var request =
         _client.postUrl(new Uri.http(uri.authority, '${uri.path}/session'));
-    var jsonParams = { "desiredCapabilities": desired };
+    var jsonParams = {"desiredCapabilities": desired};
 
     if (required != null) {
       jsonParams["requiredCapabilities"] = required;
@@ -60,15 +62,14 @@ class WebDriver extends SearchContext {
       case HttpStatus.OK:
         var jsonResp = _parseBody(resp);
 
-        if (jsonResp == null || jsonResp['status'] != 0) {
+        if (jsonResp is! Map || jsonResp['status'] != 0) {
           throw new WebDriverException(
               httpStatusCode: resp.statusCode,
               httpReasonPhrase: resp.reasonPhrase,
               jsonResp: jsonResp);
         }
 
-        sessionUri = new Uri.http(uri.authority,
-            '${uri.path}/session/${jsonResp['sessionId']}');
+        sessionUri = _sessionUri(uri, jsonResp['sessionId']);
         capabilities = new UnmodifiableMapView(jsonResp['value']);
         break;
       default:
@@ -80,6 +81,17 @@ class WebDriver extends SearchContext {
 
     return new WebDriver._(sessionUri, capabilities);
   }
+
+  factory WebDriver.fromExistingSession(String sessionId,
+      {Uri uri, Map<String, String> capabilities: const <String, String>{}}) {
+    if (uri == null) {
+      uri = DEFAULT_URI;
+    }
+    return new WebDriver._(_sessionUri(uri, sessionId), capabilities);
+  }
+
+  static Uri _sessionUri(Uri uri, String sessionId) =>
+      new Uri.http(uri.authority, '${uri.path}/session/$sessionId');
 
   WebDriver._(this._uri, this.capabilities) {
     _jsonDecoder = new JsonCodec.withReviver(_reviver);
@@ -105,8 +117,8 @@ class WebDriver extends SearchContext {
     _delete('');
   }
 
-  Iterable<Window> get windows => _get('window_handles')
-      .map((handle) => new Window._(this, handle));
+  Iterable<Window> get windows =>
+      _get('window_handles').map((handle) => new Window._(this, handle));
 
   Window get window => new Window._(this, _get('window_handle'));
 
@@ -147,10 +159,7 @@ class WebDriver extends SearchContext {
    * result will be converted to WebElements.
    */
   dynamic executeAsync(String script, List args) =>
-      _post('execute_async', {
-        'script': script,
-        'args': args
-      });
+      _post('execute_async', {'script': script, 'args': args});
 
   /**
    * Inject a snippet of JavaScript into the page for execution in the context
@@ -167,10 +176,7 @@ class WebDriver extends SearchContext {
    * result will be converted to WebElements.
    */
   dynamic execute(String script, List args) =>
-      _post('execute', {
-        'script': script,
-        'args': args
-      });
+      _post('execute', {'script': script, 'args': args});
 
   List<int> captureScreenshot() => new UnmodifiableListView(
       CryptoUtils.base64StringToBytes(_get('screenshot')));
@@ -182,9 +188,10 @@ class WebDriver extends SearchContext {
     return value;
   }
 
-  _post(String command, params) {
+  _post(String command, [params]) {
+    commandListeners.forEach((listener) => listener('POST', command, params));
     var path = _processCommand(command);
-    var request =  _client.postUrl(new Uri.http(_uri.authority, path));
+    var request = _client.postUrl(new Uri.http(_uri.authority, path));
     if (params != null) {
       request.headers.contentType = _CONTENT_TYPE_JSON;
       request.write(JSON.encode(params));
@@ -193,12 +200,14 @@ class WebDriver extends SearchContext {
   }
 
   _get(String command) {
+    commandListeners.forEach((listener) => listener('GET', command, null));
     var path = _processCommand(command);
     var request = _client.getUrl(new Uri.http(_uri.authority, path));
     return _processResponse(request.close());
   }
 
   _delete(String command) {
+    commandListeners.forEach((listener) => listener('DELETE', command, null));
     var path = _processCommand(command);
     var request = _client.deleteUrl(new Uri.http(_uri.authority, path));
     return _processResponse(request.close());
@@ -219,9 +228,9 @@ class WebDriver extends SearchContext {
     }
     var jsonBody = _parseBody(resp, _jsonDecoder);
 
-    if (resp.statusCode != HttpStatus.OK
-        || jsonBody == null
-        || jsonBody['status'] != 0) {
+    if (resp.statusCode != HttpStatus.OK ||
+        jsonBody is! Map ||
+        jsonBody['status'] != 0) {
       throw new WebDriverException(
           httpStatusCode: resp.statusCode,
           httpReasonPhrase: resp.reasonPhrase,
