@@ -179,7 +179,9 @@ class WebDriver extends SearchContext {
       _post('execute', {'script': script, 'args': args});
 
   List<int> captureScreenshot() => new UnmodifiableListView(
-      CryptoUtils.base64StringToBytes(_get('screenshot')));
+      CryptoUtils.base64StringToBytes(captureScreenshotAsBase64()));
+
+  String captureScreenshotAsBase64() => _get('screenshot');
 
   _reviver(dynamic key, dynamic value) {
     if (value is Map && value.containsKey('ELEMENT')) {
