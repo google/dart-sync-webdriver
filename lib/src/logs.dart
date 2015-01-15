@@ -19,7 +19,22 @@ part of sync.webdriver;
 class Logs extends _WebDriverBase {
   Logs._(driver) : super(driver, 'log');
 
-  List get(String logType) => _post('', {'type' : logType});
+  Iterable<LogEntry> get(String logType) => _post('', {'type' : logType}).map(
+      (entry) => new LogEntry.fromMap(entry));
+}
+
+class LogEntry {
+  String message;
+  int timestamp;
+  String level;
+  
+  LogEntry(this.message, this.timestamp, this.level);
+  
+  LogEntry.fromMap(Map map) {
+    this.message = map["message"];
+    this.timestamp = map["timestamp"];
+    this.level = map["level"];
+  }
 }
 
 class LogType {
