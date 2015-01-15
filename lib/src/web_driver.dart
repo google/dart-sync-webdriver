@@ -136,6 +136,8 @@ class WebDriver extends SearchContext {
 
   Cookies get cookies => new Cookies._(this);
 
+  Logs get logs => new Logs._(this);
+
   Timeouts get timeouts => _timeouts;
 
   /**
