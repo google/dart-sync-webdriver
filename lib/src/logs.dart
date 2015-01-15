@@ -31,9 +31,9 @@ class LogEntry {
   LogEntry(this.message, this.timestamp, this.level);
   
   LogEntry.fromMap(Map map) {
-    this.message = map["message"];
-    this.timestamp = map["timestamp"];
-    this.level = map["level"];
+    this.message = map['message'];
+    this.timestamp = map['timestamp'];
+    this.level = map['level'];
   }
 }
 
