@@ -69,7 +69,11 @@ WebDriver get freshDriver {
     }
   }
   if (_driver == null) {
-    _driver = new WebDriver(desired: Capabilities.chrome);
+    Map capabilities = Capabilities.chrome
+        ..[Capabilities.LOGGING_PREFS] = {
+            LogType.PERFORMANCE : LogLevel.INFO
+        };
+    _driver = new WebDriver(desired: capabilities);
   }
   return _driver;
 }
