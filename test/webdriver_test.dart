@@ -25,6 +25,7 @@ import 'src/alert_test.dart' as alert;
 import 'src/command_listener_test.dart' as command_listener;
 import 'src/keyboard_test.dart' as keyboard;
 import 'src/mouse_test.dart' as mouse;
+import 'src/logs_test.dart' as logs;
 import 'src/navigation_test.dart' as navigation;
 import 'src/options_test.dart' as options;
 import 'src/target_locator_test.dart' as target_locator;
@@ -44,6 +45,7 @@ void main() {
   command_listener.main();
   keyboard.main();
   mouse.main();
+  logs.main();
   navigation.main();
   options.main();
   target_locator.main();

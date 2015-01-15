@@ -33,6 +33,7 @@ part 'src/error.dart';
 part 'src/keyboard.dart';
 part 'src/keys.dart';
 part 'src/mouse.dart';
+part 'src/logs.dart';
 part 'src/navigation.dart';
 part 'src/options.dart';
 part 'src/target_locator.dart';
