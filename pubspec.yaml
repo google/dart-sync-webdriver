@@ -5,10 +5,10 @@ description: Provides WebDriver bindings for Dart. These use the WebDriver JSON 
 environment:
   sdk: '>=1.9.0-dev.2.2 <2.0.0'
 dependencies:
-  crypto: '>=0.9.0 <0.10.0'
-  matcher: '>=0.11.3 <0.12.0'
+  crypto: '^0.9.0'
+  matcher: '^0.11.3'
   sync_socket:
     path: ../dart-sync-socket
 dev_dependencies:
-  path: '>=1.3.1 <2.0.0'
-  unittest: '>=0.11.4 <0.12.0'
+  path: '^1.3.1'
+  unittest: '^0.11.4'

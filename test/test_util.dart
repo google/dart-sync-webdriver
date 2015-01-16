@@ -70,9 +70,7 @@ WebDriver get freshDriver {
   }
   if (_driver == null) {
     Map capabilities = Capabilities.chrome
-        ..[Capabilities.LOGGING_PREFS] = {
-            LogType.PERFORMANCE : LogLevel.INFO
-        };
+      ..[Capabilities.LOGGING_PREFS] = {LogType.PERFORMANCE: LogLevel.INFO};
     _driver = new WebDriver(desired: capabilities);
   }
   return _driver;

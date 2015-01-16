@@ -19,38 +19,35 @@ part of sync.webdriver;
 class Logs extends _WebDriverBase {
   Logs._(driver) : super(driver, 'log');
 
-  Iterable<LogEntry> get(String logType) => _post('', {'type' : logType}).map(
-      (entry) => new LogEntry.fromMap(entry));
+  Iterable<LogEntry> get(String logType) =>
+      _post('', {'type': logType}).map((entry) => new LogEntry.fromMap(entry));
 }
 
 class LogEntry {
-  String message;
-  int timestamp;
-  String level;
-  
-  LogEntry(this.message, this.timestamp, this.level);
-  
-  LogEntry.fromMap(Map map) {
-    this.message = map['message'];
-    this.timestamp = map['timestamp'];
-    this.level = map['level'];
-  }
+  final String message;
+  final int timestamp;
+  final String level;
+
+  const LogEntry(this.message, this.timestamp, this.level);
+
+  LogEntry.fromMap(Map map)
+      : this(map['message'], map['timestamp'], map['level']);
 }
 
 class LogType {
-  static final String BROWSER = 'browser';
-  static final String CLIENT = 'client';
-  static final String DRIVER = 'driver';
-  static final String PERFORMANCE = 'performance';
-  static final String PROFILER = 'profiler';
-  static final String SERVER = 'server';
+  static const String BROWSER = 'browser';
+  static const String CLIENT = 'client';
+  static const String DRIVER = 'driver';
+  static const String PERFORMANCE = 'performance';
+  static const String PROFILER = 'profiler';
+  static const String SERVER = 'server';
 }
 
 class LogLevel {
-  static final String OFF = 'OFF';
-  static final String SEVERE = 'SEVERE';
-  static final String WARNING = 'WARNING';
-  static final String INFO = 'INFO';
-  static final String DEBUG = 'DEBUG';
-  static final String ALL = 'ALL';
+  static const String OFF = 'OFF';
+  static const String SEVERE = 'SEVERE';
+  static const String WARNING = 'WARNING';
+  static const String INFO = 'INFO';
+  static const String DEBUG = 'DEBUG';
+  static const String ALL = 'ALL';
 }
