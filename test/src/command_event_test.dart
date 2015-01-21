@@ -70,8 +70,8 @@ void main() {
       driver.timeouts.implicitWaitTimeout = new Duration();
 
       expect(commands, hasLength(2));
-      _checkCommand(commands[0], 'POST', 'timeouts', isNotNull);
-      _checkCommand(commands[0], 'POST', 'timeouts', isNotNull);
+      _checkCommand(commands[0], 'POST', 'timeouts', isNotNull, isNull);
+      _checkCommand(commands[0], 'POST', 'timeouts', isNotNull, isNull);
     });
 
     test('fires multiple listeners', () {
@@ -95,22 +95,28 @@ void main() {
       try {
         driver.findElement(new By.id('non-existant'));
       } catch (e) {}
-      _checkCommand(commands[0], 'POST', 'element', isNotNull, false);
+      _checkCommand(
+          commands[0], 'POST', 'element', isNotNull, isNull, isNotNull);
     });
   });
 }
 
-_checkCommand(CommandEvent log, method, command, params, [success = true]) {
+_checkCommand(CommandEvent log, method, command, params,
+    [response, exception]) {
+  if (response == null) {
+    response = isNotNull;
+  }
+  if (exception == null) {
+    exception = isNull;
+  }
   expect(log.method, method);
   expect(log.endpoint, command);
   expect(log.params, params);
   expect(log.endTime, predicate(
       log.startTime.isBefore, 'event endTime is not after event startTime'));
-  if (success) {
-    expect(log.result, isNotNull);
-  } else {
-    expect(log.exception, isNotNull);
-  }
+  expect(log.result, response);
+  expect(log.exception, exception);
+
   var trace = new Trace.current(2).frames.map((f) => f.toString()).toList();
   expect(log.stackTrace.frames
       .map((f) => f.toString())
