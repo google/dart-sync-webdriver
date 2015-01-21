@@ -335,11 +335,3 @@ _parseBody(HttpClientResponseSync resp, [JsonCodec jsonDecoder = JSON]) {
 
   return body;
 }
-
-_getStackTrace() {
-  try {
-    throw '';
-  } catch (e, t) {
-    return t;
-  }
-}
