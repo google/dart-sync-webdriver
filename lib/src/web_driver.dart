@@ -16,6 +16,8 @@ limitations under the License.
 
 part of sync.webdriver;
 
+@deprecated
+/// Use [CommandEvent] instead.
 typedef void CommandListener(String method, String endpoint, params);
 
 class WebDriver extends SearchContext {
@@ -28,6 +30,12 @@ class WebDriver extends SearchContext {
   JsonCodec _jsonDecoder;
   Timeouts _timeouts;
 
+  final StreamController<CommandEvent> _onCommand =
+      new StreamController.broadcast(sync: true);
+  Stream<CommandEvent> get onCommand => _onCommand.stream;
+
+  @deprecated
+  /// Use [onCommand] instead.
   /// Listeners that will be called when each command executes
   final List<CommandListener> commandListeners = [];
 
@@ -193,28 +201,86 @@ class WebDriver extends SearchContext {
   }
 
   _post(String command, [params]) {
-    commandListeners.forEach((listener) => listener('POST', command, params));
-    var path = _processCommand(command);
-    var request = _client.postUrl(new Uri.http(uri.authority, path));
-    if (params != null) {
-      request.headers.contentType = _CONTENT_TYPE_JSON;
-      request.write(JSON.encode(params));
+    var startTime = new DateTime.now();
+    var response;
+    var exception;
+    try {
+      commandListeners.forEach((listener) => listener('POST', command, params));
+      var path = _processCommand(command);
+      var request = _client.postUrl(new Uri.http(uri.authority, path));
+      if (params != null) {
+        request.headers.contentType = _CONTENT_TYPE_JSON;
+        request.write(JSON.encode(params));
+      }
+      response = _processResponse(request.close());
+      return response;
+    } catch (e) {
+      exception = e;
+      rethrow;
+    } finally {
+      _onCommand.add(new CommandEvent(
+          method: 'POST',
+          endpoint: command,
+          params: params.toString(),
+          startTime: startTime,
+          endTime: new DateTime.now(),
+          result: response.toString(),
+          exception: exception.toString(),
+          stackTrace: new Trace.current(1)));
     }
-    return _processResponse(request.close());
   }
 
   _get(String command) {
-    commandListeners.forEach((listener) => listener('GET', command, null));
-    var path = _processCommand(command);
-    var request = _client.getUrl(new Uri.http(uri.authority, path));
-    return _processResponse(request.close());
+    var startTime = new DateTime.now();
+    var response;
+    var exception;
+    try {
+      commandListeners.forEach((listener) => listener('GET', command, null));
+      var path = _processCommand(command);
+      var request = _client.getUrl(new Uri.http(uri.authority, path));
+      response = _processResponse(request.close());
+      return response;
+    } catch (e) {
+      exception = e;
+      rethrow;
+    } finally {
+      if (command.contains('screenshot') && response != null) {
+        response = 'screenshot';
+      }
+      _onCommand.add(new CommandEvent(
+          method: 'GET',
+          endpoint: command,
+          startTime: startTime,
+          endTime: new DateTime.now(),
+          result: response.toString(),
+          exception: exception.toString(),
+          stackTrace: new Trace.current(1)));
+    }
   }
 
   _delete(String command) {
-    commandListeners.forEach((listener) => listener('DELETE', command, null));
-    var path = _processCommand(command);
-    var request = _client.deleteUrl(new Uri.http(uri.authority, path));
-    return _processResponse(request.close());
+    var startTime = new DateTime.now();
+    var response;
+    var exception;
+    try {
+      commandListeners.forEach((listener) => listener('DELETE', command, null));
+      var path = _processCommand(command);
+      var request = _client.deleteUrl(new Uri.http(uri.authority, path));
+      response = _processResponse(request.close());
+      return response;
+    } catch (e) {
+      exception = e;
+      rethrow;
+    } finally {
+      _onCommand.add(new CommandEvent(
+          method: 'DELETE',
+          endpoint: command,
+          startTime: startTime,
+          endTime: new DateTime.now(),
+          result: response.toString(),
+          exception: exception.toString(),
+          stackTrace: new Trace.current(1)));
+    }
   }
 
   String _processCommand(String command) {
@@ -268,4 +334,12 @@ _parseBody(HttpClientResponseSync resp, [JsonCodec jsonDecoder = JSON]) {
   }
 
   return body;
+}
+
+_getStackTrace() {
+  try {
+    throw '';
+  } catch (e, t) {
+    return t;
+  }
 }

@@ -16,6 +16,7 @@ limitations under the License.
 
 library sync.webdriver;
 
+import 'dart:async' show Stream, StreamController;
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
@@ -24,10 +25,12 @@ import 'dart:mirrors';
 
 import 'package:crypto/crypto.dart';
 import 'package:matcher/matcher.dart';
+import 'package:stack_trace/stack_trace.dart' show Trace;
 import 'package:sync_socket/sync_socket.dart';
 
 part 'src/alert.dart';
 part 'src/capabilities.dart';
+part 'src/command_event.dart';
 part 'src/common.dart';
 part 'src/error.dart';
 part 'src/keyboard.dart';
