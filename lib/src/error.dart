@@ -16,7 +16,7 @@ limitations under the License.
 
 part of sync.webdriver;
 
-abstract class WebDriverException {
+abstract class WebDriverException implements Exception {
   /**
    * Either the status value returned in the JSON response (preferred) or the
    * HTTP status code.
