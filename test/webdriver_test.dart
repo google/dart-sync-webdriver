@@ -17,9 +17,6 @@ limitations under the License.
 library webdriver_test;
 
 import 'package:unittest/vm_config.dart';
-import 'package:unittest/unittest.dart' show test;
-
-import 'test_util.dart' show closeDriver;
 
 import 'src/alert_test.dart' as alert;
 import 'src/command_event_test.dart' as command_event;
