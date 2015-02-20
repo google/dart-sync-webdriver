@@ -27,10 +27,17 @@ void main() {
     WebElement output;
 
     setUp(() {
-      driver = freshDriver;
+      driver = createTestDriver();
       driver.url = testPagePath;
       button = driver.findElement(new By.tagName('button'));
       output = driver.findElement(new By.id('settable'));
+    });
+
+    tearDown(() {
+      driver.quit();
+      driver = null;
+      button = null;
+      output = null;
     });
 
     test('no alert', () {

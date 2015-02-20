@@ -25,8 +25,16 @@ void main() {
     WebDriver driver;
 
     setUp(() {
-      driver = freshDriver;
+      driver = createTestDriver(
+          additionalCapabilities: {
+        Capabilities.LOGGING_PREFS: {LogType.PERFORMANCE: LogLevel.INFO}
+      });
       driver.url = testPagePath;
+    });
+
+    tearDown(() {
+      driver.quit();
+      driver = null;
     });
 
     test('get logs', () {

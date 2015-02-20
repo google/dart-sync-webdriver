@@ -20,7 +20,7 @@ import 'dart:io';
 import 'dart:math' show Point;
 import 'package:path/path.dart' as path;
 import 'package:unittest/unittest.dart';
-import 'package:sync_webdriver/sync_webdriver.dart';
+import 'package:sync_webdriver/sync_webdriver.dart' hide Platform;
 
 final Matcher isWebDriverException = new isInstanceOf<WebDriverException>();
 final Matcher isWebElement = new isInstanceOf<WebElement>();
@@ -47,38 +47,27 @@ String _getTestPagePath() {
 
 String _testPagePath;
 
-WebDriver _driver;
+WebDriver createTestDriver({Map additionalCapabilities}) {
+  Map capabilities = Capabilities.chrome;
+  Map env = Platform.environment;
 
-WebDriver get freshDriver {
-  if (_driver != null) {
-    try {
-      Window firstWindow = null;
+  Map chromeOptions = {};
 
-      for (Window window in _driver.windows) {
-        if (firstWindow == null) {
-          firstWindow = window;
-        } else {
-          _driver.switchTo.window(window);
-          _driver.close();
-        }
-      }
-      _driver.switchTo.window(firstWindow);
-      _driver.url = 'about:';
-    } catch (e) {
-      closeDriver();
-    }
+  if (env['CHROMEDRIVER_BINARY'] != null) {
+    chromeOptions['binary'] = env['CHROMEDRIVER_BINARY'];
   }
-  if (_driver == null) {
-    Map capabilities = Capabilities.chrome
-      ..[Capabilities.LOGGING_PREFS] = {LogType.PERFORMANCE: LogLevel.INFO};
-    _driver = new WebDriver(desired: capabilities);
-  }
-  return _driver;
-}
 
-void closeDriver() {
-  try {
-    _driver.quit();
-  } catch (e) {}
-  _driver = null;
+  if (env['CHROMEDRIVER_ARGS'] != null) {
+    chromeOptions['args'] = env['CHROMEDRIVER_ARGS'].split(' ');
+  }
+
+  if (chromeOptions.isNotEmpty) {
+    capabilities['chromeOptions'] = chromeOptions;
+  }
+
+  if (additionalCapabilities != null) {
+    capabilities.addAll(additionalCapabilities);
+  }
+
+  return new WebDriver(desired: capabilities);
 }

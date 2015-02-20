@@ -26,10 +26,16 @@ void main() {
     WebElement textInput;
 
     setUp(() {
-      driver = freshDriver;
+      driver = createTestDriver();
       driver.url = testPagePath;
       textInput = driver.findElement(new By.cssSelector('input[type=text]'));
       textInput.click();
+    });
+
+    tearDown(() {
+      driver.quit();
+      driver = null;
+      textInput = null;
     });
 
     test('sendKeys -- once', () {

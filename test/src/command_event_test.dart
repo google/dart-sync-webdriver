@@ -29,7 +29,7 @@ void main() {
     StreamSubscription<CommandEvent> subscription;
 
     setUp(() {
-      driver = freshDriver;
+      driver = createTestDriver();
       driver.url = testPagePath;
       subscription = driver.onCommand.listen((evt) {
         commands.add(evt);
@@ -38,7 +38,10 @@ void main() {
 
     tearDown(() {
       subscription.cancel();
+      subscription = null;
       commands.clear();
+      driver.quit();
+      driver = null;
     });
 
     test('listens to commands on driver', () {

@@ -29,8 +29,13 @@ void main() {
     WebDriver driver;
 
     setUp(() {
-      driver = freshDriver;
+      driver = createTestDriver();
       driver.url = testPagePath;
+    });
+
+    tearDown(() {
+      driver.quit();
+      driver = null;
     });
 
     test('frame index', () {

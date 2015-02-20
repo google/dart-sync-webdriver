@@ -26,7 +26,7 @@ void main() {
     List<CommandLog> commands = [];
 
     setUp(() {
-      driver = freshDriver;
+      driver = createTestDriver();
       driver.url = testPagePath;
       driver.commandListeners.add((method, command, params) {
         commands.add(new CommandLog(method, command, params));
@@ -36,6 +36,8 @@ void main() {
     tearDown(() {
       driver.commandListeners.clear();
       commands.clear();
+      driver.quit();
+      driver = null;
     });
 
     test('listens to commands on driver', () {
