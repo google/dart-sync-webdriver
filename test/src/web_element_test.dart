@@ -32,7 +32,7 @@ void main() {
     WebElement invisible;
 
     setUp(() {
-      driver = freshDriver;
+      driver = createTestDriver();
       driver.url = testPagePath;
       table = driver.findElement(const By.tagName('table'));
       button = driver.findElement(const By.tagName('button'));
@@ -43,6 +43,18 @@ void main() {
       disabled =
           driver.findElement(const By.cssSelector('input[type=password]'));
       invisible = driver.findElement(const By.tagName('div'));
+    });
+
+    tearDown(() {
+      driver.quit();
+      driver = null;
+      table = null;
+      button = null;
+      form = null;
+      textInput = null;
+      checkbox = null;
+      disabled = null;
+      invisible = null;
     });
 
     test('click', () {

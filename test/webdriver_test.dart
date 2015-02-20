@@ -55,9 +55,4 @@ void main() {
   web_driver.main();
   web_element.main();
   window.main();
-
-  // This test needs to be last to properly close the browser.
-  test('one-time teardown', () {
-    closeDriver();
-  });
 }

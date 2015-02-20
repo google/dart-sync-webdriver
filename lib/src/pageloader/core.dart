@@ -240,9 +240,9 @@ abstract class _FieldInfo {
     }
 
     if (finder != null) {
-      var fieldInfo = isList ?
-          new _FinderListFieldInfo(name, finder, filters, type) :
-          new _FinderSingleFieldInfo(name, finder, filters, type, isOptional);
+      var fieldInfo = isList
+          ? new _FinderListFieldInfo(name, finder, filters, type)
+          : new _FinderSingleFieldInfo(name, finder, filters, type, isOptional);
       if (isFunction) {
         fieldInfo = new _FinderFunctionFieldInfo(fieldInfo);
       }
@@ -308,7 +308,8 @@ class _FinderSingleFieldInfo extends _FinderFieldInfo {
   final bool _isOptional;
 
   _FinderSingleFieldInfo(Symbol fieldName, this._finder, this._filters,
-      this._instanceType, this._isOptional) : super(fieldName);
+      this._instanceType, this._isOptional)
+      : super(fieldName);
 
   @override
   calculateFieldValue(SearchContext context, PageLoader loader) {

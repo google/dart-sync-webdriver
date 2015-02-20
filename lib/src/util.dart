@@ -142,9 +142,9 @@ String _escapeQuotes(String toEscape) {
         ..write("\"")
         ..write(substrings[i])
         ..write("\"")
-        ..write((i == substrings.length - 1) ?
-            (quoteIsLast ? ", '\"')" : ")") :
-            ", '\"', ");
+        ..write((i == substrings.length - 1)
+            ? (quoteIsLast ? ", '\"')" : ")")
+            : ", '\"', ");
     }
     return quoted.toString();
   }

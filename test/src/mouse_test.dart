@@ -26,9 +26,15 @@ void main() {
     WebElement button;
 
     setUp(() {
-      driver = freshDriver;
+      driver = createTestDriver();
       driver.url = testPagePath;
       button = driver.findElement(new By.tagName('button'));
+    });
+
+    tearDown(() {
+      driver.quit();
+      driver = null;
+      button = null;
     });
 
     test('moveTo element/click', () {

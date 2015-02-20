@@ -25,8 +25,13 @@ void main() {
     WebDriver driver;
 
     setUp(() {
-      driver = freshDriver;
+      driver = createTestDriver();
       driver.url = 'http://www.google.com/ncr';
+    });
+
+    tearDown(() {
+      driver.quit();
+      driver = null;
     });
 
     test('add simple cookie', () {
@@ -81,7 +86,14 @@ void main() {
   group('TimeOuts', () {
     WebDriver driver;
 
-    setUp(() => driver = freshDriver);
+    setUp(() {
+      driver = createTestDriver();
+    });
+
+    tearDown(() {
+      driver.quit();
+      driver = null;
+    });
 
     test('set all timeouts', () {
       expect(driver.timeouts.scriptTimeout, isNull);

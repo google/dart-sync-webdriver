@@ -1,6 +1,6 @@
 library pageloader_test;
 
-import 'package:unittest/compact_vm_config.dart';
+import 'package:unittest/vm_config.dart';
 import 'package:unittest/unittest.dart';
 import 'package:sync_webdriver/sync_pageloader.dart';
 import 'package:sync_webdriver/sync_webdriver.dart';
@@ -11,15 +11,21 @@ import 'test_util.dart';
  * as they are slow and they have external dependencies.
  */
 void main() {
-  useCompactVMConfiguration();
+  useVMConfiguration();
 
   WebDriver driver;
   PageLoader loader;
 
   setUp(() {
-    driver = freshDriver;
+    driver = createTestDriver();
     driver.url = testPagePath;
     loader = new PageLoader(driver);
+  });
+
+  tearDown(() {
+    driver.quit();
+    driver = null;
+    loader = null;
   });
 
   verifyRows(List<Row> rows) {
@@ -229,11 +235,6 @@ void main() {
     expect(page.noListTypeDef(), hasLength(2));
     expect(page.webElementsTypeDef(), hasLength(2));
     verifyRows(page.rowsTypeDef());
-  });
-
-  // This test needs to be last to properly close the browser.
-  test('one-time teardown', () {
-    closeDriver();
   });
 }
 

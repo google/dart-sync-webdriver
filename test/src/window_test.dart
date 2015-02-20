@@ -26,13 +26,19 @@ void main() {
   group('Window', () {
     WebDriver driver;
 
-    setUp(() => driver = freshDriver);
+    setUp(() {
+      driver = createTestDriver();
+    });
+
+    tearDown(() {
+      driver.quit();
+      driver = null;
+    });
 
     test('size', () {
       driver.window.size = new Size(400, 600);
       var size = driver.window.size;
       expect(size, isSize);
-      // TODO(DrMarcII): Switch to hasProperty matchers
       expect(size.height, 400);
       expect(size.width, 600);
     });
@@ -41,17 +47,15 @@ void main() {
       driver.window.location = new Point(10, 20);
       var point = driver.window.location;
       expect(point, isPoint);
-      // TODO(DrMarcII): Switch to hasProperty matchers
       expect(point.x, 10);
       expect(point.y, 20);
     });
 
     // fails in some cases with multiple monitors
-    test('maximize', () {
+    skip_test('maximize', () {
       driver.window.maximize();
       var point = driver.window.location;
       expect(point, isPoint);
-      // TODO(DrMarcII): Switch to hasProperty matchers
       expect(point.x, 0);
       expect(point.y, 0);
     });

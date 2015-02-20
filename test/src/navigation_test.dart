@@ -25,8 +25,13 @@ void main() {
     WebDriver driver;
 
     setUp(() {
-      driver = freshDriver;
+      driver = createTestDriver();
       driver.url = 'http://www.google.com/ncr';
+    });
+
+    tearDown(() {
+      driver.quit();
+      driver = null;
     });
 
     test('forward/back', () {

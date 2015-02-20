@@ -83,8 +83,13 @@ void main() {
   group('custom Matcher', () {
     WebDriver driver;
     setUp(() {
-      driver = freshDriver;
+      driver = createTestDriver();
       driver.url = testPagePath;
+    });
+
+    tearDown(() {
+      driver.quit();
+      driver = null;
     });
 
     test('isDisplayed', () {
@@ -121,10 +126,17 @@ void main() {
     WebElement selectMulti;
 
     setUp(() {
-      driver = freshDriver;
+      driver = createTestDriver();
       driver.url = testPagePath;
       selectSimple = driver.findElement(const By.id('select-simple'));
       selectMulti = driver.findElement(const By.id('select-multi'));
+    });
+
+    tearDown(() {
+      driver.quit();
+      driver = null;
+      selectSimple = null;
+      selectMulti = null;
     });
 
     test('isMultiple', () {
