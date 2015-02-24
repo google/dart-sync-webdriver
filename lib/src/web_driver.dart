@@ -221,10 +221,10 @@ class WebDriver extends SearchContext {
       _onCommand.add(new CommandEvent(
           method: 'POST',
           endpoint: command,
-          params: params != null ? params.toString() : null,
+          params: params != null ? JSON.encode(params) : null,
           startTime: startTime,
           endTime: new DateTime.now(),
-          result: response != null ? response.toString() : null,
+          result: response != null ? JSON.encode(response) : null,
           exception: exception != null ? exception.toString() : null,
           stackTrace: new Trace.current(1)));
     }
@@ -252,7 +252,7 @@ class WebDriver extends SearchContext {
           endpoint: command,
           startTime: startTime,
           endTime: new DateTime.now(),
-          result: response != null ? response.toString() : null,
+          result: response != null ? JSON.encode(response) : null,
           exception: exception != null ? exception.toString() : null,
           stackTrace: new Trace.current(1)));
     }
@@ -277,7 +277,7 @@ class WebDriver extends SearchContext {
           endpoint: command,
           startTime: startTime,
           endTime: new DateTime.now(),
-          result: response != null ? response.toString() : null,
+          result: response != null ? JSON.encode(response) : null,
           exception: exception != null ? exception.toString() : null,
           stackTrace: new Trace.current(1)));
     }
