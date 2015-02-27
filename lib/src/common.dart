@@ -66,7 +66,7 @@ abstract class SearchContext {
   WebElement findElement(Finder finder) {
     var element;
     if (finder is By) {
-      element = post('element', finder);
+      element = _post('element', finder);
     } else {
       element = finder.findElement(this);
     }
@@ -78,7 +78,7 @@ abstract class SearchContext {
   List<WebElement> findElements(Finder finder) {
     var elements;
     if (finder is By) {
-      elements = post('elements', finder);
+      elements = _post('elements', finder);
     } else {
       elements = finder.findElements(this);
     }
