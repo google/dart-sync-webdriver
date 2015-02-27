@@ -109,28 +109,28 @@ class WebDriver extends SearchContext {
   @override
   WebDriver get driver => this;
 
-  set url(String url) => _post('url', {'url': url});
+  set url(String url) => post('url', {'url': url});
 
-  String get url => _get('url');
+  String get url => get('url');
 
-  String get title => _get('title');
+  String get title => get('title');
 
-  String get pageSource => _get('source');
+  String get pageSource => get('source');
 
   void close() {
-    _delete('window');
+    delete('window');
   }
 
   void quit() {
-    _delete('');
+    delete('');
   }
 
   Iterable<Window> get windows =>
-      _get('window_handles').map((handle) => new Window._(this, handle));
+      get('window_handles').map((handle) => new Window._(this, handle));
 
-  Window get window => new Window._(this, _get('window_handle'));
+  Window get window => new Window._(this, get('window_handle'));
 
-  WebElement get activeElement => _get('element/active');
+  WebElement get activeElement => get('element/active');
 
   TargetLocator get switchTo => new TargetLocator._(this);
 
@@ -169,7 +169,7 @@ class WebDriver extends SearchContext {
    * result will be converted to WebElements.
    */
   dynamic executeAsync(String script, List args) =>
-      _post('execute_async', {'script': script, 'args': args});
+      post('execute_async', {'script': script, 'args': args});
 
   /**
    * Inject a snippet of JavaScript into the page for execution in the context
@@ -186,12 +186,12 @@ class WebDriver extends SearchContext {
    * result will be converted to WebElements.
    */
   dynamic execute(String script, List args) =>
-      _post('execute', {'script': script, 'args': args});
+      post('execute', {'script': script, 'args': args});
 
   List<int> captureScreenshot() => new UnmodifiableListView(
       CryptoUtils.base64StringToBytes(captureScreenshotAsBase64()));
 
-  String captureScreenshotAsBase64() => _get('screenshot');
+  String captureScreenshotAsBase64() => get('screenshot');
 
   _reviver(dynamic key, dynamic value) {
     if (value is Map && value.containsKey('ELEMENT')) {
@@ -200,7 +200,10 @@ class WebDriver extends SearchContext {
     return value;
   }
 
-  _post(String command, [params]) {
+  @override
+  _post(String command, [params]) => post(command, params);
+
+  post(String command, [params]) {
     var startTime = new DateTime.now();
     var response;
     var exception;
@@ -230,7 +233,7 @@ class WebDriver extends SearchContext {
     }
   }
 
-  _get(String command) {
+  get(String command) {
     var startTime = new DateTime.now();
     var response;
     var exception;
@@ -258,7 +261,7 @@ class WebDriver extends SearchContext {
     }
   }
 
-  _delete(String command) {
+  delete(String command) {
     var startTime = new DateTime.now();
     var response;
     var exception;

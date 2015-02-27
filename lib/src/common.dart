@@ -66,7 +66,7 @@ abstract class SearchContext {
   WebElement findElement(Finder finder) {
     var element;
     if (finder is By) {
-      element = _post('element', finder);
+      element = post('element', finder);
     } else {
       element = finder.findElement(this);
     }
@@ -78,7 +78,7 @@ abstract class SearchContext {
   List<WebElement> findElements(Finder finder) {
     var elements;
     if (finder is By) {
-      elements = _post('elements', finder);
+      elements = post('elements', finder);
     } else {
       elements = finder.findElements(this);
     }
@@ -100,11 +100,11 @@ abstract class _WebDriverBase {
   _WebDriverBase(this.driver, this._prefix);
 
   dynamic _post(String command, [param]) =>
-      driver._post(_command(command), param);
+      driver.post(_command(command), param);
 
-  dynamic _get(String command) => driver._get(_command(command));
+  dynamic _get(String command) => driver.get(_command(command));
 
-  dynamic _delete(String command) => driver._delete(_command(command));
+  dynamic _delete(String command) => driver.delete(_command(command));
 
   String _command(String command) {
     if (command == null || command.isEmpty) {
