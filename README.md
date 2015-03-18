@@ -19,5 +19,5 @@ Projects that use Sync WebDriver should include the following in their
 pubspec.yaml:
 
 ```
-sync_webdriver: '^1.3.0'
+sync_webdriver: '^1.2.0'
 ```
