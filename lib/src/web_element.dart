@@ -20,7 +20,7 @@ final ContentType _CONTENT_TYPE_JSON =
     new ContentType("application", "json", charset: "utf-8");
 
 class WebElement extends _WebDriverBase with SearchContext {
-  final String _elementId;
+  final String id;
 
   // The following three fields identify the provenance of this element
   SearchContext _context;
@@ -29,7 +29,7 @@ class WebElement extends _WebDriverBase with SearchContext {
 
   WebElement._(WebDriver driver, String elementId)
       : super(driver, 'element/$elementId'),
-        _elementId = elementId;
+        id = elementId;
 
   /// Click on this element.
   void click() {
@@ -90,19 +90,16 @@ class WebElement extends _WebDriverBase with SearchContext {
    * Does this element represent the same element as another element?
    * Not the same as ==
    */
-  bool equals(WebElement other) =>
-      this == other || _get('equals/${other._elementId}');
+  bool equals(WebElement other) => this == other || _get('equals/${other.id}');
 
-  Map<String, String> toJson() =>
-      new Map<String, String>()..[_ELEMENT] = _elementId;
+  Map<String, String> toJson() => new Map<String, String>()..[_ELEMENT] = id;
 
   @override
-  bool operator ==(Object other) => other is WebElement &&
-      driver == other.driver &&
-      _elementId == other._elementId;
+  bool operator ==(Object other) =>
+      other is WebElement && driver == other.driver && id == other.id;
 
   @override
-  int get hashCode => _elementId.hashCode >> 3 + driver.hashCode;
+  int get hashCode => id.hashCode >> 3 + driver.hashCode;
 
   void _updateProvenance(SearchContext context, Finder finder,
       [int index = -1]) {
@@ -114,7 +111,7 @@ class WebElement extends _WebDriverBase with SearchContext {
   @override
   String toString() {
     StringBuffer result = new StringBuffer('{WebElement ');
-    result.write(_elementId);
+    result.write(id);
     if (_context != null && _finder != null) {
       result
         ..write(' ')

@@ -76,7 +76,7 @@ class Mouse extends _WebDriverBase {
   void moveTo({WebElement element, int xOffset, int yOffset}) {
     var json = {};
     if (element is WebElement) {
-      json['element'] = element._elementId;
+      json['element'] = element.id;
     }
     if (xOffset is num && yOffset is num) {
       json['xoffset'] = xOffset.floor();
