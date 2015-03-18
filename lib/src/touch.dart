@@ -48,7 +48,7 @@ class Touch extends _WebDriverBase {
   void scroll(int xOffset, int yOffset, [WebElement start]) {
     var json = {'xoffset': xOffset.floor(), 'yoffset': yOffset.floor()};
     if (start is WebElement) {
-      json['element'] = start._elementId;
+      json['element'] = start.id;
     }
     _post('scroll', json);
   }
@@ -68,7 +68,7 @@ class Touch extends _WebDriverBase {
    */
   void flickElement(WebElement start, int xOffset, int yOffset, int speed) =>
       _post('flick', {
-    'element': start._elementId,
+    'element': start.id,
     'xoffset': xOffset.floor(),
     'yoffset': yOffset.floor(),
     'speed': speed.floor()
