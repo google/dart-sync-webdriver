@@ -91,10 +91,24 @@ class WebDriver extends SearchContext {
   }
 
   factory WebDriver.fromExistingSession(String sessionId,
-      {Uri uri, Map<String, String> capabilities: const <String, String>{}}) {
+      {Uri uri}) {
     if (uri == null) {
       uri = DEFAULT_URI;
     }
+
+    var request =
+    _client.getUrl(_sessionUri(uri, sessionId));
+    var resp = request.close();
+    var jsonResp = _parseBody(resp);
+
+    if (jsonResp is! Map || jsonResp['status'] != 0) {
+      throw new WebDriverException(
+          httpStatusCode: resp.statusCode,
+          httpReasonPhrase: resp.reasonPhrase,
+          jsonResp: jsonResp);
+    }
+
+    var capabilities = new UnmodifiableMapView(jsonResp['value']);
     return new WebDriver._(_sessionUri(uri, sessionId), capabilities);
   }
 

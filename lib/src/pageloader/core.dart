@@ -241,8 +241,8 @@ abstract class _FieldInfo {
 
     if (finder != null) {
       var fieldInfo = isList
-          ? new _FinderListFieldInfo(name, finder, filters, type)
-          : new _FinderSingleFieldInfo(name, finder, filters, type, isOptional);
+          ? new _ListFieldInfo(name, finder, filters, type)
+          : new _BasicFieldInfo(name, finder, filters, type, isOptional);
       if (isFunction) {
         fieldInfo = new _FinderFunctionFieldInfo(fieldInfo);
       }
