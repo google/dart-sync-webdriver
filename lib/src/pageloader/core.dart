@@ -37,12 +37,12 @@ class PageLoader {
   }
 
   _getInstance(ClassMirror type, SearchContext context) =>
-  new _ClassInfo(type).getInstance(context, this);
+      new _ClassInfo(type).getInstance(context, this);
 }
 
 class _ClassInfo {
   static final Map<ClassMirror, _ClassInfo> _classInfoCache =
-    <ClassMirror, _ClassInfo>{};
+      <ClassMirror, _ClassInfo>{};
 
   final ClassMirror _class;
   final List<_FieldInfo> _fields;
@@ -76,7 +76,7 @@ class _ClassInfo {
   });
 
   _ClassInfo._(this._class, this._fields, this._finder, this._filters,
-               this._finderIsOptional);
+      this._finderIsOptional);
 
   static Iterable<_FieldInfo> _fieldInfos(ClassMirror type) {
     var infos = <_FieldInfo>[];
@@ -117,7 +117,7 @@ class _ClassInfo {
     try {
       if (_finder != null) {
         SearchContext ctx =
-        _getElement(context, _finder, _filters, _finderIsOptional);
+            _getElement(context, _finder, _filters, _finderIsOptional);
         if (ctx != null) {
           context = ctx;
         }
@@ -138,8 +138,8 @@ class _ClassInfo {
 
     for (DeclarationMirror constructor in _class.declarations.values) {
       if (constructor is MethodMirror &&
-      constructor.isConstructor &&
-      constructor.parameters.isEmpty) {
+          constructor.isConstructor &&
+          constructor.parameters.isEmpty) {
         page = _class.newInstance(constructor.constructorName, []);
         break;
       }
@@ -160,16 +160,16 @@ abstract class _FieldInfo {
     var name;
 
     if (field is VariableMirror &&
-    !field.isFinal &&
-    !field.isStatic &&
-    !field.isConst) {
+        !field.isFinal &&
+        !field.isStatic &&
+        !field.isConst) {
       type = field.type;
       name = field.simpleName;
       // TODO(DrMarcII): Support private setters when they work again
     } else if (field is MethodMirror &&
-    field.isSetter &&
-    !field.isStatic &&
-    !field.isPrivate) {
+        field.isSetter &&
+        !field.isStatic &&
+        !field.isPrivate) {
       type = field.parameters.first.type;
       // HACK to get correct symbol name for operating with setField.
       name = field.simpleName.toString();
@@ -222,8 +222,8 @@ abstract class _FieldInfo {
       }
 
       if (datum is HasFilterFinderOptions &&
-      datum.options.contains(
-          FilterFinderOption.DISABLE_IMPLICIT_DISPLAY_FILTERING)) {
+          datum.options.contains(
+              FilterFinderOption.DISABLE_IMPLICIT_DISPLAY_FILTERING)) {
         implicitDisplayFiltering = false;
       }
     }
@@ -241,8 +241,8 @@ abstract class _FieldInfo {
 
     if (finder != null) {
       var fieldInfo = isList
-      ? new _FinderListFieldInfo(name, finder, filters, type)
-      : new _FinderSingleFieldInfo(name, finder, filters, type, isOptional);
+          ? new _FinderListFieldInfo(name, finder, filters, type)
+          : new _FinderSingleFieldInfo(name, finder, filters, type, isOptional);
       if (isFunction) {
         fieldInfo = new _FinderFunctionFieldInfo(fieldInfo);
       }
@@ -308,14 +308,14 @@ class _FinderSingleFieldInfo extends _FinderFieldInfo {
   final bool _isOptional;
 
   _FinderSingleFieldInfo(Symbol fieldName, this._finder, this._filters,
-                         this._instanceType, this._isOptional)
-  : super(fieldName);
+      this._instanceType, this._isOptional)
+      : super(fieldName);
 
   @override
   calculateFieldValue(SearchContext context, PageLoader loader) {
     var element = _getElement(context, _finder, _filters, _isOptional);
     if (_instanceType.simpleName != const Symbol('WebElement') &&
-    element != null) {
+        element != null) {
       element = loader._getInstance(_instanceType, element);
     }
     return element;
@@ -329,15 +329,15 @@ class _FinderListFieldInfo extends _FinderFieldInfo {
 
   _FinderListFieldInfo(
       Symbol fieldName, this._finder, this._filters, this._instanceType)
-  : super(fieldName);
+      : super(fieldName);
 
   @override
   calculateFieldValue(SearchContext context, PageLoader loader) {
     List elements = _getElements(context, _finder, _filters);
     if (_instanceType.simpleName != const Symbol('WebElement')) {
       elements = elements
-      .map((element) => loader._getInstance(_instanceType, element))
-      .toList();
+          .map((element) => loader._getInstance(_instanceType, element))
+          .toList();
     }
     return elements;
   }
@@ -364,7 +364,7 @@ class FilterFinderOption {
 
   /// Disable the default implicit display filtering for a field.
   static const FilterFinderOption DISABLE_IMPLICIT_DISPLAY_FILTERING =
-  const FilterFinderOption._('DISABLE_IMPLICIT_DISPLAY_FILTERING');
+      const FilterFinderOption._('DISABLE_IMPLICIT_DISPLAY_FILTERING');
 }
 
 abstract class HasFilterFinderOptions {
@@ -383,8 +383,8 @@ abstract class ElementFilter implements Filter {
   const ElementFilter();
 
   List<WebElement> filter(List<WebElement> elements) =>
-  new UnmodifiableListView<WebElement>(
-      elements.where(keep).toList(growable: false));
+      new UnmodifiableListView<WebElement>(
+          elements.where(keep).toList(growable: false));
 
   bool keep(WebElement element);
 }
