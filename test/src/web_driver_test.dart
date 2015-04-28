@@ -129,6 +129,7 @@ void main() {
           driver.uri.authority, path.sublist(0, path.length - 2).join('/'));
       String session = path.last;
       var newDriver = new WebDriver.fromExistingSession(session, uri: uri);
+      expect(newDriver.capabilities, driver.capabilities);
       var url = newDriver.url;
       expect(url, startsWith('file:'));
       expect(url, endsWith('test_page.html'));

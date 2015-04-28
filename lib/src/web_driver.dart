@@ -90,14 +90,12 @@ class WebDriver extends SearchContext {
     return new WebDriver._(sessionUri, capabilities);
   }
 
-  factory WebDriver.fromExistingSession(String sessionId,
-      {Uri uri}) {
+  factory WebDriver.fromExistingSession(String sessionId, {Uri uri}) {
     if (uri == null) {
       uri = DEFAULT_URI;
     }
 
-    var request =
-    _client.getUrl(_sessionUri(uri, sessionId));
+    var request = _client.getUrl(_sessionUri(uri, sessionId));
     var resp = request.close();
     var jsonResp = _parseBody(resp);
 
