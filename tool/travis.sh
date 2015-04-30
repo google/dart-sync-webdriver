@@ -24,13 +24,8 @@ dartanalyzer --fatal-warnings \
   test/pageloader_test.dart \
   test/webdriver_test.dart
 
-if [ "$TRAVIS" ]; then
-  # Start chromedriver.
-  chromedriver --port=4444 --url-base=wd/hub &
+# Start chromedriver.
+chromedriver --port=4444 --url-base=wd/hub &
   
-  # Run test/webdriver_test.dart.
-  dart test/webdriver_test.dart
-
-  # Run test/pageloader_test.dart.
-  dart test/pageloader_test.dart
-fi
+# Run tests
+pub run test -p vm -r expanded
