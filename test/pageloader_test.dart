@@ -1,7 +1,6 @@
 library pageloader_test;
 
-import 'package:unittest/vm_config.dart';
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 import 'package:sync_webdriver/sync_pageloader.dart';
 import 'package:sync_webdriver/sync_webdriver.dart';
 import 'test_util.dart';
@@ -11,8 +10,6 @@ import 'test_util.dart';
  * as they are slow and they have external dependencies.
  */
 void main() {
-  useVMConfiguration();
-
   WebDriver driver;
   PageLoader loader;
 

@@ -47,6 +47,31 @@ waitForValue(condition(), {Duration timeout: _DEFAULT_WAIT,
 waitFor(condition(), Matcher matcher, {Duration timeout: _DEFAULT_WAIT,
     Duration interval: _INTERVAL, onError(Object error)}) {
   conditionWithExpect() {
+    expect(value, matcher) {
+      if (matcher is! Matcher) {
+        matcher = equals(matcher);
+      }
+
+      var matchState = {};
+      if (matcher.matches(value, matchState)) {
+        return;
+      }
+      var desc = new StringDescription()
+        ..add('Expected: ')
+        ..addDescriptionOf(matcher)
+        ..add('\n')
+        ..add('  Actual: ')
+        ..addDescriptionOf(value)
+        ..add('\n');
+
+      var mismatchDescription = new StringDescription();
+      matcher.describeMismatch(value, mismatchDescription, matchState);
+      if (mismatchDescription.length > 0) {
+        desc.add('   Which: ${mismatchDescription}\n');
+      }
+      throw new Exception(desc.toString());
+    }
+
     var value = condition();
     expect(value, matcher);
     return value;

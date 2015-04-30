@@ -22,15 +22,22 @@ dartanalyzer --fatal-warnings \
   lib/sync_pageloader.dart \
   lib/sync_webdriver.dart \
   test/pageloader_test.dart \
-  test/webdriver_test.dart
+  test/src/alert_test.dart \
+  test/src/command_event_test.dart \
+  test/src/command_listener_test.dart \
+  test/src/keyboard_test.dart \
+  test/src/logs_test.dart \
+  test/src/mouse_test.dart \
+  test/src/navigation_test.dart \
+  test/src/options_test.dart \
+  test/src/target_locator_test.dart \
+  test/src/util_test.dart \
+  test/src/web_driver_test.dart \
+  test/src/web_element_test.dart \
+  test/src/window_test.dart
 
-if [ "$TRAVIS" ]; then
-  # Start chromedriver.
-  chromedriver --port=4444 --url-base=wd/hub &
-  
-  # Run test/webdriver_test.dart.
-  dart test/webdriver_test.dart
+# Start chromedriver.
+chromedriver --port=4444 --url-base=wd/hub &
 
-  # Run test/pageloader_test.dart.
-  dart test/pageloader_test.dart
-fi
+# Run tests
+pub run test -p vm -r expanded
