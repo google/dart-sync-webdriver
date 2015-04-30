@@ -1,7 +1,9 @@
 language: dart
 sudo: false
 
-dart: dev
+dart:
+  - dev
+  - stable
 
 before_install:
   - export CHROMEDRIVER_BINARY=/usr/bin/chromium-browser
