@@ -14,10 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+@TestOn('vm')
 library webdriver_test.command_event;
 
 import 'dart:async';
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 import 'package:stack_trace/stack_trace.dart';
 import 'package:sync_webdriver/sync_webdriver.dart';
 import '../test_util.dart';

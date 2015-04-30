@@ -14,11 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+@TestOn('vm')
 library webdriver_test.window;
 
 import 'dart:math' show Point;
 
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 import 'package:sync_webdriver/sync_webdriver.dart';
 import '../test_util.dart';
 
@@ -52,12 +53,12 @@ void main() {
     });
 
     // fails in some cases with multiple monitors
-    skip_test('maximize', () {
+    test('maximize', () {
       driver.window.maximize();
       var point = driver.window.location;
       expect(point, isPoint);
       expect(point.x, 0);
       expect(point.y, 0);
-    });
+    }, skip: true);
   });
 }

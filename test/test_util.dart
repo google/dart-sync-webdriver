@@ -19,7 +19,7 @@ library webdriver_test_util;
 import 'dart:io';
 import 'dart:math' show Point;
 import 'package:path/path.dart' as path;
-import 'package:unittest/unittest.dart';
+import 'package:matcher/matcher.dart';
 import 'package:sync_webdriver/sync_webdriver.dart' hide Platform;
 
 final Matcher isWebDriverException = new isInstanceOf<WebDriverException>();
