@@ -18,23 +18,8 @@
 set -e
 
 # Verify that the libraries are error free.
-dartanalyzer --fatal-warnings \
-  lib/sync_pageloader.dart \
-  lib/sync_webdriver.dart \
-  test/pageloader_test.dart \
-  test/src/alert_test.dart \
-  test/src/command_event_test.dart \
-  test/src/command_listener_test.dart \
-  test/src/keyboard_test.dart \
-  test/src/logs_test.dart \
-  test/src/mouse_test.dart \
-  test/src/navigation_test.dart \
-  test/src/options_test.dart \
-  test/src/target_locator_test.dart \
-  test/src/util_test.dart \
-  test/src/web_driver_test.dart \
-  test/src/web_element_test.dart \
-  test/src/window_test.dart
+grep -Rl --include "*.dart" --exclude-dir="packages" '^library .*;$' lib/ test/ | \
+    xargs dartanalyzer --fatal-warnings
 
 # Start chromedriver.
 chromedriver --port=4444 --url-base=wd/hub &
