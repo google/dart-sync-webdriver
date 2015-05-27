@@ -34,11 +34,6 @@ class WebDriver extends SearchContext {
       new StreamController.broadcast(sync: true);
   Stream<CommandEvent> get onCommand => _onCommand.stream;
 
-  @deprecated
-  /// Use [onCommand] instead.
-  /// Listeners that will be called when each command executes
-  final List<CommandListener> commandListeners = [];
-
   factory WebDriver({Uri uri: null, Map<String, String> required: null,
       Map<String, String> desired: const <String, String>{}}) {
     if (uri == null) {
@@ -220,7 +215,6 @@ class WebDriver extends SearchContext {
     var response;
     var exception;
     try {
-      commandListeners.forEach((listener) => listener('POST', command, params));
       var path = _processCommand(command);
       var request = _client.postUrl(new Uri.http(uri.authority, path));
       if (params != null) {
@@ -250,7 +244,6 @@ class WebDriver extends SearchContext {
     var response;
     var exception;
     try {
-      commandListeners.forEach((listener) => listener('GET', command, null));
       var path = _processCommand(command);
       var request = _client.getUrl(new Uri.http(uri.authority, path));
       response = _processResponse(request.close());
@@ -278,7 +271,6 @@ class WebDriver extends SearchContext {
     var response;
     var exception;
     try {
-      commandListeners.forEach((listener) => listener('DELETE', command, null));
       var path = _processCommand(command);
       var request = _client.deleteUrl(new Uri.http(uri.authority, path));
       response = _processResponse(request.close());

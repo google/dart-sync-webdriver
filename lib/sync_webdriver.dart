@@ -24,9 +24,10 @@ import 'dart:math' show Point;
 import 'dart:mirrors';
 
 import 'package:crypto/crypto.dart';
-import 'package:matcher/matcher.dart';
+import 'package:matcher/matcher.dart' as m;
 import 'package:stack_trace/stack_trace.dart' show Trace;
 import 'package:sync_socket/sync_socket.dart';
+import 'package:unittest/unittest.dart' as ut;
 
 part 'src/alert.dart';
 part 'src/capabilities.dart';
@@ -35,8 +36,8 @@ part 'src/common.dart';
 part 'src/error.dart';
 part 'src/keyboard.dart';
 part 'src/keys.dart';
-part 'src/mouse.dart';
 part 'src/logs.dart';
+part 'src/mouse.dart';
 part 'src/navigation.dart';
 part 'src/options.dart';
 part 'src/target_locator.dart';

@@ -19,6 +19,8 @@ part of sync.webdriver;
 const _DEFAULT_WAIT = const Duration(seconds: 4);
 const _INTERVAL = const Duration(milliseconds: 100);
 
+bool useUnittestMatchers = false;
+
 /**
  * Waits for [condition] to be evaluated successfully, and returns
  * that value.
@@ -31,7 +33,8 @@ const _INTERVAL = const Duration(milliseconds: 100);
  */
 waitForValue(condition(), {Duration timeout: _DEFAULT_WAIT,
     Duration interval: _INTERVAL, onError(Object error)}) {
-  return waitFor(condition, isNotNull, timeout: timeout, interval: interval);
+  return waitFor(condition, useUnittestMatchers ? ut.isNotNull : m.isNotNull,
+      timeout: timeout, interval: interval);
 }
 
 /**
@@ -44,19 +47,19 @@ waitForValue(condition(), {Duration timeout: _DEFAULT_WAIT,
  * Any exceptions raised during the evauluation of [condition] are
  * caught and treated as an unsuccessful evaluation.
  */
-waitFor(condition(), Matcher matcher, {Duration timeout: _DEFAULT_WAIT,
+waitFor(condition(), matcher, {Duration timeout: _DEFAULT_WAIT,
     Duration interval: _INTERVAL, onError(Object error)}) {
   conditionWithExpect() {
     expect(value, matcher) {
-      if (matcher is! Matcher) {
-        matcher = equals(matcher);
+      if (matcher is! m.Matcher) {
+        matcher = m.equals(matcher);
       }
 
       var matchState = {};
       if (matcher.matches(value, matchState)) {
         return;
       }
-      var desc = new StringDescription()
+      var desc = new m.StringDescription()
         ..add('Expected: ')
         ..addDescriptionOf(matcher)
         ..add('\n')
@@ -64,7 +67,7 @@ waitFor(condition(), Matcher matcher, {Duration timeout: _DEFAULT_WAIT,
         ..addDescriptionOf(value)
         ..add('\n');
 
-      var mismatchDescription = new StringDescription();
+      var mismatchDescription = new m.StringDescription();
       matcher.describeMismatch(value, mismatchDescription, matchState, true);
       if (mismatchDescription.length > 0) {
         desc.add('   Which: ${mismatchDescription}\n');
@@ -73,7 +76,15 @@ waitFor(condition(), Matcher matcher, {Duration timeout: _DEFAULT_WAIT,
     }
 
     var value = condition();
-    expect(value, matcher);
+    if (matcher is ut.Matcher) {
+      ut.expect(value, matcher);
+    } else if (matcher is m.Matcher) {
+      expect(value, matcher);
+    } else if (useUnittestMatchers) {
+      ut.expect(value, matcher);
+    } else {
+      expect(value, matcher);
+    }
     return value;
   }
   return _waitFor(conditionWithExpect, timeout, interval, onError);
@@ -103,32 +114,59 @@ _waitFor(
       'Condition timeout after $timeout.  It evaluated to $result');
 }
 
-final Matcher isEnabled = wrapMatcher((WebElement e) => e.enabled);
+get isEnabled => useUnittestMatchers
+    ? ut.wrapMatcher((WebElement e) => e.enabled)
+    : m.wrapMatcher((WebElement e) => e.enabled);
 
-final Matcher isNotEnabled = isNot(isEnabled);
+get isNotEnabled =>
+    useUnittestMatchers ? ut.isNot(isEnabled) : m.isNot(isEnabled);
 
-final Matcher isDisplayed = wrapMatcher((WebElement e) => e.displayed);
+get isDisplayed => useUnittestMatchers
+    ? ut.wrapMatcher((WebElement e) => e.displayed)
+    : m.wrapMatcher((WebElement e) => e.displayed);
 
-final Matcher isNotDisplayed = isNot(isDisplayed);
+get isNotDisplayed =>
+    useUnittestMatchers ? ut.isNot(isDisplayed) : m.isNot(isDisplayed);
 
-final Matcher isSelected = wrapMatcher((WebElement e) => e.selected);
+get isSelected => useUnittestMatchers
+    ? ut.wrapMatcher((WebElement e) => e.selected)
+    : m.wrapMatcher((WebElement e) => e.selected);
 
-final Matcher isNotSelected = isNot(isSelected);
+get isNotSelected =>
+    useUnittestMatchers ? ut.isNot(isSelected) : m.isNot(isSelected);
 
-Matcher hasText(matcher) => new _HasText(wrapMatcher(matcher));
+hasText(matcher) => useUnittestMatchers
+    ? new _HasTextUnittest(ut.wrapMatcher(matcher))
+    : new _HasTextMatcher(m.wrapMatcher(matcher));
 
-class _HasText extends Matcher {
-  final Matcher _matcher;
-  const _HasText(this._matcher);
+class _HasTextUnittest extends ut.Matcher {
+  final ut.Matcher _matcher;
+  const _HasTextUnittest(this._matcher);
 
   bool matches(item, Map matchState) =>
       item is WebElement && _matcher.matches(item.text, matchState);
 
-  Description describe(Description description) =>
+  ut.Description describe(ut.Description description) =>
       description.add('a WebElement with text of ').addDescriptionOf(_matcher);
 
-  Description describeMismatch(
-      item, Description mismatchDescription, Map matchState, bool verbose) {
+  ut.Description describeMismatch(
+      item, ut.Description mismatchDescription, Map matchState, bool verbose) {
+    return mismatchDescription.add('has text of ').addDescriptionOf(item.text);
+  }
+}
+
+class _HasTextMatcher extends m.Matcher {
+  final m.Matcher _matcher;
+  const _HasTextMatcher(this._matcher);
+
+  bool matches(item, Map matchState) =>
+      item is WebElement && _matcher.matches(item.text, matchState);
+
+  m.Description describe(m.Description description) =>
+      description.add('a WebElement with text of ').addDescriptionOf(_matcher);
+
+  m.Description describeMismatch(
+      item, m.Description mismatchDescription, Map matchState, bool verbose) {
     return mismatchDescription.add('has text of ').addDescriptionOf(item.text);
   }
 }

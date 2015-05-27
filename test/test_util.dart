@@ -18,8 +18,9 @@ library webdriver_test_util;
 
 import 'dart:io';
 import 'dart:math' show Point;
-import 'package:path/path.dart' as path;
+
 import 'package:matcher/matcher.dart';
+import 'package:path/path.dart' as path;
 import 'package:sync_webdriver/sync_webdriver.dart' hide Platform;
 
 final Matcher isWebDriverException = new isInstanceOf<WebDriverException>();
@@ -48,6 +49,8 @@ String _getTestPagePath() {
 String _testPagePath;
 
 WebDriver createTestDriver({Map additionalCapabilities}) {
+  useUnittestMatchers = false;
+
   Map capabilities = Capabilities.chrome;
   Map env = Platform.environment;
 
