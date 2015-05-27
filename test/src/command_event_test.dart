@@ -18,9 +18,11 @@ limitations under the License.
 library webdriver_test.command_event;
 
 import 'dart:async';
-import 'package:test/test.dart';
+
 import 'package:stack_trace/stack_trace.dart';
 import 'package:sync_webdriver/sync_webdriver.dart';
+import 'package:test/test.dart';
+
 import '../test_util.dart';
 
 void main() {

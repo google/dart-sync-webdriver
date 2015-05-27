@@ -17,12 +17,18 @@ limitations under the License.
 @TestOn('vm')
 library webdriver_test.util;
 
-import 'package:test/test.dart';
 import 'package:sync_webdriver/sync_webdriver.dart';
+import 'package:test/test.dart';
+import 'package:unittest/unittest.dart' as unittest;
+
 import '../test_util.dart';
 
 void main() {
   group('waitFor()', () {
+    setUp(() {
+      useUnittestMatchers = false;
+    });
+
     test('that returns a string', () {
       var count = 0;
       var result = waitFor(() {
@@ -56,6 +62,10 @@ void main() {
   });
 
   group('waitForValue()', () {
+    setUp(() {
+      useUnittestMatchers = false;
+    });
+
     test('that returns a string', () {
       var count = 0;
       var result = waitForValue(() {
@@ -118,6 +128,123 @@ void main() {
       var button = driver.findElement(const By.tagName('button'));
       expect(button, hasText('button'));
       expect(button, hasText(equalsIgnoringCase('BUTTON')));
+    });
+  });
+
+  group('waitFor() -- unittest', () {
+    setUp(() {
+      useUnittestMatchers = true;
+    });
+
+    tearDown(() {
+      useUnittestMatchers = false;
+    });
+
+    test('that returns a string', () {
+      var count = 0;
+      var result = waitFor(() {
+        if (count == 2) return 'webdriver - Google Search';
+        count++;
+        return count;
+      }, unittest.equals('webdriver - Google Search'));
+
+      unittest.expect(result, unittest.equals('webdriver - Google Search'));
+    });
+
+    test('that returns null', () {
+      var count = 0;
+      var result = waitFor(() {
+        if (count == 2) return null;
+        count++;
+        return count;
+      }, unittest.isNull);
+      unittest.expect(result, unittest.isNull);
+    });
+
+    test('that returns false', () {
+      var count = 0;
+      var result = waitFor(() {
+        if (count == 2) return false;
+        count++;
+        return count;
+      }, unittest.isFalse);
+      unittest.expect(result, unittest.isFalse);
+    });
+  });
+
+  group('waitForValue() -- unittest', () {
+    setUp(() {
+      useUnittestMatchers = true;
+    });
+
+    tearDown(() {
+      useUnittestMatchers = false;
+    });
+
+    test('that returns a string', () {
+      var count = 0;
+      var result = waitForValue(() {
+        if (count == 2) return 'Google';
+        count++;
+        return null;
+      });
+      unittest.expect(result, unittest.equals('Google'));
+    });
+
+    test('that returns false', () {
+      var count = 0;
+      var result = waitForValue(() {
+        unittest.expect(count, unittest.lessThanOrEqualTo(2));
+        if (count == 2) {
+          count++;
+          return false;
+        }
+        count++;
+        return null;
+      });
+      unittest.expect(result, unittest.isFalse);
+    });
+  });
+
+  group('custom Matcher -- unittest', () {
+    WebDriver driver;
+    setUp(() {
+      driver = createTestDriver();
+      driver.url = testPagePath;
+      useUnittestMatchers = true;
+    });
+
+    tearDown(() {
+      driver.quit();
+      driver = null;
+      useUnittestMatchers = false;
+    });
+
+    test('isDisplayed', () {
+      var body = driver.findElement(const By.tagName('body'));
+      unittest.expect(body, isDisplayed);
+    });
+
+    test('isNotDisplayed', () {
+      var div = driver.findElement(const By.tagName('div'));
+      unittest.expect(div, isNotDisplayed);
+    });
+
+    test('isEnabled', () {
+      var body = driver.findElement(const By.tagName('body'));
+      unittest.expect(body, isEnabled);
+    });
+
+    test('isNotEnabled', () {
+      var input =
+          driver.findElement(const By.cssSelector('input[type=password]'));
+      unittest.expect(input, isNotEnabled);
+    });
+
+    test('hasText', () {
+      var button = driver.findElement(const By.tagName('button'));
+      unittest.expect(button, hasText('button'));
+      unittest.expect(button, hasText(unittest.equalsIgnoringCase('BUTTON')));
     });
   });
 
