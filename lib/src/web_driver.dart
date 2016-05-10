@@ -196,7 +196,7 @@ class WebDriver extends SearchContext {
       post('execute', {'script': script, 'args': args});
 
   List<int> captureScreenshot() => new UnmodifiableListView(
-      CryptoUtils.base64StringToBytes(captureScreenshotAsBase64()));
+      BASE64.decode(captureScreenshotAsBase64()));
 
   String captureScreenshotAsBase64() => get('screenshot');
 

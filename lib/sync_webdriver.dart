@@ -23,7 +23,6 @@ import 'dart:io';
 import 'dart:math' show Point;
 import 'dart:mirrors';
 
-import 'package:crypto/crypto.dart';
 import 'package:matcher/matcher.dart' as m;
 import 'package:stack_trace/stack_trace.dart' show Trace;
 import 'package:sync_socket/sync_socket.dart';
