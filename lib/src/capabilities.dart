@@ -137,6 +137,5 @@ class ChromeOptions {
     return json;
   }
 
-  String _encodeExtension(File file) =>
-      CryptoUtils.bytesToBase64(file.readAsBytesSync());
+  String _encodeExtension(File file) => BASE64.encode(file.readAsBytesSync());
 }
