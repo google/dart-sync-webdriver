@@ -46,9 +46,7 @@ void main() {
     });
 
     test('sendKeys -- twice', () {
-      driver.keyboard
-        ..sendKeys('abc')
-        ..sendKeys('def');
+      driver.keyboard..sendKeys('abc')..sendKeys('def');
       expect(textInput.attributes['value'], 'abcdef');
     });
 

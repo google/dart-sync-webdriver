@@ -118,14 +118,18 @@ _checkCommand(CommandEvent log, method, command, params,
   expect(log.method, method);
   expect(log.endpoint, command);
   expect(log.params, params);
-  expect(log.endTime, predicate(
-      log.startTime.isBefore, 'event endTime is not after event startTime'));
+  expect(
+      log.endTime,
+      predicate(log.startTime.isBefore,
+          'event endTime is not after event startTime'));
   expect(log.result, response);
   expect(log.exception, exception);
 
   var trace = new Trace.current(2).frames.map((f) => f.toString()).toList();
-  expect(log.stackTrace.frames
-      .map((f) => f.toString())
-      .skipWhile((f) => f != trace[0])
-      .toList(), trace);
+  expect(
+      log.stackTrace.frames
+          .map((f) => f.toString())
+          .skipWhile((f) => f != trace[0])
+          .toList(),
+      trace);
 }

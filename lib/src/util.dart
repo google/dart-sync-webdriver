@@ -31,8 +31,10 @@ bool useUnittestMatchers = false;
  * Any exceptions raised during the evauluation of [condition] are
  * caught and treated as an unsuccessful evaluation.
  */
-waitForValue(condition(), {Duration timeout: _DEFAULT_WAIT,
-    Duration interval: _INTERVAL, onError(Object error)}) {
+waitForValue(condition(),
+    {Duration timeout: _DEFAULT_WAIT,
+    Duration interval: _INTERVAL,
+    onError(Object error)}) {
   return waitFor(condition, useUnittestMatchers ? ut.isNotNull : m.isNotNull,
       timeout: timeout, interval: interval);
 }
@@ -47,8 +49,10 @@ waitForValue(condition(), {Duration timeout: _DEFAULT_WAIT,
  * Any exceptions raised during the evauluation of [condition] are
  * caught and treated as an unsuccessful evaluation.
  */
-waitFor(condition(), matcher, {Duration timeout: _DEFAULT_WAIT,
-    Duration interval: _INTERVAL, onError(Object error)}) {
+waitFor(condition(), matcher,
+    {Duration timeout: _DEFAULT_WAIT,
+    Duration interval: _INTERVAL,
+    onError(Object error)}) {
   conditionWithExpect() {
     expect(value, matcher) {
       if (matcher is! m.Matcher) {

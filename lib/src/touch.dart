@@ -68,11 +68,11 @@ class Touch extends _WebDriverBase {
    */
   void flickElement(WebElement start, int xOffset, int yOffset, int speed) =>
       _post('flick', {
-    'element': start.id,
-    'xoffset': xOffset.floor(),
-    'yoffset': yOffset.floor(),
-    'speed': speed.floor()
-  });
+        'element': start.id,
+        'xoffset': xOffset.floor(),
+        'yoffset': yOffset.floor(),
+        'speed': speed.floor()
+      });
 
   /**
    * Flick on the touch screen using finger motion events.

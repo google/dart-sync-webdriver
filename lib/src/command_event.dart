@@ -20,23 +20,37 @@ part of sync.webdriver;
 class CommandEvent {
   /// HTTP method for the command.
   final String method;
+
   /// HTTP endpoint for the command.
   final String endpoint;
+
   /// String representation of the params sent for the command.
   final String params;
+
   /// When the command started execution.
   final DateTime startTime;
+
   /// When the command ended execution.
   final DateTime endTime;
+
   /// String representation of the returned response for the command.
   /// If the command failed, this will be null.
   final String result;
+
   /// String representation of the exception thrown when the command failed.
   /// If the command succeeded, this will be null.
   final String exception;
+
   /// Stack trace at the point of the execution of the WebDriver command.
   final Trace stackTrace;
 
-  CommandEvent({this.method, this.endpoint, this.params, this.startTime,
-      this.endTime, this.result, this.exception, this.stackTrace});
+  CommandEvent(
+      {this.method,
+      this.endpoint,
+      this.params,
+      this.startTime,
+      this.endTime,
+      this.result,
+      this.exception,
+      this.stackTrace});
 }

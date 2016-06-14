@@ -24,6 +24,7 @@ import 'dart:math' show Point;
 import 'dart:mirrors';
 
 import 'package:matcher/matcher.dart' as m;
+import 'package:path/path.dart' as path;
 import 'package:stack_trace/stack_trace.dart' show Trace;
 import 'package:sync_socket/sync_socket.dart';
 import 'package:unittest/unittest.dart' as ut;

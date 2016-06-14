@@ -17,6 +17,7 @@ limitations under the License.
 part of sync.webdriver;
 
 @deprecated
+
 /// Use [CommandEvent] instead.
 typedef void CommandListener(String method, String endpoint, params);
 
@@ -34,13 +35,15 @@ class WebDriver extends SearchContext {
       new StreamController.broadcast(sync: true);
   Stream<CommandEvent> get onCommand => _onCommand.stream;
 
-  factory WebDriver({Uri uri: null, Map<String, String> required: null,
+  factory WebDriver(
+      {Uri uri: null,
+      Map<String, String> required: null,
       Map<String, String> desired: const <String, String>{}}) {
     if (uri == null) {
       uri = DEFAULT_URI;
     }
-    var request =
-        _client.postUrl(new Uri.http(uri.authority, '${uri.path}/session'));
+    var request = _client
+        .postUrl(new Uri.http(uri.authority, path.join(uri.path, 'session')));
     var jsonParams = {"desiredCapabilities": desired};
 
     if (required != null) {
@@ -57,6 +60,7 @@ class WebDriver extends SearchContext {
     switch (resp.statusCode) {
       case HttpStatus.SEE_OTHER:
       case HttpStatus.MOVED_TEMPORARILY:
+      case HttpStatus.MOVED_PERMANENTLY:
         sessionUri = Uri.parse(resp.headers.value(HttpHeaders.LOCATION));
         if (sessionUri.authority == null || sessionUri.authority.isEmpty) {
           sessionUri = new Uri.http(uri.authority, sessionUri.path);
@@ -64,7 +68,6 @@ class WebDriver extends SearchContext {
         break;
       case HttpStatus.OK:
         var jsonResp = _parseBody(resp);
-
         if (jsonResp is! Map || jsonResp['status'] != 0) {
           throw new WebDriverException(
               httpStatusCode: resp.statusCode,
@@ -106,7 +109,7 @@ class WebDriver extends SearchContext {
   }
 
   static Uri _sessionUri(Uri uri, String sessionId) =>
-      new Uri.http(uri.authority, '${uri.path}/session/$sessionId');
+      new Uri.http(uri.authority, path.join(uri.path, "session", sessionId));
 
   WebDriver._(this.uri, this.capabilities) {
     _jsonDecoder = new JsonCodec.withReviver(_reviver);
@@ -195,8 +198,8 @@ class WebDriver extends SearchContext {
   dynamic execute(String script, List args) =>
       post('execute', {'script': script, 'args': args});
 
-  List<int> captureScreenshot() => new UnmodifiableListView(
-      BASE64.decode(captureScreenshotAsBase64()));
+  List<int> captureScreenshot() =>
+      new UnmodifiableListView(BASE64.decode(captureScreenshotAsBase64()));
 
   String captureScreenshotAsBase64() => get('screenshot');
 
@@ -291,12 +294,7 @@ class WebDriver extends SearchContext {
   }
 
   String _processCommand(String command) {
-    StringBuffer path = new StringBuffer(uri.path);
-    if (!command.isEmpty && !command.startsWith('/')) {
-      path.write('/');
-    }
-    path.write(command);
-    return path.toString();
+    return path.join(uri.path, command);
   }
 
   _processResponse(HttpClientResponseSync resp) {

@@ -288,9 +288,7 @@ void main() {
     });
 
     test('[de]selectByIndex multiple', () {
-      var select = new Select(selectMulti)
-        ..selectByIndex(1)
-        ..selectByIndex(3);
+      var select = new Select(selectMulti)..selectByIndex(1)..selectByIndex(3);
       var options = select.options;
 
       expect(options[0].selected, false);

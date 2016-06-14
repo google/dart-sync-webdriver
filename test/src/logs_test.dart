@@ -27,8 +27,7 @@ void main() {
     WebDriver driver;
 
     setUp(() {
-      driver = createTestDriver(
-          additionalCapabilities: {
+      driver = createTestDriver(additionalCapabilities: {
         Capabilities.LOGGING_PREFS: {LogType.PERFORMANCE: LogLevel.INFO}
       });
       driver.url = testPagePath;

@@ -113,7 +113,8 @@ abstract class _WebDriverBase {
       return command;
     } else if (command.startsWith('/')) {
       return '$_prefix$command';
-    } else return '$_prefix/$command';
+    } else
+      return '$_prefix/$command';
   }
 }
 

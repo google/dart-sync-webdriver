@@ -7,4 +7,4 @@ pubspec.lock
 *.so
 .idea/
 .pub/
-
+.packages

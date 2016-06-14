@@ -113,9 +113,7 @@ class WebElement extends _WebDriverBase with SearchContext {
     StringBuffer result = new StringBuffer('{WebElement ');
     result.write(id);
     if (_context != null && _finder != null) {
-      result
-        ..write(' ')
-        ..write(_context);
+      result..write(' ')..write(_context);
       if (_index >= 0) {
         result.write('.findElements(');
       } else {
@@ -123,10 +121,7 @@ class WebElement extends _WebDriverBase with SearchContext {
       }
       result.write(_finder);
       if (_index >= 0) {
-        result
-          ..write(')[')
-          ..write(_index)
-          ..write(']}');
+        result..write(')[')..write(_index)..write(']}');
       } else {
         result.write(')}');
       }

@@ -36,14 +36,19 @@ class Cookies extends _WebDriverBase {
 class Cookie {
   /// The name of the cookie.
   final String name;
+
   /// The cookie value.
   final String value;
+
   /// (Optional) The cookie path.
   final String path;
+
   /// (Optional) The domain the cookie is visible to.
   final String domain;
+
   /// (Optional) Whether the cookie is a secure cookie.
   final bool secure;
+
   /// (Optional) When the cookie expires.
   final DateTime expiry;
 
@@ -54,7 +59,8 @@ class Cookie {
     var expiry;
     if (json['expiry'] is num) {
       expiry = new DateTime.fromMillisecondsSinceEpoch(
-          (json['expiry'] * 1000).round(), isUtc: true);
+          (json['expiry'] * 1000).round(),
+          isUtc: true);
     }
     return new Cookie(json['name'], json['value'],
         path: json['path'],
@@ -96,6 +102,7 @@ class Timeouts extends _WebDriverBase {
 
   /// Get the script timeout.
   Duration get scriptTimeout => _scriptTimeout;
+
   /// Set the script timeout.
   set scriptTimeout(Duration duration) {
     _set('script', duration);
@@ -104,6 +111,7 @@ class Timeouts extends _WebDriverBase {
 
   /// Get the implicit timeout.
   Duration get implicitWaitTimeout => _implicitWaitTimeout;
+
   /// Set the implicit timeout.
   set implicitWaitTimeout(Duration duration) {
     _set('implicit', duration);
@@ -112,6 +120,7 @@ class Timeouts extends _WebDriverBase {
 
   /// Get the page load timeout.
   Duration get pageLoadTimeout => _pageLoadTimeout;
+
   /// Set the page load timeout.
   set pageLoadTimeout(Duration duration) {
     _set('page load', duration);
