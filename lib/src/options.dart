@@ -70,7 +70,7 @@ class Cookie {
   }
 
   Map<String, dynamic> toJson() {
-    var json = {'name': name, 'value': value};
+    var json = <String, dynamic>{'name': name, 'value': value};
     if (path is String) {
       json['path'] = path;
     }
@@ -97,7 +97,7 @@ class Timeouts extends _WebDriverBase {
 
   Timeouts._(driver) : super(driver, 'timeouts');
 
-  _set(String type, Duration duration) =>
+  void _set(String type, Duration duration) =>
       _post('', {'type': type, 'ms': duration.inMilliseconds});
 
   /// Get the script timeout.
@@ -106,7 +106,7 @@ class Timeouts extends _WebDriverBase {
   /// Set the script timeout.
   set scriptTimeout(Duration duration) {
     _set('script', duration);
-    return _scriptTimeout = duration;
+    _scriptTimeout = duration;
   }
 
   /// Get the implicit timeout.
@@ -115,7 +115,7 @@ class Timeouts extends _WebDriverBase {
   /// Set the implicit timeout.
   set implicitWaitTimeout(Duration duration) {
     _set('implicit', duration);
-    return _implicitWaitTimeout = duration;
+    _implicitWaitTimeout = duration;
   }
 
   /// Get the page load timeout.
@@ -124,6 +124,7 @@ class Timeouts extends _WebDriverBase {
   /// Set the page load timeout.
   set pageLoadTimeout(Duration duration) {
     _set('page load', duration);
-    return _pageLoadTimeout = duration;
+    _pageLoadTimeout = duration;
   }
 }
+
