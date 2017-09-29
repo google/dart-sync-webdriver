@@ -97,7 +97,7 @@ class Timeouts extends _WebDriverBase {
 
   Timeouts._(driver) : super(driver, 'timeouts');
 
-  void _set(String type, Duration duration) =>
+  _set(String type, Duration duration) =>
       _post('', {'type': type, 'ms': duration.inMilliseconds});
 
   /// Get the script timeout.
