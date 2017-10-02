@@ -104,7 +104,7 @@ class WebDriver extends SearchContext {
           jsonResp: jsonResp);
     }
 
-    var capabilities = new UnmodifiableMapView(jsonResp['value']);
+    var capabilities = new UnmodifiableMapView<String, Object>(jsonResp['value']);
     return new WebDriver._(_sessionUri(uri, sessionId), capabilities);
   }
 

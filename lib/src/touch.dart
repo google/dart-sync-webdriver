@@ -46,7 +46,8 @@ class Touch extends _WebDriverBase {
    * will start scrolling from an arbitrary location.
    */
   void scroll(int xOffset, int yOffset, [WebElement start]) {
-    var json = {'xoffset': xOffset.floor(), 'yoffset': yOffset.floor()};
+    var json = <String, dynamic>{'xoffset': xOffset.floor(),
+                                 'yoffset': yOffset.floor()};
     if (start is WebElement) {
       json['element'] = start.id;
     }

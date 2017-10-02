@@ -20,8 +20,8 @@ class Window extends _WebDriverBase {
   final String _handle;
 
   Window._(WebDriver driver, String handle)
-      : super(driver, 'window/$handle'),
-        this._handle = handle;
+      : this._handle = handle,
+        super(driver, 'window/$handle');
 
   /// The size of this window.
   Size get size => new Size.fromJson(_get('size'));
@@ -41,8 +41,8 @@ class Window extends _WebDriverBase {
   String toJson() => _handle;
 
   @override
-  bool operator ==(Window other) =>
-      driver == other.driver && _handle == other._handle;
+  bool operator ==(other) =>
+      other is Window && driver == other.driver && _handle == other._handle;
 
   @override
   int get hashCode => _handle.hashCode >> 3 + driver.hashCode;

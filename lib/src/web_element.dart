@@ -28,8 +28,8 @@ class WebElement extends _WebDriverBase with SearchContext {
   int _index;
 
   WebElement._(WebDriver driver, String elementId)
-      : super(driver, 'element/$elementId'),
-        id = elementId;
+      : id = elementId,
+        super(driver, 'element/$elementId');
 
   /// Click on this element.
   void click() {
